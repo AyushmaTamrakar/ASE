@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Component1
 {
-    internal class Shape
+    internal abstract class Shape : Shapes
     {
-        private Color c;
+        private Color color;
         private int x, y;
         private bool fill;
 
@@ -19,12 +19,21 @@ namespace Component1
             x = y = 0;
 
         }
-        public Shape(Color c, int x, int y, bool fill)
+        public Shape(Color color, bool fill, int x, int y)
         {
-            this.c = c;
+            this.color = color;
             this.x = x;
             this.y = y;
             this.fill = fill;
+        }
+        public abstract void draw(Graphics g);
+        public virtual void set(Color color, bool fill, params int[] list)
+        {
+            this.color = color;
+            this.fill = fill;
+            this.x = list[0];
+            this.y = list[1];
+
         }
     }
 }
