@@ -19,14 +19,15 @@ namespace Component1
 
             }
        
-            public Circle(Color color, bool fillshape, int x, int y, int radius) : base(color, x, y, fillshape)
+            public Circle(Color color, bool fill, int x, int y, int radius) : base(color, fill, x, y)
             {
                 this.radius = radius;
             }
 
-        
-        
-        
+        public override void draw(Graphics g)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 

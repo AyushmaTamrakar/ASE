@@ -15,7 +15,7 @@ namespace Component1
 
         public Shape()
         {
-            c = Color.Black;
+            color = Color.Black;
             x = y = 0;
 
         }
