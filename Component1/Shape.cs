@@ -9,15 +9,15 @@ namespace Component1
 {
     internal abstract class Shape : Shapes
     {
-        private Color color;
-        private int x, y;
-        private bool fill;
+        protected Color color;
+        protected int x, y;
+        protected bool fill;
 
         public Shape()
         {
             color = Color.Black;
             x = y = 0;
-
+            fill = true;
         }
         public Shape(Color color, bool fill, int x, int y)
         {
@@ -34,6 +34,10 @@ namespace Component1
             this.x = list[0];
             this.y = list[1];
 
+        }
+        public override string ToString()
+        {
+            return base.ToString() + "    " + this.x + "," + this.y + " : ";
         }
     }
 }

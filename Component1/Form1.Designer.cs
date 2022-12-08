@@ -55,6 +55,7 @@
             this.drawPanel.Name = "drawPanel";
             this.drawPanel.Size = new System.Drawing.Size(324, 371);
             this.drawPanel.TabIndex = 0;
+            this.drawPanel.Click += new System.EventHandler(this.drawPanel_Click);
             this.drawPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.drawPanel_Paint);
             // 
             // commandLine
@@ -85,9 +86,9 @@
             this.label1.Font = new System.Drawing.Font("Lucida Fax", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(12, 42);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(132, 18);
+            this.label1.Size = new System.Drawing.Size(68, 18);
             this.label1.TabIndex = 4;
-            this.label1.Text = "Output Screen";
+            this.label1.Text = "Canvas";
             // 
             // menuStrip1
             // 
@@ -113,19 +114,20 @@
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveToolStripMenuItem.Text = "Save";
             // 
             // loadToolStripMenuItem
             // 
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.loadToolStripMenuItem.Text = "Load";
+            this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -170,7 +172,7 @@
             this.console.Location = new System.Drawing.Point(404, 323);
             this.console.Name = "console";
             this.console.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
-            this.console.Size = new System.Drawing.Size(279, 218);
+            this.console.Size = new System.Drawing.Size(279, 115);
             this.console.TabIndex = 10;
             this.console.Text = "";
             // 
