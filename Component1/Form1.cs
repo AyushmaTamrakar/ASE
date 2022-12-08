@@ -93,6 +93,19 @@ namespace Component1
             }
         }
 
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+           
+            SaveFileDialog saveFile = new SaveFileDialog();
+            saveFile.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            saveFile.FilterIndex = 1;
+           
+            if(saveFile.ShowDialog()== DialogResult.OK)
+            {
+                File.WriteAllText(saveFile.FileName, commandLine.Text);
+            }
+        }
+
         private void drawPanel_Click(object sender, EventArgs e)
         {
            
