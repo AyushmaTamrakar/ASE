@@ -14,8 +14,8 @@ namespace Component1
 {
     public partial class Form1 : Form 
     {
-        bool fill = false;
-        int xPos = 0 , yPos = 0;
+        private Canvass myCanvass;
+        
 
         ArrayList shapes = new ArrayList();
 
@@ -23,6 +23,8 @@ namespace Component1
         public Form1()
         {
             InitializeComponent();
+            myCanvass = new Canvass(drawPanel.CreateGraphics());
+           
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -53,32 +55,29 @@ namespace Component1
                 }
                 else if(commands.Equals("run") == true)
                 {
-                    string cmdLine = commandLine.Text.Trim().ToLower();
-                    string shapeName = cmdLine.Split('(')[0];
-                    string radiusVal = cmdLine.Split('(', ')')[1];
-
-                    if (shapeName.Equals("circle") == true)
-                    {
-                        Circle c = new Circle();
-                        c.set(Color.Black, fill, xPos, yPos, Int32.Parse(radiusVal));
-
-                    }
+                    CommandParser parse = new CommandParser();
+                    parse.commandSeparator(commandLine.Text);
+                    
                 }
                 else if(commands.Equals("reset")== true)
                 {
-                    xPos = 0;
-                    yPos = 0;
+                    myCanvass.Reset();
+                   
+                    console.Text = "Program is reset to initial state";
                     
                 }
                
             }
         }
 
+       
         private void drawPanel_Paint(object sender, PaintEventArgs e)
         {
-          
 
-        
+           // myCanvass.DrawTo(160, 120);
+
+
+
         }
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
