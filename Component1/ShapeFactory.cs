@@ -16,6 +16,10 @@ namespace Component1
             {
                 return new Circle();
             }
+            else if (shapeType.Equals("rectangle"))
+            {
+                return new Rectangle();
+            }
             else
             {
                 //if we get here then what has been passed in is inkown so throw an appropriate exception

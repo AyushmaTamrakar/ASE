@@ -13,8 +13,10 @@ namespace Component1
     internal class CommandParser
     {
         string errors = "";
-        String shapeName;
+        String commandName;
         String parameters;
+        int num1, num2, num3;
+        bool fill;
 
 
         public string Errors
@@ -22,10 +24,10 @@ namespace Component1
             get { return errors; }
             set { errors = value; }
         }
-        public string ShapeName
+        public string CommandName
         {
-            get { return shapeName; }
-            set { shapeName = value; }
+            get { return commandName; }
+            set { commandName = value; }
         }
         public string Parameter
         {
@@ -51,36 +53,42 @@ namespace Component1
                     try
                     {
                         String line = lines[i];
-                        shapeName = line.Split('(')[0];
+                        commandName = line.Split('(')[0];
                         parameters = line.Split('(', ')')[1];
 
-
-                        if (shapeName.Equals("drawto"))
+                        if (commandName.Equals("tri") == true)
                         {
-                            
-                            if (parameters.Contains(',') == true)
-                            {
-
-                                string val1 = parameters.Split('\u002C')[0]; //unicode for comma
-                                string val2 = parameters.Split('\u002C')[1];
-                                int num1 = int.Parse(val1);
-                                int num2 = int.Parse(val2);
-
-                                canvas.DrawTo(num1, num2);
- 
-                            }
+                            ParameterSeparator(parameters);
                         }
-                        if (shapeName.Equals("circle"))
+
+                        if (commandName.Equals("drawto") == true)
                         {
-                            if(parameters.Contains(',') == false)
-                            {
-                                int num1 = int.Parse(parameters);
-                                canvas.Circle(num1);
-                            }
-                            else
-                            {
-                                errors = "Invalid parameters for circle";
-                            }
+                            ParameterSeparator(parameters);
+                            canvas.DrawTo(num1, num2);
+                            
+                        }
+                        if (commandName.Equals("circle") == true)
+                        {
+                            ParameterSeparator(parameters);
+                            canvas.Circle(num1);
+                            
+                        }
+                        if(commandName.Equals("moveto") == true)
+                        {
+                            ParameterSeparator(parameters);
+                            canvas.XPos = num1;
+                            canvas.YPos = num2;
+                            //canvas.MoveTo(num1, num2);   
+                        }
+                        if(commandName.Equals("rectangle") == true)
+                        {
+                            ParameterSeparator(parameters);
+                            canvas.Rectangle(num1, num2);
+                        }
+                        if(commandName.Equals("fill")== true)
+                        {
+                            ParameterSeparator(parameters);
+                            canvas.ShapeFill(fill);
                         }
 
                     }
@@ -92,6 +100,53 @@ namespace Component1
                 }
             }
         }
-      
+    
+        public void ParameterSeparator(string parameters)
+        {
+            if (parameters.Contains(',') == true)
+            {
+                if(parameters.Split('\u002C').Length == 2)
+                {
+                    string val1 = parameters.Split('\u002C')[0]; //unicode for comma
+                    string val2 = parameters.Split('\u002C')[1];
+                    num1 = int.Parse(val1);
+                    num2 = int.Parse(val2);
+                }
+                else if(parameters.Split('\u002C').Length == 3)
+                {
+                    string val1 = parameters.Split('\u002C')[0]; //unicode for comma
+                    string val2 = parameters.Split('\u002C')[1];
+                    string val3 = parameters.Split('\u002C')[2];
+                    num1 = int.Parse(val1);
+                    num2 = int.Parse(val2);
+                    num3 = int.Parse(val3);
+                    MessageBox.Show("Triangle");
+                }
+                                                   
+            }
+            else
+            {
+                if(parameters == "on" || parameters == "off")
+                {
+                    if(parameters == "on")
+                    {
+                        fill = true;
+                    }
+                    else if(parameters == "off")
+                    {
+                        fill = false;
+                    }
+                }
+                else
+                {
+                    num1 = int.Parse(parameters);
+                }
+               
+            }
+
+        }
+     
+        
     }
+   
 }

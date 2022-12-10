@@ -17,17 +17,19 @@ namespace Component1
         Color color;
         int xPos, yPos;
         bool fill = false;
-        Brush brush;
+        Shape shape;
+        ShapeFactory factory = new ShapeFactory();
 
-       
+
         public Canvass(Graphics g)
         {
             this.g = g;
             xPos = 0;
             yPos = 0;
-            pen = new Pen(Color.Black, 2);
-            brush = new SolidBrush(Color.Black);
             color = Color.Black;
+            pen = new Pen(color, 2);
+          
+            
         }
         public Graphics G
         {
@@ -54,20 +56,40 @@ namespace Component1
             get { return fill; }
             set { fill = value; }
         }
+        public Color Color
+        {
+            get { return color; }
+            set { color = value; }
+        }
         public void DrawTo(int toX, int toY)
         {
-            G.DrawLine(Pen, xPos, yPos, toX, toY);
-
+            G.DrawLine(Pen, XPos, YPos, toX, toY);
+            XPos = toX;
+            YPos = toY;
         
         }
         public void Circle(int radius)
         {
-            Shape s;
-            ShapeFactory f = new ShapeFactory();
-            s = f.getShape("circle");
-            s.set(color, fill, xPos, yPos, radius*2);
-            s.draw(G);
-            
+            shape = factory.getShape("circle");
+            shape.set(Color,Fill, XPos, YPos, radius * 2);
+            shape.draw(G);
+            shape.ToString();
+        }
+        public void Rectangle(int width, int height)
+        {
+            shape = factory.getShape("rectangle");
+            shape.set(Color, Fill, XPos, YPos, width, height);
+            shape.draw(G);
+            shape.ToString();
+        }
+        public void ShapeFill(bool fill)
+        {
+            Fill = fill;
+        }
+        public void MoveTo(int toX, int toY)
+        {
+            XPos = toX;
+            YPos = toY;
         }
       
         public void Reset()
