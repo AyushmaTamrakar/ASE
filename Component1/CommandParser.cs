@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -17,7 +18,10 @@ namespace Component1
         String parameters;
         int num1, num2, num3;
         bool fill;
+        ArrayList colors = new ArrayList() { "coral", "crimson", "lavender", "lime", "aqua" };
+        Color pen;
 
+        
 
         public string Errors
         {
@@ -90,7 +94,11 @@ namespace Component1
                             ParameterSeparator(parameters);
                             canvas.ShapeFill(fill);
                         }
-
+                        if (commandName.Equals("pen") == true)
+                        {
+                            ParameterSeparator(parameters);
+                            canvas.PenColor(pen);
+                        }
                     }
                     catch (Exception e)
                     {
@@ -136,6 +144,32 @@ namespace Component1
                     {
                         fill = false;
                     }
+                }
+                if(colors.Contains(parameters) == true)
+                {
+                    switch (parameters)
+                    {
+                        case "coral":
+                            pen = Color.Coral;
+                            break;
+                        case "crimson":
+                            pen = Color.Crimson;
+                            break;
+                        case "lavender":
+                            pen = Color.Lavender;
+                            break;
+                        case "lime":
+                            pen = Color.Lime;
+                            break;
+                        case "aqua":
+                            pen = Color.Aqua;
+                            break;
+                        default:
+                            pen = Color.Black;
+                            break;
+
+                    }
+
                 }
                 else
                 {

@@ -38,7 +38,7 @@ namespace Component1
         }
         public override void set(Color colour, bool fill, params int[] list)
         {
-            //list[0] is x, list[1] is y, list[2] is radius
+            //list[0] is x, list[1] is y, list[2] is width, list[3] is height
             base.set(colour, fill, list[0], list[1]);
             this.width = list[2];
             this.height = list[3];

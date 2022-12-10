@@ -17,7 +17,7 @@ namespace Component1
         {
             color = Color.Black;
             x = y = 0;
-            fill = true;
+            fill = false;
         }
         public Shape(Color color, bool fill, int x, int y)
         {

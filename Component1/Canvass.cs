@@ -71,7 +71,7 @@ namespace Component1
         public void Circle(int radius)
         {
             shape = factory.getShape("circle");
-            shape.set(Color,Fill, XPos, YPos, radius * 2);
+            shape.set(Color,Fill, XPos-radius, YPos-radius, radius * 2);
             shape.draw(G);
             shape.ToString();
         }
@@ -80,11 +80,16 @@ namespace Component1
             shape = factory.getShape("rectangle");
             shape.set(Color, Fill, XPos, YPos, width, height);
             shape.draw(G);
-            shape.ToString();
+            Console.WriteLine(shape.ToString());
+            
         }
         public void ShapeFill(bool fill)
         {
             Fill = fill;
+        }
+        public void PenColor(Color color)
+        {
+            Color = color;
         }
         public void MoveTo(int toX, int toY)
         {
@@ -96,6 +101,7 @@ namespace Component1
         {
             xPos = 0;
             yPos = 0;
+            color = Color.Black;
             MessageBox.Show("Stupid");
         }
         public void Clear()
