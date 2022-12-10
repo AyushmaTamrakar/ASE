@@ -19,6 +19,7 @@ namespace Component1
         bool fill = false;
         Shape shape;
         ShapeFactory factory = new ShapeFactory();
+        Brush brush;
 
 
         public Canvass(Graphics g)
@@ -28,6 +29,7 @@ namespace Component1
             yPos = 0;
             color = Color.Black;
             pen = new Pen(color, 2);
+            //brush = new SolidBrush(color);
           
             
         }
@@ -71,7 +73,7 @@ namespace Component1
         public void Circle(int radius)
         {
             shape = factory.getShape("circle");
-            shape.set(Color,Fill, XPos-radius, YPos-radius, radius * 2);
+            shape.set(Color,Fill, XPos-radius, YPos-radius, radius * 2, radius*2);
             shape.draw(G);
             shape.ToString();
         }
@@ -83,8 +85,17 @@ namespace Component1
             Console.WriteLine(shape.ToString());
             
         }
+        public void Triangle(int width, int height)
+        {
+            shape = factory.getShape("triangle");
+            shape.set(Color, Fill, XPos-width, YPos-height, width, height);
+            shape.draw(G);
+            Console.WriteLine(shape.ToString());
+
+        }
         public void ShapeFill(bool fill)
         {
+            
             Fill = fill;
         }
         public void PenColor(Color color)
@@ -102,7 +113,8 @@ namespace Component1
             xPos = 0;
             yPos = 0;
             color = Color.Black;
-            MessageBox.Show("Stupid");
+            fill = false;
+            
         }
         public void Clear()
         {

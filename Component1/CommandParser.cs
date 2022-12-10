@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.Remoting;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Markup;
@@ -17,7 +18,7 @@ namespace Component1
         String commandName;
         String parameters;
         int num1, num2, num3;
-        bool fill;
+        int lineNum ;
         ArrayList colors = new ArrayList() { "coral", "crimson", "lavender", "lime", "aqua" };
         Color pen;
 
@@ -54,21 +55,25 @@ namespace Component1
 
                 for (int i = 0; i < lines.Length; i++)
                 {
+                    
+                    lineNum ++;
                     try
                     {
                         String line = lines[i];
                         commandName = line.Split('(')[0];
                         parameters = line.Split('(', ')')[1];
-
-                        if (commandName.Equals("tri") == true)
-                        {
-                            ParameterSeparator(parameters);
-                        }
-
+                      
                         if (commandName.Equals("drawto") == true)
                         {
-                            ParameterSeparator(parameters);
-                            canvas.DrawTo(num1, num2);
+                            try
+                            {
+                                ParameterSeparator(parameters);
+                                canvas.DrawTo(num1, num2);
+                            }
+                            catch(Exception a)
+                            {
+                                
+                            }
                             
                         }
                         if (commandName.Equals("circle") == true)
@@ -89,20 +94,39 @@ namespace Component1
                             ParameterSeparator(parameters);
                             canvas.Rectangle(num1, num2);
                         }
-                        if(commandName.Equals("fill")== true)
+                        if (commandName.Equals("triangle") == true)
                         {
                             ParameterSeparator(parameters);
-                            canvas.ShapeFill(fill);
+                            canvas.Triangle(num1, num2);
                         }
+
                         if (commandName.Equals("pen") == true)
                         {
                             ParameterSeparator(parameters);
                             canvas.PenColor(pen);
                         }
+                        if(commandName.Equals("fill") == true)
+                        {
+                             
+                            if (parameters == "on" || parameters == "off")
+                            {
+                                if (parameters == "on")
+                                {
+                                    canvas.ShapeFill(true);
+
+                                }
+                                else
+                                {
+                                    canvas.ShapeFill(false);
+                                }
+                            }
+                        }
                     }
                     catch (Exception e)
                     {
-                        errors = "Wrong command";
+                       
+
+
                     }
 
                 }
@@ -134,41 +158,10 @@ namespace Component1
             }
             else
             {
-                if(parameters == "on" || parameters == "off")
-                {
-                    if(parameters == "on")
-                    {
-                        fill = true;
-                    }
-                    else if(parameters == "off")
-                    {
-                        fill = false;
-                    }
-                }
+               
                 if(colors.Contains(parameters) == true)
                 {
-                    switch (parameters)
-                    {
-                        case "coral":
-                            pen = Color.Coral;
-                            break;
-                        case "crimson":
-                            pen = Color.Crimson;
-                            break;
-                        case "lavender":
-                            pen = Color.Lavender;
-                            break;
-                        case "lime":
-                            pen = Color.Lime;
-                            break;
-                        case "aqua":
-                            pen = Color.Aqua;
-                            break;
-                        default:
-                            pen = Color.Black;
-                            break;
-
-                    }
+                    SelectedColor(parameters);
 
                 }
                 else
@@ -178,6 +171,31 @@ namespace Component1
                
             }
 
+        }
+        public void SelectedColor(string select)
+        {
+            switch (select)
+            {
+                case "coral":
+                    pen = Color.Coral;
+                    break;
+                case "crimson":
+                    pen = Color.Crimson;
+                    break;
+                case "lavender":
+                    pen = Color.Lavender;
+                    break;
+                case "lime":
+                    pen = Color.Lime;
+                    break;
+                case "aqua":
+                    pen = Color.Aqua;
+                    break;
+                default:
+                    pen = Color.Black;
+                    break;
+
+            }
         }
      
         
