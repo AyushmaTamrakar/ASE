@@ -15,7 +15,8 @@ namespace Component1
     public partial class Form1 : Form 
     {
         private Canvass myCanvass;
-        
+        public static Graphics g;
+        //Bitmap bitmap = new Bitmap(490, 340);
 
         ArrayList shapes = new ArrayList();
 
@@ -23,8 +24,10 @@ namespace Component1
         public Form1()
         {
             InitializeComponent();
-            myCanvass = new Canvass(drawPanel.CreateGraphics());
-           
+
+             g = drawPanel.CreateGraphics();
+            myCanvass = new Canvass(g);
+          //  myCanvass = new Canvass(Graphics.FromImage(bitmap));
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -45,18 +48,35 @@ namespace Component1
                 String commands = actionText.Text.Trim().ToLower(); //read commandLine trim whitespaces and change to lowercase
                 if(commands.Equals("clear") == true)
                 {
-                    console.Clear();
-                    commandLine.Clear();
-                    //drawPanel.Refresh();
-                   // g.Clear(drawPanel.BackColor);
-                   
-                   // drawPanel.BackColor = Color.Blue;
+                    myCanvass.Clear();
 
                 }
                 else if(commands.Equals("run") == true)
                 {
                     CommandParser parse = new CommandParser();
-                    parse.commandSeparator(commandLine.Text);
+                    parse.commandSeparator(commandLine.Text.Trim().ToLower());
+
+                    if (parse.ShapeName.Equals("drawto"))
+                    {
+                       string some = parse.Parameter;
+                        if (some.Contains(',') == true)
+                        {
+
+                            string val1 = some.Split('\u002C')[0]; //unicode for comma
+                            string val2 = some.Split('\u002C')[1];
+                            int num1 = int.Parse(val1);
+                            int num2 = int.Parse(val2);
+
+                            myCanvass.DrawTo(num1, num2);
+                            MessageBox.Show("parsed");
+
+
+                        }
+                    }
+                    if(parse.Errors != "")
+                    {
+                        console.Text = parse.Errors;
+                    }
                     
                 }
                 else if(commands.Equals("reset")== true)
@@ -74,8 +94,9 @@ namespace Component1
         private void drawPanel_Paint(object sender, PaintEventArgs e)
         {
 
-           // myCanvass.DrawTo(160, 120);
-
+            //Graphics g = e.Graphics;
+            // g.DrawImageUnscaled(bitmap, 0, 0);
+            g = e.Graphics;
 
 
         }
@@ -103,11 +124,6 @@ namespace Component1
             {
                 File.WriteAllText(saveFile.FileName, commandLine.Text);
             }
-        }
-
-        private void drawPanel_Click(object sender, EventArgs e)
-        {
-           
         }
     }
 }
