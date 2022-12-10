@@ -14,6 +14,7 @@ namespace Component1
     {
         Graphics g;
         Pen pen;
+        Color color;
         int xPos, yPos;
         bool fill = false;
         Brush brush;
@@ -26,6 +27,7 @@ namespace Component1
             yPos = 0;
             pen = new Pen(Color.Black, 2);
             brush = new SolidBrush(Color.Black);
+            color = Color.Black;
         }
         public Graphics G
         {
@@ -50,12 +52,22 @@ namespace Component1
         public bool Fill
         {
             get { return fill; }
+            set { fill = value; }
         }
         public void DrawTo(int toX, int toY)
         {
-            G.DrawLine(pen, xPos, yPos, toX, toY);
+            G.DrawLine(Pen, xPos, yPos, toX, toY);
 
         
+        }
+        public void Circle(int radius)
+        {
+            Shape s;
+            ShapeFactory f = new ShapeFactory();
+            s = f.getShape("circle");
+            s.set(color, fill, xPos, yPos, radius*2);
+            s.draw(G);
+            
         }
       
         public void Reset()

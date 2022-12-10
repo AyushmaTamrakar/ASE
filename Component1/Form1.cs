@@ -15,7 +15,7 @@ namespace Component1
     public partial class Form1 : Form 
     {
         private Canvass myCanvass;
-        public static Graphics g;
+          Graphics g;
         //Bitmap bitmap = new Bitmap(490, 340);
 
         ArrayList shapes = new ArrayList();
@@ -54,25 +54,9 @@ namespace Component1
                 else if(commands.Equals("run") == true)
                 {
                     CommandParser parse = new CommandParser();
-                    parse.commandSeparator(commandLine.Text.Trim().ToLower());
+                    parse.commandSeparator(commandLine.Text.Trim().ToLower(), myCanvass);
 
-                    if (parse.ShapeName.Equals("drawto"))
-                    {
-                       string some = parse.Parameter;
-                        if (some.Contains(',') == true)
-                        {
-
-                            string val1 = some.Split('\u002C')[0]; //unicode for comma
-                            string val2 = some.Split('\u002C')[1];
-                            int num1 = int.Parse(val1);
-                            int num2 = int.Parse(val2);
-
-                            myCanvass.DrawTo(num1, num2);
-                            MessageBox.Show("parsed");
-
-
-                        }
-                    }
+                
                     if(parse.Errors != "")
                     {
                         console.Text = parse.Errors;
