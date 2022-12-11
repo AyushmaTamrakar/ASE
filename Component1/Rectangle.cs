@@ -9,16 +9,16 @@ namespace Component1
 {
     internal class Rectangle: Shape
     {
-        int width, height;
+        int length, breadth;
 
         public Rectangle() : base()
         {
 
         }
-        public Rectangle(Color color, bool fill, int x, int y, int width, int height) : base(color, fill, x, y)
+        public Rectangle(Color color, bool fill, int x, int y, int length, int breadth) : base(color, fill, x, y)
         {
-            this.height = height;
-            this.width = width;
+            this.breadth = breadth;
+            this.length = length;
         }
 
         public override void draw(Graphics g)
@@ -28,25 +28,25 @@ namespace Component1
 
             if (fill)
             {
-                g.FillRectangle(brush, x, y, width, height);
+                g.FillRectangle(brush, x, y, length, breadth);
             }
             else
             {
-                g.DrawRectangle(pen, x, y, width, height);
+                g.DrawRectangle(pen, x, y, length, breadth);
             }
 
         }
         public override void set(Color colour, bool fill, params int[] list)
         {
-            //list[0] is x, list[1] is y, list[2] is width, list[3] is height
+            //list[0] is x, list[1] is y, list[2] is length, list[3] is breadth
             base.set(colour, fill, list[0], list[1]);
-            this.width = list[2];
-            this.height = list[3];
+            this.length = list[2];
+            this.breadth = list[3];
 
         }
         public override string ToString() //all classes inherit from object and ToString() is abstract in object
         {
-            return base.ToString() + "  " + this.width + " "+ this.height;
+            return base.ToString() + "  " + this.length + " "+ this.breadth;
         }
     }
 }

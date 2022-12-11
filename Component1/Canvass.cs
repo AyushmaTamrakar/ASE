@@ -19,7 +19,7 @@ namespace Component1
         bool fill = false;
         Shape shape;
         ShapeFactory factory = new ShapeFactory();
-        Brush brush;
+      
 
 
         public Canvass(Graphics g)
@@ -28,10 +28,7 @@ namespace Component1
             xPos = 0;
             yPos = 0;
             color = Color.Black;
-            pen = new Pen(color, 2);
-            //brush = new SolidBrush(color);
-          
-            
+            pen = new Pen(color, 2);                
         }
         public Graphics G
         {
@@ -65,11 +62,14 @@ namespace Component1
         }
         public void DrawTo(int toX, int toY)
         {
+           
             G.DrawLine(Pen, XPos, YPos, toX, toY);
             XPos = toX;
             YPos = toY;
         
         }
+      
+       
         public void Circle(int radius)
         {
             shape = factory.getShape("circle");
@@ -77,30 +77,32 @@ namespace Component1
             shape.draw(G);
             shape.ToString();
         }
-        public void Rectangle(int width, int height)
+        public void Rectangle(int length, int breadth)
         {
             shape = factory.getShape("rectangle");
-            shape.set(Color, Fill, XPos, YPos, width, height);
+            shape.set(Color, Fill, XPos, YPos, length, breadth);
             shape.draw(G);
             Console.WriteLine(shape.ToString());
             
         }
-        public void Triangle(int width, int height)
+        public void Triangle(int length, int breadth)
         {
             shape = factory.getShape("triangle");
-            shape.set(Color, Fill, XPos-width, YPos-height, width, height);
+            shape.set(Color, Fill, XPos-length, YPos-breadth, length, breadth);
             shape.draw(G);
             Console.WriteLine(shape.ToString());
 
         }
         public void ShapeFill(bool fill)
         {
-            
+            MessageBox.Show("not filling");
             Fill = fill;
         }
         public void PenColor(Color color)
         {
+            pen = new Pen(color, 2);
             Color = color;
+           
         }
         public void MoveTo(int toX, int toY)
         {
@@ -110,10 +112,10 @@ namespace Component1
       
         public void Reset()
         {
-            xPos = 0;
-            yPos = 0;
-            color = Color.Black;
-            fill = false;
+            XPos = 0;
+            YPos = 0;
+            Color = Color.Black;
+            Fill = false;
             
         }
         public void Clear()

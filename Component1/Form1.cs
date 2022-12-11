@@ -15,19 +15,14 @@ namespace Component1
     public partial class Form1 : Form 
     {
         private Canvass myCanvass;
-          Graphics g;
-        //Bitmap bitmap = new Bitmap(490, 340);
-
-        ArrayList shapes = new ArrayList();
-
+        Graphics g;
 
         public Form1()
         {
             InitializeComponent();
 
-             g = drawPanel.CreateGraphics();
-            myCanvass = new Canvass(g);
-          //  myCanvass = new Canvass(Graphics.FromImage(bitmap));
+            g = drawPanel.CreateGraphics();
+            myCanvass = new Canvass(g);          
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -42,33 +37,41 @@ namespace Component1
         private void action_KeyDown(object sender, KeyEventArgs e)
         {
             if(e.KeyCode == Keys.Enter)
-            {
-                console.Text = "hello";
-              
+            {                          
                 String commands = actionText.Text.Trim().ToLower(); //read commandLine trim whitespaces and change to lowercase
                 if(commands.Equals("clear") == true)
                 {
                     myCanvass.Clear();
-
+                    console.ForeColor = Color.Blue;
+                    console.Text = "Canvass Cleared!";
+                    
+                    actionText.Text = "";
                 }
                 else if(commands.Equals("run") == true)
                 {
                     CommandParser parse = new CommandParser();
                     parse.commandSeparator(commandLine.Text.Trim().ToLower(), myCanvass);
-
-                
+                                    
                     if(parse.Errors != "")
                     {
+                        console.ForeColor = Color.Red;
                         console.Text = parse.Errors;
                     }
+                    actionText.Text = "";
                     
                 }
                 else if(commands.Equals("reset")== true)
                 {
                     myCanvass.Reset();
-                   
+                    console.ForeColor = Color.Green;
                     console.Text = "Program is reset to initial state";
-                    
+                    actionText.Text = "";
+
+                }
+                else
+                {
+                    console.Text = "Invalid command! Please check Action Commands";
+                    actionText.Text = "";
                 }
                
             }
@@ -77,19 +80,16 @@ namespace Component1
        
         private void drawPanel_Paint(object sender, PaintEventArgs e)
         {
-
-            //Graphics g = e.Graphics;
-            // g.DrawImageUnscaled(bitmap, 0, 0);
             g = e.Graphics;
-
-
         }
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileDialog openFile = new OpenFileDialog();
-            openFile.DefaultExt = "txt";
-            openFile.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            OpenFileDialog openFile = new OpenFileDialog
+            {
+                DefaultExt = "txt",
+                Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*"
+            };
             if (openFile.ShowDialog()== DialogResult.OK)
             {
                string selectedFile = openFile.FileName;
