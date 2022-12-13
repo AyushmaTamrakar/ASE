@@ -60,7 +60,7 @@ namespace Component1
             get { return color; }
             set { color = value; }
         }
-        public void DrawTo(int toX, int toY)
+        public void drawTo(int toX, int toY)
         {
            
             G.DrawLine(Pen, XPos, YPos, toX, toY);
@@ -70,14 +70,14 @@ namespace Component1
         }
       
        
-        public void Circle(int radius)
+        public void drawCircle(int radius)
         {
             shape = factory.getShape("circle");
             shape.set(Color,Fill, XPos-radius, YPos-radius, radius * 2, radius*2);
             shape.draw(G);
             shape.ToString();
         }
-        public void Rectangle(int length, int breadth)
+        public void drawRectangle(int length, int breadth)
         {
             shape = factory.getShape("rectangle");
             shape.set(Color, Fill, XPos, YPos, length, breadth);
@@ -85,7 +85,7 @@ namespace Component1
             Console.WriteLine(shape.ToString());
             
         }
-        public void Triangle(int length, int breadth)
+        public void drawTriangle(int length, int breadth)
         {
             shape = factory.getShape("triangle");
             shape.set(Color, Fill, XPos-length, YPos-breadth, length, breadth);
@@ -93,24 +93,24 @@ namespace Component1
             Console.WriteLine(shape.ToString());
 
         }
-        public void ShapeFill(bool fill)
+        public void fillShape(bool fill)
         {
-            MessageBox.Show("not filling");
+
             Fill = fill;
         }
-        public void PenColor(Color color)
+        public void setPenColor(Color color)
         {
             pen = new Pen(color, 2);
             Color = color;
            
         }
-        public void MoveTo(int toX, int toY)
+        public void moveTo(int toX, int toY)
         {
             XPos = toX;
             YPos = toY;
         }
       
-        public void Reset()
+        public void reset()
         {
             XPos = 0;
             YPos = 0;
@@ -118,7 +118,7 @@ namespace Component1
             Fill = false;
             
         }
-        public void Clear()
+        public void clear()
         {
             G.Clear(Color.White);
         }

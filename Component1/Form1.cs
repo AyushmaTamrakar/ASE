@@ -41,7 +41,7 @@ namespace Component1
                 String commands = actionText.Text.Trim().ToLower(); //read commandLine trim whitespaces and change to lowercase
                 if(commands.Equals("clear") == true)
                 {
-                    myCanvass.Clear();
+                    myCanvass.clear();
                     console.ForeColor = Color.Blue;
                     console.Text = "Canvass Cleared!";
                     
@@ -50,7 +50,7 @@ namespace Component1
                 else if(commands.Equals("run") == true)
                 {
                     CommandParser parse = new CommandParser();
-                    parse.commandSeparator(commandLine.Text.Trim().ToLower(), myCanvass);
+                    parse.separateCommand(commandLine.Text.Trim().ToLower(), myCanvass);
                                     
                     if(parse.Errors != "")
                     {
@@ -62,7 +62,7 @@ namespace Component1
                 }
                 else if(commands.Equals("reset")== true)
                 {
-                    myCanvass.Reset();
+                    myCanvass.reset();
                     console.ForeColor = Color.Green;
                     console.Text = "Program is reset to initial state";
                     actionText.Text = "";

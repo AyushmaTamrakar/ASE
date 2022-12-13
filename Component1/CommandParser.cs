@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Drawing;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -43,7 +44,7 @@ namespace Component1
 
         public CommandParser() { }
 
-        public void commandSeparator(string command, Canvass canvas)
+        public void separateCommand(string command, Canvass canvas)
         {
 
             if (String.IsNullOrEmpty(command) == true)
@@ -62,15 +63,17 @@ namespace Component1
                         lineNum++;
 
                         String line = lines[i];
+
                         commandName = line.Split('(')[0];
-
-
-                        commandCheck(commandName);
+                        checkCommandName(commandName);
 
                         if (validCommand == true)
                         {
+
+
                             parameters = line.Split('(', ')')[1];
-                            ParameterSeparator(parameters, commandName);
+
+                            separateParameter(parameters, commandName);
 
                             drawCommand(commandName, canvas);
                         }
@@ -80,16 +83,21 @@ namespace Component1
                             throw new CommandException("Invalid Command \"" + commandName + "\" at line" + lineNum);
                         }
                     }
+
                 }
                 catch (CommandException e)
                 {
                     errors = e.Message;
                 }
+                catch (Exception)
+                {
+
+                }
 
             }
 
         }
-        public bool commandCheck(string commandName)
+        public bool checkCommandName(string commandName)
         {
 
             if (String.IsNullOrEmpty(commandName) == false)
@@ -110,40 +118,36 @@ namespace Component1
 
             }
         }
-        public void parameterCheck(string commandName)
-        {
 
-
-        }
         public void drawCommand(string commandName, Canvass canvass)
         {
             switch (commandName)
             {
                 case "drawto":
-                    canvass.DrawTo(num1, num2);
+                    canvass.drawTo(num1, num2);
                     break;
                 case "circle":
-                    canvass.Circle(num1);
+                    canvass.drawCircle(num1);
                     break;
                 case "moveto":
-                    canvass.MoveTo(num1, num2);
+                    canvass.moveTo(num1, num2);
                     break;
                 case "rectangle":
-                    canvass.Rectangle(num1, num2);
+                    canvass.drawRectangle(num1, num2);
                     break;
                 case "triangle":
-                    canvass.Triangle(num1, num2);
+                    canvass.drawTriangle(num1, num2);
                     break;
                 case "pen":
-                    canvass.PenColor(pen);
+                    canvass.setPenColor(pen);
                     break;
                 case "fill":
-                    canvass.ShapeFill(isFill);
+                    canvass.fillShape(isFill);
                     break;
 
             }
         }
-        public void ParameterSeparator(string parameters, string commandName)
+        public void separateParameter(string parameters, string commandName)
         {
 
             if (commandName.Equals("drawto") || commandName.Equals("moveto") || commandName.Equals("rectangle"))
@@ -209,7 +213,7 @@ namespace Component1
                     }
                     else
                     {
-                        throw new InvalidParameterException(commandName + " command should be either on or off");
+                        throw new InvalidParameterException(commandName + " command should be either on or off at line " + lineNum);
 
                     }
                 }
@@ -225,19 +229,21 @@ namespace Component1
                 {
                     if (parameters.Equals("on") || parameters.Equals("off"))
                     {
-                        if (parameters.Equals("on"))
+                        switch (parameters)
                         {
-                            isFill = true;
-                        }
-                        else if (parameters.Equals("off"))
-                        {
+                            case "on":
+                                isFill = true;
+                                break;
 
-                            isFill = false;
+                            case "off":
+                                isFill = false;
+                                break;
                         }
+
                     }
                     else
                     {
-                        throw new InvalidParameterException(commandName + " command should be either on or off");
+                        throw new InvalidParameterException(commandName + " command should be either on or off at line " + lineNum);
 
                     }
                 }
@@ -251,13 +257,13 @@ namespace Component1
                 if (colors.Contains(parameters) == true)
                 {
                     isString = Regex.IsMatch(parameters, @"^[A-z]*$");
-                    SelectedColor(parameters);
+                    checkColor(parameters);
 
                 }
             }
             else if (commandName.Equals("circle"))
             {
-               
+
                 try
                 {
                     isNumeric1 = int.TryParse(parameters, out num1);
@@ -277,7 +283,7 @@ namespace Component1
 
 
         }
-        public void SelectedColor(string select)
+        public void checkColor(string select)
         {
             switch (select)
             {
@@ -302,7 +308,6 @@ namespace Component1
 
             }
         }
-
 
     }
 

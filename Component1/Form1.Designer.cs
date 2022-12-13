@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.drawPanel = new System.Windows.Forms.Panel();
             this.commandLine = new System.Windows.Forms.RichTextBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -50,10 +51,9 @@
             // drawPanel
             // 
             this.drawPanel.BackColor = System.Drawing.SystemColors.Window;
-            this.drawPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.drawPanel.Location = new System.Drawing.Point(12, 67);
             this.drawPanel.Name = "drawPanel";
-            this.drawPanel.Size = new System.Drawing.Size(324, 371);
+            this.drawPanel.Size = new System.Drawing.Size(386, 371);
             this.drawPanel.TabIndex = 0;
             this.drawPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.drawPanel_Paint);
             // 
@@ -62,7 +62,7 @@
             this.commandLine.Location = new System.Drawing.Point(404, 67);
             this.commandLine.Name = "commandLine";
             this.commandLine.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
-            this.commandLine.Size = new System.Drawing.Size(279, 176);
+            this.commandLine.Size = new System.Drawing.Size(354, 176);
             this.commandLine.TabIndex = 1;
             this.commandLine.Text = "";
             // 
@@ -75,7 +75,7 @@
             // 
             this.actionText.Location = new System.Drawing.Point(470, 261);
             this.actionText.Name = "actionText";
-            this.actionText.Size = new System.Drawing.Size(213, 20);
+            this.actionText.Size = new System.Drawing.Size(288, 20);
             this.actionText.TabIndex = 3;
             this.actionText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.action_KeyDown);
             // 
@@ -91,12 +91,13 @@
             // 
             // menuStrip1
             // 
+            this.menuStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Visible;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(772, 24);
             this.menuStrip1.TabIndex = 5;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -106,35 +107,40 @@
             this.saveToolStripMenuItem,
             this.loadToolStripMenuItem,
             this.exitToolStripMenuItem});
+            this.fileToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("fileToolStripMenuItem.Image")));
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // saveToolStripMenuItem
             // 
+            this.saveToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveToolStripMenuItem.Image")));
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // loadToolStripMenuItem
             // 
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.loadToolStripMenuItem.Text = "Load";
             this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
+            this.helpToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("helpToolStripMenuItem.Image")));
+            this.helpToolStripMenuItem.ImageAlign = System.Drawing.ContentAlignment.TopRight;
+            this.helpToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // label2
@@ -151,7 +157,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Lucida Fax", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(401, 263);
+            this.label3.Location = new System.Drawing.Point(404, 260);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(63, 18);
             this.label3.TabIndex = 7;
@@ -161,7 +167,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Lucida Fax", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(401, 302);
+            this.label4.Location = new System.Drawing.Point(404, 293);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(76, 18);
             this.label4.TabIndex = 9;
@@ -169,10 +175,10 @@
             // 
             // console
             // 
-            this.console.Location = new System.Drawing.Point(404, 323);
+            this.console.Location = new System.Drawing.Point(404, 314);
             this.console.Name = "console";
             this.console.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
-            this.console.Size = new System.Drawing.Size(279, 115);
+            this.console.Size = new System.Drawing.Size(354, 124);
             this.console.TabIndex = 10;
             this.console.Text = "";
             // 
@@ -180,7 +186,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.ClientSize = new System.Drawing.Size(772, 450);
             this.Controls.Add(this.console);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -190,6 +197,8 @@
             this.Controls.Add(this.actionText);
             this.Controls.Add(this.commandLine);
             this.Controls.Add(this.drawPanel);
+            this.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Graphical Programming Language";
