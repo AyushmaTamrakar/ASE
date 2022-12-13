@@ -49,13 +49,14 @@ namespace Component1
                 }
                 else if(commands.Equals("run") == true)
                 {
+                    console.Text = String.Empty;
                     CommandParser parse = new CommandParser();
                     parse.separateCommand(commandLine.Text.Trim().ToLower(), myCanvass);
                                     
-                    if(parse.Errors != "")
+                    if(parse.Error != "")
                     {
                         console.ForeColor = Color.Red;
-                        console.Text = parse.Errors;
+                        console.Text = parse.Error;
                     }
                     actionText.Text = "";
                     
@@ -64,13 +65,15 @@ namespace Component1
                 {
                     myCanvass.reset();
                     console.ForeColor = Color.Green;
-                    console.Text = "Program is reset to initial state";
+                    console.Text = "Program is reset to initial state \n Color is Set to Black\n Position of pen is set to (0, 0) coordinates";
                     actionText.Text = "";
+                 
 
                 }
                 else
                 {
-                    console.Text = "Invalid command! Please check Action Commands";
+                    console.ForeColor = Color.DarkBlue;
+                    console.Text = "Invalid command!!. Command should be either \n 1. run \n 2. clear \n 3. reset";
                     actionText.Text = "";
                 }
                

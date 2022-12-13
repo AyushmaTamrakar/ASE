@@ -10,10 +10,10 @@ namespace Component1
 {
     internal class CommandParser
     {
-        string errors = "";
-        int count = 0;
+        string error = "";
+
         String commandName;
-        String parameters;
+        String parameter;
         int num1, num2, num3;
         bool validCommand, validParameter;
         bool isFill, isNumeric1, isNumeric2, isNumeric3, isString;
@@ -21,15 +21,15 @@ namespace Component1
         int lineNum;
         ArrayList colors = new ArrayList() { "coral", "magenta", "chocolate", "lime", "aqua" };
         Color pen;
-        ArrayList error = new ArrayList();
+        ArrayList errors = new ArrayList();
 
         bool flag;
 
 
-        public string Errors
+        public string Error
         {
-            get { return errors; }
-            set { errors = value; }
+            get { return error; }
+            set { error = value; }
         }
         public string CommandName
         {
@@ -38,8 +38,8 @@ namespace Component1
         }
         public string Parameter
         {
-            get { return parameters; }
-            set { parameters = value; }
+            get { return parameter; }
+            set { parameter = value; }
         }
 
         public CommandParser() { }
@@ -49,7 +49,7 @@ namespace Component1
 
             if (String.IsNullOrEmpty(command) == true)
             {
-                throw new CommandException("No commands to run");
+                error = "No commands to run!!";
 
             }
             else
@@ -69,17 +69,23 @@ namespace Component1
 
                         if (validCommand == true)
                         {
+                            if (line.Contains('(') == false)
+                            {
+                                throw new CommandException("Missing ( Parantheses at line " + lineNum);
+                            }
+                            else
+                            {
 
+                                parameter = line.Split('(', ')')[1];
 
-                            parameters = line.Split('(', ')')[1];
+                                separateParameter(parameter, commandName);
 
-                            separateParameter(parameters, commandName);
-
-                            drawCommand(commandName, canvas);
+                                drawCommand(commandName, canvas);
+                            }
                         }
                         else
                         {
-                            count++;
+
                             throw new CommandException("Invalid Command \"" + commandName + "\" at line" + lineNum);
                         }
                     }
@@ -87,7 +93,7 @@ namespace Component1
                 }
                 catch (CommandException e)
                 {
-                    errors = e.Message;
+                    error = e.Message;
                 }
                 catch (Exception)
                 {
@@ -95,6 +101,7 @@ namespace Component1
                 }
 
             }
+
 
         }
         public bool checkCommandName(string commandName)
@@ -136,7 +143,7 @@ namespace Component1
                     canvass.drawRectangle(num1, num2);
                     break;
                 case "triangle":
-                    canvass.drawTriangle(num1, num2);
+                    canvass.drawTriangle(num1, num2,num3);
                     break;
                 case "pen":
                     canvass.setPenColor(pen);
@@ -147,17 +154,17 @@ namespace Component1
 
             }
         }
-        public void separateParameter(string parameters, string commandName)
+        public void separateParameter(string parameter, string commandName)
         {
 
             if (commandName.Equals("drawto") || commandName.Equals("moveto") || commandName.Equals("rectangle"))
             {
                 try
                 {
-                    if (parameters.Split('\u002C').Length == 2)
+                    if (parameter.Split('\u002C').Length == 2)
                     {
-                        string val1 = parameters.Split('\u002C')[0]; //unicode for comma
-                        string val2 = parameters.Split('\u002C')[1];
+                        string val1 = parameter.Split('\u002C')[0]; //unicode for comma
+                        string val2 = parameter.Split('\u002C')[1];
 
                         try
                         {
@@ -170,7 +177,7 @@ namespace Component1
                         }
                         catch (InvalidParameterException e)
                         {
-                            errors = e.Message;
+                            error = e.Message;
                         }
                         try
                         {
@@ -182,7 +189,7 @@ namespace Component1
                         }
                         catch (InvalidParameterException e)
                         {
-                            errors = e.Message;
+                            error = e.Message;
                         }
 
                     }
@@ -194,18 +201,18 @@ namespace Component1
                 }
                 catch (InvalidParameterException e)
                 {
-                    errors = e.Message;
+                    error = e.Message;
                 }
             }
             if (commandName.Equals("triangle"))
             {
                 try
                 {
-                    if (parameters.Split('\u002C').Length == 3)
+                    if (parameter.Split('\u002C').Length == 3)
                     {
-                        string val1 = parameters.Split('\u002C')[0]; //unicode for comma
-                        string val2 = parameters.Split('\u002C')[1];
-                        string val3 = parameters.Split('\u002C')[2];
+                        string val1 = parameter.Split('\u002C')[0]; //unicode for comma
+                        string val2 = parameter.Split('\u002C')[1];
+                        string val3 = parameter.Split('\u002C')[2];
                         isNumeric1 = int.TryParse(val1, out num1);
                         isNumeric2 = int.TryParse(val2, out num2);
                         isNumeric3 = int.TryParse(val3, out num3);
@@ -219,7 +226,7 @@ namespace Component1
                 }
                 catch (InvalidParameterException e)
                 {
-                    errors = e.Message;
+                    error = e.Message;
                 }
             }
 
@@ -227,9 +234,9 @@ namespace Component1
             {
                 try
                 {
-                    if (parameters.Equals("on") || parameters.Equals("off"))
+                    if (parameter.Equals("on") || parameter.Equals("off"))
                     {
-                        switch (parameters)
+                        switch (parameter)
                         {
                             case "on":
                                 isFill = true;
@@ -249,15 +256,15 @@ namespace Component1
                 }
                 catch (InvalidParameterException e)
                 {
-                    errors = e.Message;
+                    error = e.Message;
                 }
             }
             else if (commandName.Equals("pen"))
             {
-                if (colors.Contains(parameters) == true)
+                if (colors.Contains(parameter) == true)
                 {
-                    isString = Regex.IsMatch(parameters, @"^[A-z]*$");
-                    checkColor(parameters);
+                    isString = Regex.IsMatch(parameter, @"^[A-z]*$");
+                    checkColor(parameter);
 
                 }
             }
@@ -266,16 +273,16 @@ namespace Component1
 
                 try
                 {
-                    isNumeric1 = int.TryParse(parameters, out num1);
+                    isNumeric1 = int.TryParse(parameter, out num1);
 
                     if (isNumeric1 == false)
                     {
-                        throw new InvalidParameterException(parameters + " is an invalid parameter");
+                        throw new InvalidParameterException(parameter + " is an invalid parameter");
                     }
                 }
                 catch (InvalidParameterException e)
                 {
-                    errors = e.Message;
+                    error = e.Message;
                 }
             }
 

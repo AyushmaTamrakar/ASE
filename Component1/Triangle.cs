@@ -9,16 +9,16 @@ namespace Component1
 {
     internal class Triangle : Shape
     {
-        int length, breadth;
+        int sideA, sideB, sideC;
         public Triangle() : base()
         {
 
         }
-        public Triangle(Color color, bool fill, int x, int y, int length, int breadth) : base(color, fill, x, y)
+        public Triangle(Color color, bool fill, int x, int y, int sideA, int sideB, int sideC) : base(color, fill, x, y)
         {
-            this.length = length;
-            this.breadth = breadth;
-            //this.sideC = sideC;
+            this.sideA = sideA;
+            this.sideB = sideB;
+            this.sideC = sideC;
         }
         public override void draw(Graphics g)
         {
@@ -27,12 +27,15 @@ namespace Component1
 
             if (fill)
             {
-                Point[] point = { new Point(length / 2, x), new Point(y, length), new Point(length, breadth) };
+                
+                Point[] point = { new Point(x, y), new Point(x+sideA, y), 
+                    new Point((int)(x + sideB* Math.Cos(sideC * Math.PI / 180))  , (int)(y +sideB * Math.Sin(sideC * Math.PI/180))) };
                 g.FillPolygon(brush, point);
             }
             else
             {
-                Point[] point = { new Point(length / 2, x), new Point(y, length), new Point(length, breadth) };
+                Point[] point = { new Point(x, y), new Point(x+sideA, y),
+                    new Point((int)(x + sideB* Math.Cos(sideC * Math.PI / 180))  , (int)(y +sideB * Math.Sin(sideC * Math.PI/180))) };
                 g.DrawPolygon(pen, point);
 
             }
@@ -41,9 +44,9 @@ namespace Component1
         {
             //list[0] is x, list[1] is y, list[2] is length, list[3] is breadth
             base.set(colour, fill, list[0], list[1]);
-            this.length = list[2];
-            this.breadth = list[3];
-       
+            this.sideA = list[2];
+            this.sideB = list[3];
+            this.sideC = list[4];
 
         }
 

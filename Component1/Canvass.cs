@@ -85,10 +85,10 @@ namespace Component1
             Console.WriteLine(shape.ToString());
             
         }
-        public void drawTriangle(int length, int breadth)
+        public void drawTriangle(int sideA, int sideB, int sideC)
         {
             shape = factory.getShape("triangle");
-            shape.set(Color, Fill, XPos-length, YPos-breadth, length, breadth);
+           shape.set(Color, Fill, XPos, YPos, sideA, sideB, sideC);
             shape.draw(G);
             Console.WriteLine(shape.ToString());
 
