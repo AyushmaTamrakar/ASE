@@ -10,27 +10,33 @@ namespace Component1
 {
     internal class CommandParser
     {
-        string error = "";
 
+        string error;
         String commandName;
         String parameter;
         int num1, num2, num3;
         string val1, val2, val3;
-        bool validCommand, validParameter;
-        bool isFill, isNumeric1, isNumeric2, isNumeric3, isString, isBoolean, isColor;
+        bool validCommand;
+        bool isFill, isNumeric1, isNumeric2, isNumeric3, isBoolean, isColor;
 
         int lineNum;
         ArrayList colors = new ArrayList() { "coral", "magenta", "chocolate", "lime", "aqua" };
         Color pen;
         ArrayList errors = new ArrayList();
-
-        bool flag;
-
+        ArrayList errorLines = new ArrayList();
 
         public string Error
         {
             get { return error; }
             set { error = value; }
+        }
+      
+       
+
+        public ArrayList Errors
+        {
+            get { return errors; }
+            set { errors = value; }
         }
         public string CommandName
         {
@@ -50,58 +56,45 @@ namespace Component1
 
             if (String.IsNullOrEmpty(command) == true)
             {
-                error = "No commands to run!!";
+
+                error = "No commands to run";
 
             }
+
             else
             {
                 char[] delimeter = new[] { '\r', '\n' };
                 String[] lines = command.Split(delimeter, StringSplitOptions.RemoveEmptyEntries);
-                try
+                for (int i = 0; i < lines.Length; i++)
                 {
-                    for (int i = 0; i < lines.Length; i++)
+                    lineNum++;
+                    
+
+                    String line = lines[i];
+
+
+                    commandName = line.Split('(')[0];
+                    checkCommandName(commandName);
+
+                    if (validCommand == true)
                     {
-                        lineNum++;
-
-                        String line = lines[i];
-                        if(line.Contains('(') == false)
-                        {
-                            throw new CommandException("Paranthesis not found line" + lineNum);
-                        }
-
-                        commandName = line.Split('(')[0];
-                        checkCommandName(commandName);
-
-                        if (validCommand == true)
-                        {
 
 
-                            parameter = line.Split('(', ')')[1];
+                        parameter = line.Split('(', ')')[1];
 
-                            checkParameter(parameter, commandName);
+                        checkParameter(parameter, commandName);
 
-                            drawCommand(commandName, canvas);
+                        drawCommand(commandName, canvas);
 
-                        }
-                        else
-                        {
-
-                            throw new CommandException("Invalid Command \"" + commandName + "\" at line" + lineNum);
-                        }
                     }
-
+                    else
+                    {
+                       
+                        errorLines.Add( "Invalid Command \"" + commandName + "\" at line" + lineNum);
+                       
+                    }
                 }
-                catch (CommandException e)
-                {
-                    error = e.Message;
-                }
-                catch (Exception)
-                {
-
-                }
-
             }
-
 
         }
         public bool checkCommandName(string commandName)
@@ -165,11 +158,11 @@ namespace Component1
                     {
                         if (isNumeric1 == false)
                         {
-                            throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" at line " + j);
+                            throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" at line ");
                         }
                         if (isNumeric2 == false)
                         {
-                            throw new InvalidParameterException("Wrong parameter \"" + val2 + "\" at line " + j);
+                            throw new InvalidParameterException("Wrong parameter \"" + val2 + "\" at line ");
                         }
                     }
                     if (commandName.Equals("triangle"))
@@ -208,7 +201,8 @@ namespace Component1
             }
             catch (InvalidParameterException e)
             {
-                error = e.Message;
+
+                errors.Add(e.Message);
             }
 
         }
@@ -302,6 +296,11 @@ namespace Component1
 
             }
             isColor = true;
+        }
+
+        public ArrayList getErrors()
+        {
+            return errorLines;
         }
 
     }
