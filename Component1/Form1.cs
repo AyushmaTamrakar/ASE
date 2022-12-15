@@ -16,7 +16,7 @@ namespace Component1
     {
         private Canvass myCanvass;
         Graphics g;
-        int i = 0;
+
         public Form1()
         {
             InitializeComponent();
@@ -51,29 +51,31 @@ namespace Component1
                 }
                 else if (commands.Equals("run") == true)
                 {
-
+                    int i = 0;
                     console.Text = String.Empty;
                     CommandParser parse = new CommandParser();
                     //parse.Error.Clear();
                     parse.parseCommand(commandLine.Text, myCanvass);
-                    if(parse.NoCommand == true)
+                    if (parse.NoCommand == true)
                     {
                         console.ForeColor = Color.Red;
                         console.Text = "No commands to run";
                     }
 
-                  
+
                     if (parse.Error != 0)
                     {
-                      
-                        console.ForeColor = Color.Red;                       
-                         
-                        
+
+                        console.ForeColor = Color.Red;
+
+
+
                         foreach (string error_description in parse.error_list())
                         {
                             console.AppendText(Environment.NewLine + "Error on line " + (int)parse.ErrorLines[i] + ": " + error_description);
                             i++;
                         }
+
                         console.AppendText(Environment.NewLine + "Please correct command syntax.");
                     }
 
