@@ -16,7 +16,7 @@ namespace Component1
     {
         private Canvass myCanvass;
         Graphics g;
-
+        int i = 0;
         public Form1()
         {
             InitializeComponent();
@@ -61,17 +61,18 @@ namespace Component1
                         console.ForeColor = Color.Red;
                         console.Text = "No commands to run";
                     }
+
+                  
                     if (parse.Error != 0)
                     {
-                        int i = 0;
-                        console.ForeColor = Color.Red;
-
-                        int lineNum = (int)parse.ErrorLines[i];
-
+                      
+                        console.ForeColor = Color.Red;                       
+                         
+                        
                         foreach (string error_description in parse.error_list())
                         {
-                            console.AppendText(Environment.NewLine + "Error on line " + lineNum + " : " + error_description);
-                            lineNum++;
+                            console.AppendText(Environment.NewLine + "Error on line " + (int)parse.ErrorLines[i] + ": " + error_description);
+                            i++;
                         }
                         console.AppendText(Environment.NewLine + "Please correct command syntax.");
                     }

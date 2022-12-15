@@ -19,7 +19,7 @@ namespace Component1
         bool validCommand;
         bool isFill, isNumeric1, isNumeric2, isNumeric3, isBoolean, isColor;
 
-       
+
 
         ArrayList colors = new ArrayList() { "coral", "magenta", "chocolate", "lime", "aqua" };
         Color pen;
@@ -35,7 +35,7 @@ namespace Component1
         public int Error
         {
             get { return error; }
-            set { error = value; }  
+            set { error = value; }
         }
         public ArrayList ErrorLines
         {
@@ -44,7 +44,7 @@ namespace Component1
         }
         public bool NoCommand
         {
-            get { return noCommand;}
+            get { return noCommand; }
             set { noCommand = value; }
         }
 
@@ -63,36 +63,63 @@ namespace Component1
             {
                 char[] delimeter = new[] { '\r', '\n' };
                 String[] lines = command.Split(delimeter, StringSplitOptions.RemoveEmptyEntries);
-               
-                    for (int i = 0; i < lines.Length; i++)
-                    {
-                        count_line++;
-                        String line = lines[i];
 
-                        commandName = line.Split('(')[0];
-                        checkCommandName(commandName);
-                    try
-                    {
-                        if (validCommand == true)
-                        {
-                            parameter = line.Split('(', ')')[1];
+                for (int i = 0; i < lines.Length; i++)
+                {
 
-                            checkParameter(parameter, commandName);
-
-                            drawCommand(commandName, canvas);
-
-                        }                       
-                    }
-                   
-                    catch (IndexOutOfRangeException)
+                    count_line++;
+                    String line = lines[i];
+                    char[] parantheses = new[] { '(', ')' };
+                    if (line.Contains(parantheses[0]) == false && line.Contains(parantheses[1]) == false)
                     {
                         error++;
                         error_lines.Add(count_line);
-                        errors.Add("Invalid command " +commandName);
+                        errors.Add("Parantheses Not Found ");
+                    }
+                    else if (line.Contains(parantheses[0]) == false)
+                    {
+                        error++;
+                        error_lines.Add(count_line);
+                        errors.Add("( Not Found ");
+                    }
+                    else if (line.Contains(parantheses[1]) == false)
+                    {
+                        error++;
+                        error_lines.Add(count_line);
+                        errors.Add(") Not Found ");
+                    }
+                    else
+                    {
+                        commandName = line.Split('(')[0].Trim();
+                        checkCommandName(commandName);
+                        try
+                        {
+                            if (validCommand == true)
+                            {
+                                parameter = line.Split('(', ')')[1];
+
+                                checkParameter(parameter, commandName);
+
+                                drawCommand(commandName, canvas);
+
+                            }
+                            else
+                            {
+                                throw new IndexOutOfRangeException("Invalid command \"" + commandName + " \"");
+                            }
+                        }
+
+                        catch (IndexOutOfRangeException e)
+                        {
+                            error++;
+                            error_lines.Add(count_line);
+                            errors.Add(e.Message);
+                        }
                     }
 
+
                 }
-               
+
             }
 
         }
@@ -164,27 +191,27 @@ namespace Component1
                 {
                     if (isNumeric1 == false)
                     {
-                        throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" ");
+                        throw new InvalidParameterException("Wrong parameter \"" + val1 + "\". Parameter should be integer ");
                     }
                     if (isNumeric2 == false)
                     {
-                        throw new InvalidParameterException("Wrong parameter \"" + val2 + "\" ");
+                        throw new InvalidParameterException("Wrong parameter \"" + val2 + "\". Parameter should be integer ");
                     }
                 }
                 if (commandName.Equals("triangle"))
                 {
                     if (isNumeric1 == false)
                     {
-                        throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" " );
+                        throw new InvalidParameterException("Wrong parameter \"" + val1 + "\". Parameter should be integer ");
                     }
                     if (isNumeric2 == false)
                     {
-                        throw new InvalidParameterException("Wrong parameter \"" + val2 + "\"  " );
+                        throw new InvalidParameterException("Wrong parameter \"" + val2 + "\". Parameter should be integer ");
                     }
 
                     if (isNumeric3 == false)
                     {
-                        throw new InvalidParameterException("Wrong parameter \"" + val3 + "\"  ");
+                        throw new InvalidParameterException("Wrong parameter \"" + val3 + "\" . Parameter should be integer ");
                     }
                 }
                 if (commandName.Equals("fill"))
@@ -199,7 +226,7 @@ namespace Component1
                 {
                     if (isColor == false)
                     {
-                        throw new InvalidParameterException("Wrong color at line " );
+                        throw new InvalidParameterException("Wrong color. \nColor should be either \"coral\", \"magenta\", \"chocolate\", \"lime\", \"aqua\" ");
                     }
 
                 }
@@ -207,7 +234,7 @@ namespace Component1
                 {
                     if (isNumeric1 == false)
                     {
-                        throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" ");
+                        throw new InvalidParameterException("Wrong parameter \"" + val1 + "\"  . Parameter should be integer");
                     }
                 }
 
@@ -315,9 +342,7 @@ namespace Component1
         {
             return errors;
         }
-      
-      
-       
+
     }
 
 
