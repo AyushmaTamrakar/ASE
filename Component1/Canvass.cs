@@ -70,11 +70,11 @@ namespace Component1
         }
       
        
-        public void drawCircle(int radius)
+        public void drawCircle(int radius) //drawCircleMethod 
         {
-            shape = factory.getShape("circle");
-            shape.set(Color,Fill, XPos-radius, YPos-radius, radius * 2, radius*2);
-            shape.draw(G);
+            shape = factory.getShape("circle");  //get shapes from Factory Class
+            shape.set(Color,Fill, XPos-radius, YPos-radius, radius * 2, radius*2); // sets value  in Set method of Shape class
+            shape.draw(G);  // passing graphics to draw method
             shape.ToString();
         }
         public void drawRectangle(int length, int breadth)
@@ -110,7 +110,7 @@ namespace Component1
             YPos = toY;
         }
       
-        public void reset()
+        public void reset()  // resets canvas
         {
             XPos = 0;
             YPos = 0;
@@ -118,7 +118,7 @@ namespace Component1
             Fill = false;
             
         }
-        public void clear()
+        public void clear()  // clears canvas
         {
             G.Clear(Color.White);
         }

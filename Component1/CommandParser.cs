@@ -1,8 +1,10 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections;
 using System.Drawing;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.AccessControl;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -56,7 +58,7 @@ namespace Component1
         public void parseCommand(string command, Canvass canvas)
         {
 
-            if (String.IsNullOrEmpty(command) == true)
+            if (String.IsNullOrEmpty(command) == true) // checks if richTextBox is empty
             {
                 noCommand = true;
 
@@ -65,17 +67,18 @@ namespace Component1
             else
             {
                 char[] delimeter = new[] { '\r', '\n' };
-                String[] lines = command.Split(delimeter, StringSplitOptions.RemoveEmptyEntries);
+                String[] lines = command.Split(delimeter, StringSplitOptions.RemoveEmptyEntries); //splits line
 
                 for (int i = 0; i < lines.Length; i++)
                 {
 
-                    count_line++;
+                    count_line++; // counts line
                     String line = lines[i];
                     try
                     {
                         char[] parantheses = new[] { '(', ')' };
 
+                        // check if each line has parantheses
                         if (line.Contains(parantheses[0]) == false && line.Contains(parantheses[1]) == false)
                         {
 
@@ -95,24 +98,24 @@ namespace Component1
                         else
                         {
 
-                            commandName = line.Split('(')[0].Trim();
+                            commandName = line.Split('(')[0].Trim(); // line split to get commandName
 
-                            checkCommandName(commandName);
+                            checkCommandName(commandName); // checkCommandName method called passing parameter commandName
                             try
                             {
-                                if (validCommand == true)
+                                if (validCommand == true) // if command is valid 
                                 {
-                                    parameter = line.Split('(', ')')[1];
+                                    parameter = line.Split('(', ')')[1]; // line split to get parameter between ()
 
-                                    if (parameter.Length != 0)
+                                    if (parameter.Length != 0) // if parameter exists
                                     {
 
-                                        checkParameter(parameter, commandName);
+                                        checkParameter(parameter, commandName); // splits and check parameter
 
-                                        drawCommand(commandName, canvas);
+                                        drawCommand(commandName, canvas); // draw commands to canvas
                                     }
                                     else
-                                    {
+                                    {          // error display if parameter not found
                                         error++;
                                         error_lines.Add(count_line);
                                         errors.Add("Parameter not found ");
@@ -121,16 +124,16 @@ namespace Component1
 
                                 }
                                 else
-                                {
+                                {          // if commandName is invalid
                                     throw new IndexOutOfRangeException("Invalid command \"" + commandName + " \"");
                                 }
                             }
 
-                            catch (IndexOutOfRangeException e)
+                            catch (IndexOutOfRangeException e) // handles IndexOutOfRangeExcepetion
                             {
-                                error++;
-                                error_lines.Add(count_line);
-                                errors.Add(e.Message);
+                                error++;     // counts number of errorLines
+                                error_lines.Add(count_line); // add count_line to error_lines arraylist
+                                errors.Add(e.Message);  // add to arrayList errors
                             }
                         }
 
@@ -151,31 +154,33 @@ namespace Component1
 
             if (String.IsNullOrEmpty(commandName) == false)
             {
+
+                // string array of commands
                 string[] commands = { "drawto", "moveto", "circle", "rectangle", "triangle", "pen", "fill" };
                 for (int i = 0; i < commands.Length; i++)
                 {
-                    if (commands[i] == commandName)
+                    if (commands[i] == commandName)  // checks commandName
                     {
-                        validCommand = true;
+                        validCommand = true;      // command is valid
                     }
                 }
-                return validCommand;
+                return validCommand;    // returns bool value
             }
             else
             {
-                return validCommand = false;
+                return validCommand = false;    // command is invalid , returns bool value false
 
             }
         }
 
-        public bool drawCommand(string commandName, Canvass canvass)
+        public bool drawCommand(string commandName, Canvass canvass)  // draw command to canvas
         {
             if (String.IsNullOrEmpty(commandName) == false)
             {
-                switch (commandName)
+                switch (commandName)   // checks commandName and draw
                 {
                     case "drawto":
-                        canvass.drawTo(num1, num2);
+                        canvass.drawTo(num1, num2);   // calls drawTo method from Canvass class
                         break;
                     case "circle":
                         canvass.drawCircle(num1);
@@ -204,19 +209,19 @@ namespace Component1
                 return false;
             }
         }
-        public bool checkParameter(string parameter, string commmandName)
+        public bool checkParameter(string parameter, string commmandName) //checks parameter pass with commands
         {
             try
             {
                 if (commandName.Equals("drawto") || commandName.Equals("moveto") || commandName.Equals("rectangle"))
                 {
 
-                    if (parameter.Split('\u002C').Length == 2)
+                    if (parameter.Split('\u002C').Length == 2)  // splits parameter at ,
                     {
                         val1 = parameter.Split('\u002C')[0]; //unicode for comma
                         val2 = parameter.Split('\u002C')[1];
 
-                        if (!Regex.IsMatch(val1, @"^\d+$") && !Regex.IsMatch(val2, @"^\d+$"))
+                        if (!Regex.IsMatch(val1, @"^\d+$") && !Regex.IsMatch(val2, @"^\d+$"))  // if val1 and val2 is not [0-9]
                         {
                             throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" and \"" + val2 + "\" Parameter should be integer ");
                         }
@@ -229,7 +234,7 @@ namespace Component1
                         {
                             throw new InvalidParameterException("Wrong parameter \"" + val2 + "\". Parameter should be integer ");
                         }
-                        if (Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$"))
+                        if (Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$")) // if both values are digits
                         {
                             num1 = int.Parse(val1);
                             num2 = int.Parse(val2);
@@ -239,7 +244,7 @@ namespace Component1
                     }
                     else
                     {
-                        throw new InvalidParameterException("Should contain two integer parameters ");
+                        throw new InvalidParameterException("Should contain two integer parameters ");  //throw error
                     }
 
 
