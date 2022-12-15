@@ -23,6 +23,8 @@ namespace Component1
 
             g = drawPanel.CreateGraphics();
             myCanvass = new Canvass(g);
+            xPos.Text = myCanvass.XPos.ToString();
+            yPos.Text = myCanvass.YPos.ToString();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -52,28 +54,31 @@ namespace Component1
 
                     console.Text = String.Empty;
                     CommandParser parse = new CommandParser();
-                    parse.Errors.Clear();
-                    parse.separateCommand(commandLine.Text.Trim().ToLower(), myCanvass);
-
-                    if(parse.Error != "")
+                    //parse.Error.Clear();
+                    parse.parseCommand(commandLine.Text, myCanvass);
+                    if(parse.NoCommand == true)
                     {
                         console.ForeColor = Color.Red;
-                        console.Text = parse.Error;
+                        console.Text = "No commands to run";
                     }
-                    
-                      
+                    if (parse.Error != 0)
+                    {
+                        int i = 0;
+                        console.ForeColor = Color.Red;
 
-                        for (int i = 1; i < parse.getErrors().Count; i++)
+                        int lineNum = (int)parse.ErrorLines[i];
+
+                        foreach (string error_description in parse.error_list())
                         {
-
-                            console.Text = (string)parse.getErrors()[i];
-
-
+                            console.AppendText(Environment.NewLine + "Error on line " + lineNum + " : " + error_description);
+                            lineNum++;
                         }
-                    
+                        console.AppendText(Environment.NewLine + "Please correct command syntax.");
+                    }
 
                     actionText.Text = "";
-
+                    xPos.Text = myCanvass.XPos.ToString();
+                    yPos.Text = myCanvass.YPos.ToString();
                 }
                 else if (commands.Equals("reset") == true)
                 {
@@ -81,7 +86,8 @@ namespace Component1
                     console.ForeColor = Color.Green;
                     console.Text = "Program is reset to initial state \n Color is Set to Black\n Position of pen is set to (0, 0) coordinates";
                     actionText.Text = "";
-
+                    xPos.Text = myCanvass.XPos.ToString();
+                    yPos.Text = myCanvass.YPos.ToString();
 
                 }
                 else
@@ -126,5 +132,7 @@ namespace Component1
                 File.WriteAllText(saveFile.FileName, commandLine.Text);
             }
         }
+
+
     }
 }

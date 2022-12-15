@@ -45,15 +45,20 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.console = new System.Windows.Forms.RichTextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.xPos = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.yPos = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // drawPanel
             // 
             this.drawPanel.BackColor = System.Drawing.SystemColors.Window;
-            this.drawPanel.Location = new System.Drawing.Point(12, 67);
+            this.drawPanel.Location = new System.Drawing.Point(12, 118);
             this.drawPanel.Name = "drawPanel";
-            this.drawPanel.Size = new System.Drawing.Size(386, 371);
+            this.drawPanel.Size = new System.Drawing.Size(386, 320);
             this.drawPanel.TabIndex = 0;
             this.drawPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.drawPanel_Paint);
             // 
@@ -83,7 +88,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Lucida Fax", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(12, 42);
+            this.label1.Location = new System.Drawing.Point(12, 87);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(68, 18);
             this.label1.TabIndex = 4;
@@ -116,7 +121,7 @@
             // 
             this.saveToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveToolStripMenuItem.Image")));
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
@@ -124,7 +129,7 @@
             // 
             this.loadToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("loadToolStripMenuItem.Image")));
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
             this.loadToolStripMenuItem.Text = "Load";
             this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
             // 
@@ -132,7 +137,7 @@
             // 
             this.exitToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("exitToolStripMenuItem.Image")));
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -184,12 +189,67 @@
             this.console.TabIndex = 10;
             this.console.Text = "";
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Lucida Fax", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(12, 47);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(77, 18);
+            this.label7.TabIndex = 13;
+            this.label7.Text = "Position";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Lucida Fax", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(124, 47);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(24, 18);
+            this.label8.TabIndex = 14;
+            this.label8.Text = "X:";
+            // 
+            // xPos
+            // 
+            this.xPos.AutoSize = true;
+            this.xPos.Font = new System.Drawing.Font("Lucida Fax", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.xPos.Location = new System.Drawing.Point(154, 47);
+            this.xPos.Name = "xPos";
+            this.xPos.Size = new System.Drawing.Size(18, 18);
+            this.xPos.TabIndex = 15;
+            this.xPos.Text = "  ";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Lucida Fax", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(216, 47);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(24, 18);
+            this.label5.TabIndex = 16;
+            this.label5.Text = "Y:";
+            // 
+            // yPos
+            // 
+            this.yPos.AutoSize = true;
+            this.yPos.Font = new System.Drawing.Font("Lucida Fax", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.yPos.Location = new System.Drawing.Point(246, 47);
+            this.yPos.Name = "yPos";
+            this.yPos.Size = new System.Drawing.Size(18, 18);
+            this.yPos.TabIndex = 17;
+            this.yPos.Text = "  ";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
             this.ClientSize = new System.Drawing.Size(772, 450);
+            this.Controls.Add(this.yPos);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.xPos);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.console);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -228,6 +288,11 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.RichTextBox console;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label xPos;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label yPos;
     }
 }
 

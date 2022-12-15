@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Component1
 {
-    internal class Canvass
+    public class Canvass
     {
         Graphics g;
         Pen pen;

@@ -8,10 +8,10 @@ using System.Windows.Forms;
 
 namespace Component1
 {
-    internal class CommandParser
+    public class CommandParser
     {
 
-        string error;
+
         String commandName;
         String parameter;
         int num1, num2, num3;
@@ -19,45 +19,43 @@ namespace Component1
         bool validCommand;
         bool isFill, isNumeric1, isNumeric2, isNumeric3, isBoolean, isColor;
 
-        int lineNum;
-        ArrayList colors = new ArrayList() { "coral", "magenta", "chocolate", "lime", "aqua" };
-        Color pen;
-        ArrayList errors = new ArrayList();
-        ArrayList errorLines = new ArrayList();
-
-        public string Error
-        {
-            get { return error; }
-            set { error = value; }
-        }
-      
        
 
-        public ArrayList Errors
+        ArrayList colors = new ArrayList() { "coral", "magenta", "chocolate", "lime", "aqua" };
+        Color pen;
+
+
+        ArrayList errors = new ArrayList();
+        ArrayList error_lines = new ArrayList();
+        int error = 0;
+        int count_line;
+
+        bool noCommand;
+
+        public int Error
         {
-            get { return errors; }
-            set { errors = value; }
+            get { return error; }
+            set { error = value; }  
         }
-        public string CommandName
+        public ArrayList ErrorLines
         {
-            get { return commandName; }
-            set { commandName = value; }
+            get { return error_lines; }
+            set { error_lines = value; }
         }
-        public string Parameter
+        public bool NoCommand
         {
-            get { return parameter; }
-            set { parameter = value; }
+            get { return noCommand;}
+            set { noCommand = value; }
         }
 
         public CommandParser() { }
 
-        public void separateCommand(string command, Canvass canvas)
+        public void parseCommand(string command, Canvass canvas)
         {
 
             if (String.IsNullOrEmpty(command) == true)
             {
-
-                error = "No commands to run";
+                noCommand = true;
 
             }
 
@@ -65,35 +63,36 @@ namespace Component1
             {
                 char[] delimeter = new[] { '\r', '\n' };
                 String[] lines = command.Split(delimeter, StringSplitOptions.RemoveEmptyEntries);
-                for (int i = 0; i < lines.Length; i++)
-                {
-                    lineNum++;
-                    
-
-                    String line = lines[i];
-
-
-                    commandName = line.Split('(')[0];
-                    checkCommandName(commandName);
-
-                    if (validCommand == true)
+               
+                    for (int i = 0; i < lines.Length; i++)
                     {
+                        count_line++;
+                        String line = lines[i];
 
-
-                        parameter = line.Split('(', ')')[1];
-
-                        checkParameter(parameter, commandName);
-
-                        drawCommand(commandName, canvas);
-
-                    }
-                    else
+                        commandName = line.Split('(')[0];
+                        checkCommandName(commandName);
+                    try
                     {
-                       
-                        errorLines.Add( "Invalid Command \"" + commandName + "\" at line" + lineNum);
-                       
+                        if (validCommand == true)
+                        {
+                            parameter = line.Split('(', ')')[1];
+
+                            checkParameter(parameter, commandName);
+
+                            drawCommand(commandName, canvas);
+
+                        }                       
                     }
+                   
+                    catch (IndexOutOfRangeException)
+                    {
+                        error++;
+                        error_lines.Add(count_line);
+                        errors.Add("Invalid command " +commandName);
+                    }
+
                 }
+               
             }
 
         }
@@ -119,32 +118,40 @@ namespace Component1
             }
         }
 
-        public void drawCommand(string commandName, Canvass canvass)
+        public bool drawCommand(string commandName, Canvass canvass)
         {
-            switch (commandName)
+            if (String.IsNullOrEmpty(commandName) == false)
             {
-                case "drawto":
-                    canvass.drawTo(num1, num2);
-                    break;
-                case "circle":
-                    canvass.drawCircle(num1);
-                    break;
-                case "moveto":
-                    canvass.moveTo(num1, num2);
-                    break;
-                case "rectangle":
-                    canvass.drawRectangle(num1, num2);
-                    break;
-                case "triangle":
-                    canvass.drawTriangle(num1, num2, num3);
-                    break;
-                case "pen":
-                    canvass.setPenColor(pen);
-                    break;
-                case "fill":
-                    canvass.fillShape(isFill);
-                    break;
+                switch (commandName)
+                {
+                    case "drawto":
+                        canvass.drawTo(num1, num2);
+                        break;
+                    case "circle":
+                        canvass.drawCircle(num1);
+                        break;
+                    case "moveto":
+                        canvass.moveTo(num1, num2);
+                        break;
+                    case "rectangle":
+                        canvass.drawRectangle(num1, num2);
+                        break;
+                    case "triangle":
+                        canvass.drawTriangle(num1, num2, num3);
+                        break;
+                    case "pen":
+                        canvass.setPenColor(pen);
+                        break;
+                    case "fill":
+                        canvass.fillShape(isFill);
+                        break;
 
+                }
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
         public void checkParameter(string parameter, string commmandName)
@@ -152,56 +159,64 @@ namespace Component1
             separateParameter(parameter, commandName);
             try
             {
-                for (int j = 1; j <= lineNum; j++)
+
+                if (commandName.Equals("drawto") || commandName.Equals("moveto") || commandName.Equals("rectangle"))
                 {
-                    if (commandName.Equals("drawto") || commandName.Equals("moveto") || commandName.Equals("rectangle"))
+                    if (isNumeric1 == false)
                     {
-                        if (isNumeric1 == false)
-                        {
-                            throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" at line ");
-                        }
-                        if (isNumeric2 == false)
-                        {
-                            throw new InvalidParameterException("Wrong parameter \"" + val2 + "\" at line ");
-                        }
+                        throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" ");
                     }
-                    if (commandName.Equals("triangle"))
+                    if (isNumeric2 == false)
                     {
-                        if (isNumeric1 == false)
-                        {
-                            throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" at line " + j);
-                        }
-                        if (isNumeric2 == false)
-                        {
-                            throw new InvalidParameterException("Wrong parameter \"" + val2 + "\" at line " + j);
-                        }
-
-                        if (isNumeric3 == false)
-                        {
-                            throw new InvalidParameterException("Wrong parameter \"" + val3 + "\" at line " + j);
-                        }
-                    }
-                    if (commandName.Equals("fill"))
-                    {
-
-                        if (isBoolean == false)
-                        {
-                            throw new InvalidParameterException("Parameter should be on or off " + j);
-                        }
-                    }
-                    if (commandName.Equals("pen"))
-                    {
-                        if (isColor == false)
-                        {
-                            throw new InvalidParameterException("Wrong color at line " + j);
-                        }
-
+                        throw new InvalidParameterException("Wrong parameter \"" + val2 + "\" ");
                     }
                 }
+                if (commandName.Equals("triangle"))
+                {
+                    if (isNumeric1 == false)
+                    {
+                        throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" " );
+                    }
+                    if (isNumeric2 == false)
+                    {
+                        throw new InvalidParameterException("Wrong parameter \"" + val2 + "\"  " );
+                    }
+
+                    if (isNumeric3 == false)
+                    {
+                        throw new InvalidParameterException("Wrong parameter \"" + val3 + "\"  ");
+                    }
+                }
+                if (commandName.Equals("fill"))
+                {
+
+                    if (isBoolean == false)
+                    {
+                        throw new InvalidParameterException("Parameter should be on or off ");
+                    }
+                }
+                if (commandName.Equals("pen"))
+                {
+                    if (isColor == false)
+                    {
+                        throw new InvalidParameterException("Wrong color at line " );
+                    }
+
+                }
+                if (commandName.Equals("circle"))
+                {
+                    if (isNumeric1 == false)
+                    {
+                        throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" ");
+                    }
+                }
+
             }
             catch (InvalidParameterException e)
             {
 
+                error++;
+                error_lines.Add(count_line);
                 errors.Add(e.Message);
             }
 
@@ -249,14 +264,11 @@ namespace Component1
                         break;
                 }
 
-
             }
             else
             {
                 isBoolean = false;
             }
-
-
 
             if (colors.Contains(parameter) == true)
             {
@@ -267,6 +279,7 @@ namespace Component1
 
             if (commandName.Equals("circle"))
             {
+                val1 = parameter;
                 isNumeric1 = int.TryParse(parameter, out num1);
 
             }
@@ -298,11 +311,14 @@ namespace Component1
             isColor = true;
         }
 
-        public ArrayList getErrors()
+        public ArrayList error_list()
         {
-            return errorLines;
+            return errors;
         }
-
+      
+      
+       
     }
+
 
 }
