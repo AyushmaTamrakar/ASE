@@ -1,11 +1,14 @@
 ﻿using System;
-using System.Runtime.Serialization;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Component1
 {
-    [Serializable]
-    internal class InvalidParameterException : Exception
+     class InvalidParameterException: Exception
     {
+
         public InvalidParameterException()
         {
         }
@@ -14,6 +17,7 @@ namespace Component1
         {
         }
 
-        
+
+
     }
 }

@@ -9,7 +9,7 @@ namespace UnitTestProject1
     {
         CommandParser commandParser = new CommandParser();
 
-        public Canvass canvass { get; private set; }
+      
 
         [TestMethod]
         public void checkCommand()

@@ -50,7 +50,6 @@
     <Compile Include="Circle.cs" />
     <Compile Include="CommandNotFoundException.cs" />
     <Compile Include="CommandParser.cs" />
-    <Compile Include="CommanNotFoundException.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -77,6 +76,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="ClassDiagram1.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

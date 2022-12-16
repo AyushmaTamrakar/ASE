@@ -17,7 +17,6 @@ namespace Component1
         Color color;
         int xPos, yPos;
         bool fill = false;
-        Shape shape;
         ShapeFactory factory = new ShapeFactory();
       
 

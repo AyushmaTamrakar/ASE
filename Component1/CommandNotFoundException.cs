@@ -1,24 +1,18 @@
 ﻿using System;
-using System.Runtime.Serialization;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Component1
 {
-    [Serializable]
-    internal class CommandNotFoundException : Exception
+     class CommandNotFoundException: Exception
     {
         public CommandNotFoundException()
         {
         }
 
         public CommandNotFoundException(string message) : base(message)
-        {
-        }
-
-        public CommandNotFoundException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
-
-        protected CommandNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
