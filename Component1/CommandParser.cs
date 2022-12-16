@@ -82,30 +82,30 @@ namespace Component1
                         if (line.Contains(parantheses[0]) == false && line.Contains(parantheses[1]) == false)
                         {
 
-                            throw new CommandNotFoundException("Parantheses Not Found ");
+                            throw new CommandNotFoundException("Parentheses Not Found ");
 
                         }
                         else if (line.Contains(parantheses[0]) == false)
                         {
-                            throw new CommandNotFoundException("( Not Found  ");
+                            throw new CommandNotFoundException(" \" ( \" Missing   ");
 
                         }
                         else if (line.Contains(parantheses[1]) == false)
                         {
-                            throw new CommandNotFoundException(") Not Found  ");
+                            throw new CommandNotFoundException(" \" ) \" Missing  ");
 
                         }
                         else
                         {
 
-                            commandName = line.Split('(')[0].Trim(); // line split to get commandName
+                            commandName = line.Split('(')[0].Trim().ToLower(); // line split to get commandName
 
                             checkCommandName(commandName); // checkCommandName method called passing parameter commandName
                             try
                             {
                                 if (validCommand == true) // if command is valid 
                                 {
-                                    parameter = line.Split('(', ')')[1]; // line split to get parameter between ()
+                                    parameter = line.Split('(', ')')[1].ToLower(); // line split to get parameter between ()
 
                                     if (parameter.Length != 0) // if parameter exists
                                     {
@@ -218,27 +218,28 @@ namespace Component1
 
                     if (parameter.Split('\u002C').Length == 2)  // splits parameter at ,
                     {
-                        val1 = parameter.Split('\u002C')[0]; //unicode for comma
-                        val2 = parameter.Split('\u002C')[1];
+                        val1 = parameter.Split('\u002C')[0].Trim(); //unicode for comma
+                        val2 = parameter.Split('\u002C')[1].Trim();
 
-                        if (!Regex.IsMatch(val1, @"^\d+$") && !Regex.IsMatch(val2, @"^\d+$"))  // if val1 and val2 is not [0-9]
-                        {
-                            throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" and \"" + val2 + "\" Parameter should be integer ");
-                        }
-
-                        if (!Regex.IsMatch(val1, @"^\d+$"))
-                        {
-                            throw new InvalidParameterException("Wrong parameter \"" + val1 + "\". Parameter should be integer ");
-                        }
-                        if (!Regex.IsMatch(val2, @"^\d+$"))
-                        {
-                            throw new InvalidParameterException("Wrong parameter \"" + val2 + "\". Parameter should be integer ");
-                        }
                         if (Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$")) // if both values are digits
                         {
                             num1 = int.Parse(val1);
                             num2 = int.Parse(val2);
                         }
+
+                        else if (!Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$"))
+                        {
+                            throw new InvalidParameterException("Wrong parameter \"" + val1 + "\". Parameter should be integer ");
+                        }
+                         else if (!Regex.IsMatch(val2, @"^\d+$") && Regex.IsMatch(val1, @"^\d+$"))
+                        {
+                            throw new InvalidParameterException("Wrong parameter \"" + val2 + "\". Parameter should be integer ");
+                        }
+                         else if (!Regex.IsMatch(val1, @"^\d+$") && !Regex.IsMatch(val2, @"^\d+$"))  // if val1 and val2 is not [0-9]
+                        {
+                            throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" and \"" + val2 + "\" Parameter should be integer ");
+                        }
+                       
 
 
                     }
@@ -254,35 +255,46 @@ namespace Component1
 
                     if (parameter.Split('\u002C').Length == 3)
                     {
-                        val1 = parameter.Split('\u002C')[0]; //unicode for comma
-                        val2 = parameter.Split('\u002C')[1];
-                        val3 = parameter.Split('\u002C')[2];
+                        val1 = parameter.Split('\u002C')[0].Trim(); //unicode for comma
+                        val2 = parameter.Split('\u002C')[1].Trim();
+                        val3 = parameter.Split('\u002C')[2].Trim();
 
-                        if (!Regex.IsMatch(val1, @"^\d+$") && !Regex.IsMatch(val2, @"^\d+$") && !Regex.IsMatch(val3, @"^\d+$"))
-                        {
-                            throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" , \"" + val2 + "\" " + val1 + "\" ");
-                        }
-
-                        if (!Regex.IsMatch(val1, @"^\d+$"))
-                        {
-                            throw new InvalidParameterException("Wrong parameter \"" + val1 + "\". Parameter should be integer ");
-                        }
-                        if (!Regex.IsMatch(val2, @"^\d+$"))
-                        {
-                            throw new InvalidParameterException("Wrong parameter \"" + val2 + "\". Parameter should be integer ");
-                        }
-                        if (!Regex.IsMatch(val3, @"^\d+$"))
-                        {
-                            throw new InvalidParameterException("Wrong parameter \"" + val3 + "\". Parameter should be integer ");
-                        }
                         if (Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$") && Regex.IsMatch(val3, @"^\d+$"))
                         {
                             num1 = int.Parse(val1);
                             num2 = int.Parse(val2);
                             num3 = int.Parse(val3);
+                        }                      
+
+                        else if (!Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$") && Regex.IsMatch(val3, @"^\d+$"))
+                        {
+                            throw new InvalidParameterException("Wrong parameter \"" + val1 + "\". Parameter should be integer ");
+                        }
+                        else if (!Regex.IsMatch(val2, @"^\d+$") && Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val3, @"^\d+$"))
+                        {
+                            throw new InvalidParameterException("Wrong parameter \"" + val2 + "\". Parameter should be integer ");
+                        }
+                       else if (!Regex.IsMatch(val3, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$") && Regex.IsMatch(val1, @"^\d+$"))
+                        {
+                            throw new InvalidParameterException("Wrong parameter \"" + val3 + "\". Parameter should be integer ");
                         }
 
-
+                        else if (!Regex.IsMatch(val1, @"^\d+$") && !Regex.IsMatch(val2, @"^\d+$") && Regex.IsMatch(val3, @"^\d+$"))
+                        {
+                            throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" , \"" + val2  + "\" ");
+                        }
+                        else if (!Regex.IsMatch(val2, @"^\d+$") && !Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val3, @"^\d+$"))
+                        {
+                            throw new InvalidParameterException("Wrong parameter  \"" + val2 + "\" and  " + val3 + "\" ");
+                        }
+                        else if (!Regex.IsMatch(val3, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$") && !Regex.IsMatch(val1, @"^\d+$"))
+                        {
+                            throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" , \" " + val3 + "\" ");
+                        }
+                        else if (!Regex.IsMatch(val1, @"^\d+$") && !Regex.IsMatch(val2, @"^\d+$") && !Regex.IsMatch(val3, @"^\d+$"))
+                        {
+                            throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" , \"" + val2 + "\" and " + val3 + "\" ");
+                        }
                     }
                     else
                     {
@@ -316,7 +328,11 @@ namespace Component1
                 }
                 if (commandName.Equals("pen"))
                 {
-                    if (colors.Contains(parameter) == true)
+                    if(Regex.IsMatch(parameter, @"^\d+$"))
+                    {
+                        throw new InvalidParameterException("Parameter should not contain integer");
+                    }
+                    else if (colors.Contains(parameter) == true)
                     {
 
                         checkColor(parameter);
