@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace Component1
 {
@@ -20,7 +21,7 @@ namespace Component1
         ShapeFactory factory = new ShapeFactory();
         Shape shape;
 
-
+        public Canvass() { }
         public Canvass(Graphics g)
         {
             this.g = g;
@@ -69,12 +70,13 @@ namespace Component1
         }
       
        
-        public void drawCircle(int radius) //drawCircleMethod 
+        public bool drawCircle(int radius) //drawCircleMethod 
         {
             shape = factory.getShape("circle");  //get shapes from Factory Class
             shape.set(Color,Fill, XPos-radius, YPos-radius, radius * 2, radius*2); // sets value  in Set method of Shape class
             shape.draw(G);  // passing graphics to draw method
             shape.ToString();
+            return true;
         }
         public void drawRectangle(int length, int breadth)
         {
@@ -107,6 +109,7 @@ namespace Component1
         {
             XPos = toX;
             YPos = toY;
+            
         }
       
         public void reset()  // resets canvas

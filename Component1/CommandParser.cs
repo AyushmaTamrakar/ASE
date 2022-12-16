@@ -77,22 +77,26 @@ namespace Component1
                     String line = lines[i];
                     try
                     {
+
                         char[] parantheses = new[] { '(', ')' };
 
                         // check if each line has parantheses
                         if (line.Contains(parantheses[0]) == false && line.Contains(parantheses[1]) == false)
                         {
-
                             throw new CommandNotFoundException("Parentheses Not Found ");
+
 
                         }
                         else if (line.Contains(parantheses[0]) == false)
                         {
+
                             throw new CommandNotFoundException(" \" ( \" Missing   ");
+
 
                         }
                         else if (line.Contains(parantheses[1]) == false)
                         {
+
                             throw new CommandNotFoundException(" \" ) \" Missing  ");
 
                         }
@@ -148,6 +152,38 @@ namespace Component1
                 }
 
             }
+
+        }
+        public bool checkParentheses(string line)
+        {
+            char[] parantheses = new[] { '(', ')' };
+
+            // check if each line has parantheses
+            if (line.Contains(parantheses[0]) == false && line.Contains(parantheses[1]) == false)
+            {
+                return false;
+                throw new CommandNotFoundException("Parentheses Not Found ");
+
+
+            }
+            else if (line.Contains(parantheses[0]) == false)
+            {
+                return false;
+                throw new CommandNotFoundException(" \" ( \" Missing   ");
+
+
+            }
+            else if (line.Contains(parantheses[1]) == false)
+            {
+                return false;
+                throw new CommandNotFoundException(" \" ) \" Missing  ");
+
+            }
+            else
+            {
+                return true;
+            }
+
 
         }
         public bool checkCommandName(string commandName)
@@ -232,15 +268,15 @@ namespace Component1
                         {
                             throw new InvalidParameterException("Wrong parameter \"" + val1 + "\". Parameter should be integer ");
                         }
-                         else if (!Regex.IsMatch(val2, @"^\d+$") && Regex.IsMatch(val1, @"^\d+$"))
+                        else if (!Regex.IsMatch(val2, @"^\d+$") && Regex.IsMatch(val1, @"^\d+$"))
                         {
                             throw new InvalidParameterException("Wrong parameter \"" + val2 + "\". Parameter should be integer ");
                         }
-                         else if (!Regex.IsMatch(val1, @"^\d+$") && !Regex.IsMatch(val2, @"^\d+$"))  // if val1 and val2 is not [0-9]
+                        else if (!Regex.IsMatch(val1, @"^\d+$") && !Regex.IsMatch(val2, @"^\d+$"))  // if val1 and val2 is not [0-9]
                         {
                             throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" and \"" + val2 + "\" Parameter should be integer ");
                         }
-                       
+
 
 
                     }
@@ -265,7 +301,7 @@ namespace Component1
                             num1 = int.Parse(val1);
                             num2 = int.Parse(val2);
                             num3 = int.Parse(val3);
-                        }                      
+                        }
 
                         else if (!Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$") && Regex.IsMatch(val3, @"^\d+$"))
                         {
@@ -275,14 +311,14 @@ namespace Component1
                         {
                             throw new InvalidParameterException("Wrong parameter \"" + val2 + "\". Parameter should be integer ");
                         }
-                       else if (!Regex.IsMatch(val3, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$") && Regex.IsMatch(val1, @"^\d+$"))
+                        else if (!Regex.IsMatch(val3, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$") && Regex.IsMatch(val1, @"^\d+$"))
                         {
                             throw new InvalidParameterException("Wrong parameter \"" + val3 + "\". Parameter should be integer ");
                         }
 
                         else if (!Regex.IsMatch(val1, @"^\d+$") && !Regex.IsMatch(val2, @"^\d+$") && Regex.IsMatch(val3, @"^\d+$"))
                         {
-                            throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" , \"" + val2  + "\" ");
+                            throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" , \"" + val2 + "\" ");
                         }
                         else if (!Regex.IsMatch(val2, @"^\d+$") && !Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val3, @"^\d+$"))
                         {
@@ -329,7 +365,7 @@ namespace Component1
                 }
                 if (commandName.Equals("pen"))
                 {
-                    if(Regex.IsMatch(parameter, @"^\d+$"))
+                    if (Regex.IsMatch(parameter, @"^\d+$"))
                     {
                         throw new InvalidParameterException("Parameter should not contain integer");
                     }
