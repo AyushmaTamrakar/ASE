@@ -50,6 +50,9 @@
             this.xPos = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.yPos = new System.Windows.Forms.Label();
+            this.aboutUsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.commandListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.actionListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -121,7 +124,7 @@
             // 
             this.saveToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveToolStripMenuItem.Image")));
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
@@ -129,7 +132,7 @@
             // 
             this.loadToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("loadToolStripMenuItem.Image")));
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.loadToolStripMenuItem.Text = "Load";
             this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
             // 
@@ -137,12 +140,16 @@
             // 
             this.exitToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("exitToolStripMenuItem.Image")));
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aboutUsToolStripMenuItem,
+            this.commandListToolStripMenuItem,
+            this.actionListToolStripMenuItem});
             this.helpToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("helpToolStripMenuItem.Image")));
             this.helpToolStripMenuItem.ImageAlign = System.Drawing.ContentAlignment.TopRight;
             this.helpToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
@@ -239,6 +246,24 @@
             this.yPos.TabIndex = 17;
             this.yPos.Text = "  ";
             // 
+            // aboutUsToolStripMenuItem
+            // 
+            this.aboutUsToolStripMenuItem.Name = "aboutUsToolStripMenuItem";
+            this.aboutUsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.aboutUsToolStripMenuItem.Text = "About";
+            // 
+            // commandListToolStripMenuItem
+            // 
+            this.commandListToolStripMenuItem.Name = "commandListToolStripMenuItem";
+            this.commandListToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.commandListToolStripMenuItem.Text = "Command List";
+            // 
+            // actionListToolStripMenuItem
+            // 
+            this.actionListToolStripMenuItem.Name = "actionListToolStripMenuItem";
+            this.actionListToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.actionListToolStripMenuItem.Text = "Action List";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -293,6 +318,9 @@
         private System.Windows.Forms.Label xPos;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label yPos;
+        private System.Windows.Forms.ToolStripMenuItem aboutUsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem commandListToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem actionListToolStripMenuItem;
     }
 }
 

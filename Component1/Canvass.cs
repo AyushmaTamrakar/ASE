@@ -18,7 +18,7 @@ namespace Component1
         int xPos, yPos;
         bool fill = false;
         ShapeFactory factory = new ShapeFactory();
-      
+        Shape shape;
 
 
         public Canvass(Graphics g)

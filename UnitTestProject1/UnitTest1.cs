@@ -38,10 +38,12 @@ namespace UnitTestProject1
             string parameter = "3,4";
             string commandName = "drawto";
             int expectedNum1 = 3;
+            int expectedNum2 = 4;
             try
             {
                 commandParser.checkParameter(parameter, commandName);
                 Assert.AreEqual(expectedNum1, commandParser.Num1);
+                Assert.AreEqual(expectedNum2, commandParser.Num2);
             }
             catch (Exception)
             {
@@ -49,12 +51,7 @@ namespace UnitTestProject1
             }
         }
 
-        [TestMethod]
-        public void checkParseCommand()
-        {
-           
-
-        }
+    
 
     }
 }
