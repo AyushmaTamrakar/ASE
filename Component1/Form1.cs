@@ -6,7 +6,9 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -16,17 +18,41 @@ namespace Component1
     {
         private Canvass myCanvass;
         Graphics g;
+        Thread newThread;
+        bool flag = false, running = false;
 
         public Form1()
         {
             InitializeComponent();
-
             g = drawPanel.CreateGraphics();
             myCanvass = new Canvass(g);
             xPos.Text = myCanvass.XPos.ToString();
             yPos.Text = myCanvass.YPos.ToString();
+            newThread = new System.Threading.Thread(thread); // create the newthread passing the delegate mehtod thread() which corresponds to the ThreadStart delegate void method
+            newThread.Start();
         }
+        public void thread()
+        {
+            // this is the actual method that is executed as a thread. If you allow execution to exit then the thread will terminate
+            while (true) // don't allow (in this case) for it to terminate
+            {
+                while (running == true)
+                {
+                    if (flag == false)
+                    {
+                        myCanvass.Color = Color.Blue;
+                        flag = true;
+                    }
+                    else
+                    {
+                        myCanvass.Color = Color.GreenYellow;
+                        flag = false;
+                    }
+                    Thread.Sleep(500);
+                }
+            }
 
+        }
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
@@ -54,8 +80,23 @@ namespace Component1
                     int i = 0;
                     console.Text = String.Empty;
                     CommandParser parse = new CommandParser();
-                    //parse.Error.Clear();
-                    parse.parseCommand(commandLine.Text, myCanvass);
+
+
+                    if (parse.parseCommand(commandLine.Text) == true)
+                    {
+                        char[] delimeter = new[] { '\r', '\n' };
+                        String[] lines = commandLine.Text.Split(delimeter, StringSplitOptions.RemoveEmptyEntries); //splits line
+
+                        for (int j = 0; j < lines.Length; j++)
+                        {
+                            String line = lines[j];
+                            string commandName = line.Split('(')[0].Trim().ToLower();
+                            string parameters = line.Split('(', ')')[1].ToLower();
+
+                            myCanvass.drawCommand(commandName, parameters);
+                           
+                        }
+                    }
                     if (parse.NoCommand == true)
                     {
                         console.ForeColor = Color.Red;
@@ -107,6 +148,7 @@ namespace Component1
         private void drawPanel_Paint(object sender, PaintEventArgs e)
         {
             g = e.Graphics;
+          
         }
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)

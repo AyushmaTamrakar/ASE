@@ -13,19 +13,18 @@ namespace Component1
     public class CommandParser
     {
 
-
         String commandName;
         String parameter;
-        int num1, num2, num3;
+      
         string val1, val2, val3;
         bool validCommand;
-        bool isFill, isColor;
-
+        bool isFill;
 
 
         ArrayList colors = new ArrayList() { "coral", "magenta", "chocolate", "lime", "aqua" };
         Color pen;
 
+  
 
         ArrayList errors = new ArrayList();
         ArrayList error_lines = new ArrayList();
@@ -51,17 +50,16 @@ namespace Component1
             set { noCommand = value; }
         }
 
-        public int Num1 { get; set; }
-        public int Num2 { get; set; }
-
+  
         public CommandParser() { }
 
-        public void parseCommand(string command, Canvass canvas)
+        public bool parseCommand(string command)
         {
 
             if (String.IsNullOrEmpty(command) == true) // checks if richTextBox is empty
             {
                 noCommand = true;
+                return false;
 
             }
 
@@ -77,70 +75,59 @@ namespace Component1
                     String line = lines[i];
                     try
                     {
+                        checkParentheses(line);
 
-                        char[] parantheses = new[] { '(', ')' };
+                        commandName = line.Split('(')[0].Trim().ToLower(); // line split to get commandName
 
-                        // check if each line has parantheses
-                        if (line.Contains(parantheses[0]) == false && line.Contains(parantheses[1]) == false)
+                        checkCommandName(commandName); // checkCommandName method called passing parameter commandName
+                        try
                         {
-                            throw new CommandNotFoundException("Parentheses Not Found ");
-
-
-                        }
-                        else if (line.Contains(parantheses[0]) == false)
-                        {
-
-                            throw new CommandNotFoundException(" \" ( \" Missing   ");
-
-
-                        }
-                        else if (line.Contains(parantheses[1]) == false)
-                        {
-
-                            throw new CommandNotFoundException(" \" ) \" Missing  ");
-
-                        }
-                        else
-                        {
-
-                            commandName = line.Split('(')[0].Trim().ToLower(); // line split to get commandName
-
-                            checkCommandName(commandName); // checkCommandName method called passing parameter commandName
-                            try
+                            if (validCommand == true) // if command is valid 
                             {
-                                if (validCommand == true) // if command is valid 
-                                {
-                                    parameter = line.Split('(', ')')[1].ToLower(); // line split to get parameter between ()
+                                parameter = line.Split('(', ')')[1].ToLower(); // line split to get parameter between ()
 
-                                    if (parameter.Length != 0) // if parameter exists
+                                if (parameter.Length != 0) // if parameter exists
+                                {
+                                    try
+                                    {
+                                        checkParameter(parameter); // splits and check parameter
+                             
+                                    }
+                                    catch (InvalidParameterException e)
                                     {
 
-                                        checkParameter(parameter, commandName); // splits and check parameter
-
-                                        drawCommand(commandName, canvas); // draw commands to canvas
-                                    }
-                                    else
-                                    {          // error display if parameter not found
                                         error++;
                                         error_lines.Add(count_line);
-                                        errors.Add("Parameter not found ");
-
+                                        errors.Add(e.Message);
+                                        return false;
                                     }
-
+                                    // draw commands to canvas
                                 }
                                 else
-                                {          // if commandName is invalid
-                                    throw new IndexOutOfRangeException("Invalid command \"" + commandName + " \"");
-                                }
-                            }
+                                {          // error display if parameter not found
+                                    error++;
+                                    error_lines.Add(count_line);
+                                    errors.Add("Parameter not found ");
 
-                            catch (IndexOutOfRangeException e) // handles IndexOutOfRangeExcepetion
-                            {
-                                error++;     // counts number of errorLines
-                                error_lines.Add(count_line); // add count_line to error_lines arraylist
-                                errors.Add(e.Message);  // add to arrayList errors
+                                    return false;
+                                }
+                                return true;
+                            }
+                            else
+                            {          // if commandName is invalid
+                                throw new IndexOutOfRangeException("Invalid command \"" + commandName + " \"");
                             }
                         }
+
+                        catch (IndexOutOfRangeException e) // handles IndexOutOfRangeExcepetion
+                        {
+                            error++;     // counts number of errorLines
+                            error_lines.Add(count_line); // add count_line to error_lines arraylist
+                            errors.Add(e.Message);  // add to arrayList errors
+                            return false;
+                        }
+
+
 
                     }
                     catch (CommandNotFoundException e)
@@ -148,41 +135,45 @@ namespace Component1
                         error++;
                         error_lines.Add(count_line);
                         errors.Add(e.Message);
+                        return false;
                     }
+
                 }
 
+
             }
+            return true;
 
         }
-        public bool checkParentheses(string line)
+        public void checkParentheses(string line)
         {
+
             char[] parantheses = new[] { '(', ')' };
 
             // check if each line has parantheses
             if (line.Contains(parantheses[0]) == false && line.Contains(parantheses[1]) == false)
             {
-                return false;
+
                 throw new CommandNotFoundException("Parentheses Not Found ");
 
 
             }
             else if (line.Contains(parantheses[0]) == false)
             {
-                return false;
+
                 throw new CommandNotFoundException(" \" ( \" Missing   ");
+
 
 
             }
             else if (line.Contains(parantheses[1]) == false)
             {
-                return false;
+
                 throw new CommandNotFoundException(" \" ) \" Missing  ");
 
+
             }
-            else
-            {
-                return true;
-            }
+
 
 
         }
@@ -193,7 +184,7 @@ namespace Component1
             {
 
                 // string array of commands
-                string[] commands = { "drawto", "moveto", "circle", "rectangle", "triangle", "pen", "fill" };
+                string[] commands = { "drawto", "moveto", "circle", "rectangle", "triangle", "pen", "fill", "colour" };
                 for (int i = 0; i < commands.Length; i++)
                 {
                     if (commands[i] == commandName)  // checks commandName
@@ -210,202 +201,171 @@ namespace Component1
             }
         }
 
-        public bool drawCommand(string commandName, Canvass canvass)  // draw command to canvas
+    
+        public bool checkParameter(string parameter) //checks parameter pass with commands
         {
-            if (String.IsNullOrEmpty(commandName) == false)
-            {
-                switch (commandName)   // checks commandName and draw
-                {
-                    case "drawto":
-                        canvass.drawTo(num1, num2);   // calls drawTo method from Canvass class
-                        break;
-                    case "circle":
-                        canvass.drawCircle(num1);
-                        break;
-                    case "moveto":
-                        canvass.moveTo(num1, num2);
-                        break;
-                    case "rectangle":
-                        canvass.drawRectangle(num1, num2);
-                        break;
-                    case "triangle":
-                        canvass.drawTriangle(num1, num2, num3);
-                        break;
-                    case "pen":
-                        canvass.setPenColor(pen);
-                        break;
-                    case "fill":
-                        canvass.fillShape(isFill);
-                        break;
 
-                }
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        public bool checkParameter(string parameter, string commmandName) //checks parameter pass with commands
-        {
-            try
-            {
-                if (commandName.Equals("drawto") || commandName.Equals("moveto") || commandName.Equals("rectangle"))
-                {
-
-                    if (parameter.Split('\u002C').Length == 2)  // splits parameter at ,
-                    {
-                        val1 = parameter.Split('\u002C')[0].Trim(); //unicode for comma
-                        val2 = parameter.Split('\u002C')[1].Trim();
-
-                        if (Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$")) // if both values are digits
-                        {
-                            num1 = int.Parse(val1);
-                            num2 = int.Parse(val2);
-                        }
-
-                        else if (!Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$"))
-                        {
-                            throw new InvalidParameterException("Wrong parameter \"" + val1 + "\". Parameter should be integer ");
-                        }
-                        else if (!Regex.IsMatch(val2, @"^\d+$") && Regex.IsMatch(val1, @"^\d+$"))
-                        {
-                            throw new InvalidParameterException("Wrong parameter \"" + val2 + "\". Parameter should be integer ");
-                        }
-                        else if (!Regex.IsMatch(val1, @"^\d+$") && !Regex.IsMatch(val2, @"^\d+$"))  // if val1 and val2 is not [0-9]
-                        {
-                            throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" and \"" + val2 + "\" Parameter should be integer ");
-                        }
-
-
-
-                    }
-                    else
-                    {
-                        throw new InvalidParameterException("Should contain two integer parameters ");  //throw error
-                    }
-
-
-                }
-                if (commandName.Equals("triangle"))
-                {
-
-                    if (parameter.Split('\u002C').Length == 3)
-                    {
-                        val1 = parameter.Split('\u002C')[0].Trim(); //unicode for comma
-                        val2 = parameter.Split('\u002C')[1].Trim();
-                        val3 = parameter.Split('\u002C')[2].Trim();
-
-                        if (Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$") && Regex.IsMatch(val3, @"^\d+$"))
-                        {
-                            num1 = int.Parse(val1);
-                            num2 = int.Parse(val2);
-                            num3 = int.Parse(val3);
-                        }
-
-                        else if (!Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$") && Regex.IsMatch(val3, @"^\d+$"))
-                        {
-                            throw new InvalidParameterException("Wrong parameter \"" + val1 + "\". Parameter should be integer ");
-                        }
-                        else if (!Regex.IsMatch(val2, @"^\d+$") && Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val3, @"^\d+$"))
-                        {
-                            throw new InvalidParameterException("Wrong parameter \"" + val2 + "\". Parameter should be integer ");
-                        }
-                        else if (!Regex.IsMatch(val3, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$") && Regex.IsMatch(val1, @"^\d+$"))
-                        {
-                            throw new InvalidParameterException("Wrong parameter \"" + val3 + "\". Parameter should be integer ");
-                        }
-
-                        else if (!Regex.IsMatch(val1, @"^\d+$") && !Regex.IsMatch(val2, @"^\d+$") && Regex.IsMatch(val3, @"^\d+$"))
-                        {
-                            throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" , \"" + val2 + "\" ");
-                        }
-                        else if (!Regex.IsMatch(val2, @"^\d+$") && !Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val3, @"^\d+$"))
-                        {
-                            throw new InvalidParameterException("Wrong parameter  \"" + val2 + "\" and  " + val3 + "\" ");
-                        }
-                        else if (!Regex.IsMatch(val3, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$") && !Regex.IsMatch(val1, @"^\d+$"))
-                        {
-                            throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" , \" " + val3 + "\" ");
-                        }
-                        else if (!Regex.IsMatch(val1, @"^\d+$") && !Regex.IsMatch(val2, @"^\d+$") && !Regex.IsMatch(val3, @"^\d+$"))
-                        {
-                            throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" , \"" + val2 + "\" and " + val3 + "\" ");
-                        }
-                    }
-                    else
-                    {
-                        throw new InvalidParameterException("Should contain three integer parameters ");
-                    }
-
-
-                }
-                if (commandName.Equals("fill"))
-                {
-
-                    if (parameter.Equals("on") || parameter.Equals("off"))
-                    {
-                        switch (parameter)
-                        {
-                            case "on":
-                                isFill = true;
-                                break;
-
-                            case "off":
-                                isFill = false;
-                                break;
-                        }
-
-                    }
-                    else
-                    {
-                        throw new InvalidParameterException("Fill should be either \"on\" or \"off\" ");
-                    }
-
-                }
-                if (commandName.Equals("pen"))
-                {
-                    if (Regex.IsMatch(parameter, @"^\d+$"))
-                    {
-                        throw new InvalidParameterException("Parameter should not contain integer");
-                    }
-                    else if (colors.Contains(parameter) == true)
-                    {
-
-                        checkColor(parameter);
-
-                    }
-                    else
-                    {
-                        throw new InvalidParameterException("Wrong color. \nColor should be either \"coral\", \"magenta\", \"chocolate\", \"lime\", \"aqua\" ");
-                    }
-
-                }
-                if (commandName.Equals("circle"))
-                {
-
-                    val1 = parameter;
-                    if (!Regex.IsMatch(val1, @"^\d+$"))
-                    {
-                        throw new InvalidParameterException("Wrong parameter for circle \"" + val1 + "\" ");
-                    }
-
-                    else
-                    {
-                        num1 = int.Parse(val1);
-                    }
-
-                }
-                return true;
-            }
-            catch (InvalidParameterException e)
+            if (commandName.Equals("drawto") || commandName.Equals("moveto") || commandName.Equals("rectangle"))
             {
 
-                error++;
-                error_lines.Add(count_line);
-                errors.Add(e.Message);
-                return false;
+                if (parameter.Split('\u002C').Length == 2)  // splits parameter at ,
+                {
+                    val1 = parameter.Split('\u002C')[0].Trim(); //unicode for comma
+                    val2 = parameter.Split('\u002C')[1].Trim();
+
+                    if (Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$")) // if both values are digits
+                    {
+                        return true;
+                    }
+
+                    else if (!Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$"))
+                    {
+                        
+                        throw new InvalidParameterException("Wrong parameter \"" + val1 + "\". Parameter should be integer ");
+                    }
+                    else if (!Regex.IsMatch(val2, @"^\d+$") && Regex.IsMatch(val1, @"^\d+$"))
+                    {
+                        throw new InvalidParameterException("Wrong parameter \"" + val2 + "\". Parameter should be integer ");
+                    }
+                    else if (!Regex.IsMatch(val1, @"^\d+$") && !Regex.IsMatch(val2, @"^\d+$"))  // if val1 and val2 is not [0-9]
+                    {
+                        throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" and \"" + val2 + "\" Parameter should be integer ");
+                    }
+
+
+
+                }
+                else
+                {
+                    throw new InvalidParameterException("Should contain two integer parameters ");  //throw error
+                }
+
+
             }
+            if (commandName.Equals("triangle"))
+            {
+
+                if (parameter.Split('\u002C').Length == 3)
+                {
+                    val1 = parameter.Split('\u002C')[0].Trim(); //unicode for comma
+                    val2 = parameter.Split('\u002C')[1].Trim();
+                    val3 = parameter.Split('\u002C')[2].Trim();
+
+                    if (Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$") && Regex.IsMatch(val3, @"^\d+$"))
+                    {
+                        return true;
+                    }
+
+                    else if (!Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$") && Regex.IsMatch(val3, @"^\d+$"))
+                    {
+                        throw new InvalidParameterException("Wrong parameter \"" + val1 + "\". Parameter should be integer ");
+                    }
+                    else if (!Regex.IsMatch(val2, @"^\d+$") && Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val3, @"^\d+$"))
+                    {
+                        throw new InvalidParameterException("Wrong parameter \"" + val2 + "\". Parameter should be integer ");
+                    }
+                    else if (!Regex.IsMatch(val3, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$") && Regex.IsMatch(val1, @"^\d+$"))
+                    {
+                        throw new InvalidParameterException("Wrong parameter \"" + val3 + "\". Parameter should be integer ");
+                    }
+
+                    else if (!Regex.IsMatch(val1, @"^\d+$") && !Regex.IsMatch(val2, @"^\d+$") && Regex.IsMatch(val3, @"^\d+$"))
+                    {
+                        throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" , \"" + val2 + "\" ");
+                    }
+                    else if (!Regex.IsMatch(val2, @"^\d+$") && !Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val3, @"^\d+$"))
+                    {
+                        throw new InvalidParameterException("Wrong parameter  \"" + val2 + "\" and  " + val3 + "\" ");
+                    }
+                    else if (!Regex.IsMatch(val3, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$") && !Regex.IsMatch(val1, @"^\d+$"))
+                    {
+                        throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" , \" " + val3 + "\" ");
+                    }
+                    else if (!Regex.IsMatch(val1, @"^\d+$") && !Regex.IsMatch(val2, @"^\d+$") && !Regex.IsMatch(val3, @"^\d+$"))
+                    {
+                        throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" , \"" + val2 + "\" and " + val3 + "\" ");
+                    }
+                }
+                else
+                {
+                    throw new InvalidParameterException("Should contain three integer parameters ");
+                }
+
+
+            }
+            if (commandName.Equals("fill"))
+            {
+
+                if (parameter.Equals("on") || parameter.Equals("off"))
+                {
+                    switch (parameter)
+                    {
+                        case "on":
+                            isFill = true;
+                            break;
+
+                        case "off":
+                            isFill = false;
+                            break;
+                    }
+
+                }
+                else
+                {
+                    throw new InvalidParameterException("Fill should be either \"on\" or \"off\" ");
+                }
+
+            }
+            if (commandName.Equals("pen"))
+            {
+                if (Regex.IsMatch(parameter, @"^\d+$"))
+                {
+                    throw new InvalidParameterException("Parameter should not contain integer");
+                }
+                else if (colors.Contains(parameter) == true)
+                {
+
+                    checkColor(parameter);
+
+                }
+                else
+                {
+                    throw new InvalidParameterException("Wrong color. \nColor should be either \"coral\", \"magenta\", \"chocolate\", \"lime\", \"aqua\" ");
+                }
+
+            }
+            if (commandName.Equals("circle"))
+            {
+
+                val1 = parameter;
+                if (!Regex.IsMatch(val1, @"^\d+$"))
+                {
+                    throw new InvalidParameterException("Wrong parameter for circle \"" + val1 + "\" ");
+                }
+
+                else
+                {
+                    return true;
+
+                }
+
+            }
+            if (commandName.Equals("colour"))
+            {
+                val1 = parameter;
+                if (Regex.IsMatch(val1, @"^\d+$"))
+                {
+                    throw new InvalidParameterException("Wrong parameter for colour \"" + val1 + "\" ");
+                }
+
+                else
+                {
+                    return true;
+
+                }
+            }
+            return true;
+
 
         }
 
@@ -435,7 +395,7 @@ namespace Component1
                         break;
 
                 }
-                isColor = true;
+
                 return true;
             }
             return false;
@@ -447,6 +407,5 @@ namespace Component1
         }
 
     }
-
 
 }
