@@ -26,7 +26,6 @@ namespace Component1
         Shape shape;
 
 
-     
 
 
         ArrayList shape_list = new ArrayList();
@@ -72,14 +71,7 @@ namespace Component1
             get { return color; }
             set { color = value; }
         }
-        public void drawTo(int toX, int toY)
-        {
-
-            G.DrawLine(Pen, XPos, YPos, toX, toY);
-            XPos = toX;
-            YPos = toY;
-
-        }
+     
 
         public void drawCommand(string commandName, string parameters)
         {
@@ -104,6 +96,7 @@ namespace Component1
             }
             if (commandName.Equals("circle"))
             {
+
                 string val1 = parameters.Split('\u002C')[0].Trim(); //unicode for comma
 
                 int radius = int.Parse(val1);
@@ -178,11 +171,7 @@ namespace Component1
                 Color = color;
             }
 
-            if (commandName.Equals("colour"))
-            {
-                running = !running;
-             
-            }
+           
         }
      
         public void reset()  // resets canvas
@@ -202,6 +191,8 @@ namespace Component1
         {
             return shape_list;
         }
+
        
+
     }
 }
