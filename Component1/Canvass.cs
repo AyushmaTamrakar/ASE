@@ -96,14 +96,14 @@ namespace Component1
             }
             if (commandName.Equals("circle"))
             {
-
+              
                 string val1 = parameters.Split('\u002C')[0].Trim(); //unicode for comma
 
                 int radius = int.Parse(val1);
                 shape = factory.getShape("circle");  //get shapes from Factory Class
                 shape.set(Color, Fill, XPos - radius, YPos - radius, radius * 2, radius * 2); // sets value  in Set method of Shape class
+                                                                                              // shape.draw(G);
                 shape.draw(G);
-
             }
             if (commandName.Equals("rectangle"))
             {
@@ -125,7 +125,7 @@ namespace Component1
 
                 int sideA = int.Parse(val1);
                 int sideB = int.Parse(val2);
-                int sideC = int.Parse(val1);
+                int sideC = int.Parse(val3);
 
                 shape = factory.getShape("triangle");
                 shape.set(Color, Fill, XPos, YPos, sideA, sideB, sideC);
@@ -138,7 +138,7 @@ namespace Component1
                 {
                     Fill = true;
                 }
-                else
+                else if (val1.Equals("off"))    
                 {
                     Fill = false;
                 }
@@ -187,12 +187,7 @@ namespace Component1
             G.Clear(Color.White);
         }
 
-        public ArrayList shapeList()
-        {
-            return shape_list;
-        }
-
-       
+          
 
     }
 }

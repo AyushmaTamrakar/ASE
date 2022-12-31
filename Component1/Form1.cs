@@ -7,6 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,15 +19,15 @@ namespace Component1
     {
         private Canvass myCanvass;
         Graphics g;
-      
+        ArrayList shape = new ArrayList();
 
         public Form1()
         {
             InitializeComponent();
             g = drawPanel.CreateGraphics();
-            myCanvass = new Canvass(g);
-            xPos.Text = myCanvass.XPos.ToString();
-            yPos.Text = myCanvass.YPos.ToString();
+            myCanvass = new Canvass(g);        
+            xPosition.Text=myCanvass.XPos.ToString();
+            yPosition.Text =myCanvass.YPos.ToString();
           
         }
      
@@ -67,12 +68,21 @@ namespace Component1
                         for (int j = 0; j < lines.Length; j++)
                         {
                             String line = lines[j];
-                            string commandName = line.Split('(')[0].Trim().ToLower();
-                            string parameters = line.Split('(', ')')[1].ToLower();
 
-                         
-                            myCanvass.drawCommand(commandName, parameters);
+                            if (line.Contains("="))
+                            {
+                                string variable_name = line.Split('=')[0].Trim().ToLower();
+                                string value = line.Split('=', delimeter[0])[1].Trim().ToLower();
+                                myCanvass.drawCommand(variable_name, value);
+                            }
+                            else
+                            {
+                                string commandName = line.Split('(')[0].Trim().ToLower();
+                                string parameters = line.Split('(', ')')[1].ToLower();
 
+
+                                myCanvass.drawCommand(commandName, parameters);
+                            }
 
                         }
                     }
@@ -100,8 +110,8 @@ namespace Component1
                     }
 
                     actionText.Text = "";
-                    xPos.Text = myCanvass.XPos.ToString();
-                    yPos.Text = myCanvass.YPos.ToString();
+                    xPosition.Text = myCanvass.XPos.ToString();
+                    yPosition.Text = myCanvass.YPos.ToString();
                 }
                 else if (commands.Equals("reset") == true)
                 {
@@ -109,8 +119,8 @@ namespace Component1
                     console.ForeColor = Color.Green;
                     console.Text = "Program is reset to initial state \n Color is Set to Black\n Position of pen is set to (0, 0) coordinates";
                     actionText.Text = "";
-                    xPos.Text = myCanvass.XPos.ToString();
-                    yPos.Text = myCanvass.YPos.ToString();
+                    xPosition.Text = myCanvass.XPos.ToString();
+                    yPosition.Text = myCanvass.YPos.ToString();
 
                 }
                 else
@@ -127,7 +137,9 @@ namespace Component1
         private void drawPanel_Paint(object sender, PaintEventArgs e)
         {
             g = e.Graphics;
-          
+
+
+
         }
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)

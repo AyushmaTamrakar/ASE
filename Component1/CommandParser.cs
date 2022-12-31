@@ -73,74 +73,98 @@ namespace Component1
 
                     count_line++; // counts line
                     String line = lines[i];
-                    try
-                    {
-                        checkParentheses(line);
 
-                        commandName = line.Split('(')[0].Trim().ToLower(); // line split to get commandName
-
-                        checkCommandName(commandName); // checkCommandName method called passing parameter commandName
+                    if (line.Contains("=")) {
+                        string variable_name = line.Split('=')[0].Trim().ToLower();
+                        string value = line.Split('=', delimeter[0])[1].Trim().ToLower();
                         try
                         {
-                            if (validCommand == true) // if command is valid 
+                            if(!Regex.IsMatch(value, @"^\d+$"))
                             {
-                                parameter = line.Split('(', ')')[1].ToLower(); // line split to get parameter between ()
-
-                                if (parameter.Length != 0) // if parameter exists
-                                {
-                                    try
-                                    {
-                                        checkParameter(parameter); // splits and check parameter
-                             
-                                    }
-                                    catch (InvalidParameterException e)
-                                    {
-
-                                        error++;
-                                        error_lines.Add(count_line);
-                                        errors.Add(e.Message);
-                                        return false;
-                                    }
-                                    // draw commands to canvas
-                                }
-                                else
-                                {          // error display if parameter not found
-                                    error++;
-                                    error_lines.Add(count_line);
-                                    errors.Add("Parameter not found ");
-
-                                    return false;
-                                }
-                                return true;
-                            }
-                            else
-                            {          // if commandName is invalid
-                                throw new IndexOutOfRangeException("Invalid command \"" + commandName + " \"");
+                                throw new CommandNotFoundException("Value should be number");
                             }
                         }
-
-                        catch (IndexOutOfRangeException e) // handles IndexOutOfRangeExcepetion
+                        catch (CommandNotFoundException e)
                         {
-                            error++;     // counts number of errorLines
-                            error_lines.Add(count_line); // add count_line to error_lines arraylist
-                            errors.Add(e.Message);  // add to arrayList errors
+                            error++;
+                            error_lines.Add(count_line);
+                            errors.Add(e.Message);
+                        }
+                         
+
+
+                    }
+                    else
+                    {
+                        try
+                        {
+                            checkParentheses(line);
+
+                            commandName = line.Split('(')[0].Trim().ToLower(); // line split to get commandName
+
+                            checkCommandName(commandName); // checkCommandName method called passing parameter commandName
+                            try
+                            {
+                                if (validCommand == true) // if command is valid 
+                                {
+                                    parameter = line.Split('(', ')')[1].ToLower(); // line split to get parameter between ()
+
+                                    if (parameter.Length != 0) // if parameter exists
+                                    {
+                                        try
+                                        {
+                                            checkParameter(parameter); // splits and check parameter
+
+                                        }
+                                        catch (InvalidParameterException e)
+                                        {
+
+                                            error++;
+                                            error_lines.Add(count_line);
+                                            errors.Add(e.Message);
+                                            return false;
+                                        }
+                                        // draw commands to canvas
+                                    }
+                                    else
+                                    {          // error display if parameter not found
+                                        error++;
+                                        error_lines.Add(count_line);
+                                        errors.Add("Parameter not found ");
+
+                                        return false;
+                                    }
+                                    return true;
+                                }
+                                else
+                                {          // if commandName is invalid
+                                    throw new IndexOutOfRangeException("Invalid command \"" + commandName + " \"");
+                                }
+                            }
+
+                            catch (IndexOutOfRangeException e) // handles IndexOutOfRangeExcepetion
+                            {
+                                error++;     // counts number of errorLines
+                                error_lines.Add(count_line); // add count_line to error_lines arraylist
+                                errors.Add(e.Message);  // add to arrayList errors
+                                return false;
+                            }
+
+
+
+                        }
+                        catch (CommandNotFoundException e)
+                        {
+                            error++;
+                            error_lines.Add(count_line);
+                            errors.Add(e.Message);
                             return false;
                         }
 
-
-
                     }
-                    catch (CommandNotFoundException e)
-                    {
-                        error++;
-                        error_lines.Add(count_line);
-                        errors.Add(e.Message);
-                        return false;
-                    }
+
 
                 }
-
-
             }
             return true;
 
