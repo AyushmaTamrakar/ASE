@@ -27,8 +27,8 @@ namespace Component1
 
 
 
-
-        ArrayList shape_list = new ArrayList();
+        ArrayList addLine = new ArrayList();
+        ArrayList shapeList = new ArrayList();
         public Canvass()
         {
          
@@ -81,7 +81,9 @@ namespace Component1
                 string val2 = parameters.Split('\u002C')[1].Trim();
                 int toX = int.Parse(val1);
                 int toY = int.Parse(val2);
-                G.DrawLine(Pen, XPos, YPos, toX, toY);
+                DrawTo draw = new DrawTo();
+                draw.set(color, xPos, yPos, toX, toY);
+                addLine.Add(draw);
                 XPos = toX;
                 YPos = toY;
             }
@@ -101,9 +103,9 @@ namespace Component1
 
                 int radius = int.Parse(val1);
                 shape = factory.getShape("circle");  //get shapes from Factory Class
-                shape.set(Color, Fill, XPos - radius, YPos - radius, radius * 2, radius * 2); // sets value  in Set method of Shape class
-                                                                                              // shape.draw(G);
-                shape.draw(G);
+                shape.set(Color, Fill, XPos - radius, YPos - radius, radius * 2, radius * 2); // sets value  in Set metho
+              
+                shapeList.Add(shape);
             }
             if (commandName.Equals("rectangle"))
             {
@@ -114,7 +116,7 @@ namespace Component1
                 int breadth = int.Parse(val2);
                 shape = factory.getShape("rectangle");
                 shape.set(Color, Fill, XPos, YPos, length, breadth);
-                shape.draw(G);
+                shapeList.Add(shape);
 
             }
             if (commandName.Equals("triangle"))
@@ -129,7 +131,7 @@ namespace Component1
 
                 shape = factory.getShape("triangle");
                 shape.set(Color, Fill, XPos, YPos, sideA, sideB, sideC);
-                shape.draw(G);
+                shapeList.Add(shape);
             }
             if (commandName.Equals("fill"))
             {
@@ -188,6 +190,13 @@ namespace Component1
         }
 
           
-
+public ArrayList getShape()
+        {
+            return shapeList;
+        }
+        public ArrayList getLine()
+        {
+            return addLine;
+        }
     }
 }

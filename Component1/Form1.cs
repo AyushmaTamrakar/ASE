@@ -82,6 +82,7 @@ namespace Component1
 
 
                                 myCanvass.drawCommand(commandName, parameters);
+                                drawPanel.Refresh();
                             }
 
                         }
@@ -137,8 +138,18 @@ namespace Component1
         private void drawPanel_Paint(object sender, PaintEventArgs e)
         {
             g = e.Graphics;
-
-
+            for(int i = 0; i < myCanvass.getShape().Count; i++)
+            {
+                Shape s;
+                s = (Shape)myCanvass.getShape()[i];
+                s.draw(g);
+            }
+            for (int i = 0; i < myCanvass.getLine().Count; i++)
+            {
+                DrawTo s;
+                s = (DrawTo)myCanvass.getLine()[i];
+                s.draw(g);
+            }
 
         }
 
