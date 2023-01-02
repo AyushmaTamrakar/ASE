@@ -17,25 +17,28 @@ namespace Component1
 {
     public class Canvass
     {
+
         Pen pen;
         Color color;
         int xPos, yPos;
-        bool fill = false;
+        bool fill;
+
+     
+
         ShapeFactory factory = new ShapeFactory();
         Shape shape;
-
 
         ArrayList addLine = new ArrayList();
         ArrayList shapeList = new ArrayList();
         public Canvass()
         {
+            xPos = 0;
+            yPos = 0;
+            color = Color.Black;
+            pen = new Pen(color, 2);
+            fill = false;
         }
 
-        public Pen Pen
-        {
-            get { return pen; }
-            set { pen = value; }
-        }
         public int XPos
         {
             get { return xPos; }
@@ -58,14 +61,12 @@ namespace Component1
         }
 
 
-        public void drawCommand(string commandName, string parameters)
+        public void drawCommand(string commandName, params string[] parameters)
         {
             if (commandName.Equals("drawto"))
             {
-                string val1 = parameters.Split('\u002C')[0].Trim(); //unicode for comma
-                string val2 = parameters.Split('\u002C')[1].Trim();
-                int toX = int.Parse(val1);
-                int toY = int.Parse(val2);
+                int toX = int.Parse(parameters[0]);
+                int toY = int.Parse(parameters[1]);
                 DrawTo draw = new DrawTo();
                 draw.set(color, xPos, yPos, toX, toY);
                 addLine.Add(draw);
@@ -74,19 +75,16 @@ namespace Component1
             }
             if (commandName.Equals("moveto"))
             {
-                string val1 = parameters.Split('\u002C')[0].Trim(); //unicode for comma
-                string val2 = parameters.Split('\u002C')[1].Trim();
-                int toX = int.Parse(val1);
-                int toY = int.Parse(val2);
+
+                int toX = int.Parse(parameters[0]);
+                int toY = int.Parse(parameters[1]);
                 XPos = toX;
                 YPos = toY;
             }
             if (commandName.Equals("circle"))
             {
 
-                string val1 = parameters.Split('\u002C')[0].Trim(); //unicode for comma
-
-                int radius = int.Parse(val1);
+                int radius = int.Parse(parameters[0]);
                 shape = factory.getShape("circle");  //get shapes from Factory Class
                 shape.set(Color, Fill, XPos - radius, YPos - radius, radius * 2, radius * 2); // sets value  in Set metho
 
@@ -94,11 +92,9 @@ namespace Component1
             }
             if (commandName.Equals("rectangle"))
             {
-                string val1 = parameters.Split('\u002C')[0].Trim(); //unicode for comma
-                string val2 = parameters.Split('\u002C')[1].Trim();
 
-                int length = int.Parse(val1);
-                int breadth = int.Parse(val2);
+                int length = int.Parse(parameters[0]);
+                int breadth = int.Parse(parameters[1]);
                 shape = factory.getShape("rectangle");
                 shape.set(Color, Fill, XPos, YPos, length, breadth);
                 shapeList.Add(shape);
@@ -106,13 +102,10 @@ namespace Component1
             }
             if (commandName.Equals("triangle"))
             {
-                string val1 = parameters.Split('\u002C')[0].Trim(); //unicode for comma
-                string val2 = parameters.Split('\u002C')[1].Trim();
-                string val3 = parameters.Split('\u002C')[2].Trim();
 
-                int sideA = int.Parse(val1);
-                int sideB = int.Parse(val2);
-                int sideC = int.Parse(val3);
+                int sideA = int.Parse(parameters[0]);
+                int sideB = int.Parse(parameters[1]);
+                int sideC = int.Parse(parameters[3]);
 
                 shape = factory.getShape("triangle");
                 shape.set(Color, Fill, XPos, YPos, sideA, sideB, sideC);
@@ -120,7 +113,7 @@ namespace Component1
             }
             if (commandName.Equals("fill"))
             {
-                string val1 = parameters.Split('\u002C')[0].Trim();
+                string val1 = parameters[0];
                 if (val1.Equals("on"))
                 {
                     Fill = true;
@@ -132,7 +125,7 @@ namespace Component1
             }
             if (commandName.Equals("pen"))
             {
-                string val1 = parameters.Split('\u002c')[0].Trim();
+                string val1 = parameters[0];
                 switch (val1)
                 {
                     case "coral":
@@ -157,9 +150,11 @@ namespace Component1
                 pen = new Pen(color, 2);
                 Color = color;
             }
+
+           
+
         }
-
-
+   
         public ArrayList getShape()
         {
             return shapeList;

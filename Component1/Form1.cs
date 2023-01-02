@@ -22,17 +22,25 @@ namespace Component1
         private Canvass myCanvass;
         Graphics g;
         ArrayList shape = new ArrayList();
+        Color color;
 
+        Thread newThread;
+        bool flag = false, running = false;
         public Form1()
         {
             InitializeComponent();
             g = drawPanel.CreateGraphics();
-            myCanvass = new Canvass();        
-            xPosition.Text=myCanvass.XPos.ToString();
-            yPosition.Text =myCanvass.YPos.ToString();
-          
+            myCanvass = new Canvass();
+            xPosition.Text = myCanvass.XPos.ToString();
+            yPosition.Text = myCanvass.YPos.ToString();
+           
+                newThread = new System.Threading.Thread(thread); // create the newthread passing the delegate mehtod thread() which corresponds to the ThreadStart delegate void method
+                newThread.Start();
+
+            
+
         }
-     
+
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
@@ -49,8 +57,18 @@ namespace Component1
                 String commands = actionText.Text.Trim().ToLower(); //read commandLine trim whitespaces and change to lowercase
                 if (commands.Equals("clear") == true)
                 {
-                  
-                    g.Clear(Color.White);
+                    myCanvass.getShape().Clear();
+                    myCanvass.getLine().Clear();
+                    try
+                    {
+                        g.Clear(Color.White);
+                    }
+                    catch (Exception)
+                    {
+                        console.Text = "Canvas cannot be cleared!";
+                    }
+                    drawPanel.Refresh();
+
 
                     console.ForeColor = Color.Blue;
                     console.Text = "Canvass Cleared!";
@@ -82,7 +100,14 @@ namespace Component1
                             else
                             {
                                 string commandName = line.Split('(')[0].Trim().ToLower();
-                                string parameters = line.Split('(', ')')[1].ToLower();
+                                if(commandName== "colour")
+                                {
+                                    running = !running;
+                                }
+                                string parameter = line.Split('(', ')')[1].ToLower();
+
+                                string[] parameters = parameter.Split(',');
+
 
 
                                 myCanvass.drawCommand(commandName, parameters);
@@ -120,11 +145,12 @@ namespace Component1
                 }
                 else if (commands.Equals("reset") == true)
                 {
-                   myCanvass.XPos = 0;
+                    myCanvass.XPos = 0;
                     myCanvass.YPos = 0;
                     myCanvass.Color = Color.Black;
                     myCanvass.Fill = false;
-                   
+                    myCanvass.getShape().Clear();
+                    myCanvass.getLine().Clear();
                     console.ForeColor = Color.Green;
                     console.Text = "Program is reset to initial state \n Color is Set to Black\n Position of pen is set to (0, 0) coordinates";
                     actionText.Text = "";
@@ -142,11 +168,32 @@ namespace Component1
             }
         }
 
+        public void thread()
+        {
+            // this is the actual method that is executed as a thread. If you allow execution to exit then the thread will terminate
+            while (true) // don't allow (in this case) for it to terminate
+            {
+                while (running == true)
+                {
+                    if (flag == false)
+                    {
+                        this.color = Color.Blue;
+                        flag = true;
+                    }
+                    else
+                    {
+                        this.color = Color.Red;
+                        flag = false;
+                    }
+                    Thread.Sleep(500);
+                }
+            }
 
+        }
         private void drawPanel_Paint(object sender, PaintEventArgs e)
         {
             g = e.Graphics;
-            for(int i = 0; i < myCanvass.getShape().Count; i++)
+            for (int i = 0; i < myCanvass.getShape().Count; i++)
             {
                 Shape s;
                 s = (Shape)myCanvass.getShape()[i];
