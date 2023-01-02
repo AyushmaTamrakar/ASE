@@ -41,45 +41,81 @@ namespace UnitTestProject1
            
         }
 
-        /// <summary>
-        /// checks validity of parameters
-        /// </summary>
         [TestMethod]
-        public void checkParams()
-        {
-          
-        }
-
-        /// <summary>
-        /// checks if there are parentheses
-        /// </summary>
-        [TestMethod]
-        public void checkBrackets()
-        {
-            //string string1 = "circle 90";
-            //Assert.IsFalse(commandParser.checkParentheses(string1));
-            //string string2 = "circle(90)";
-            //Assert.IsTrue(commandParser.checkParentheses(string2));
-
-        }
-        [TestMethod]
-        public void moveToCommand()
+        public void checkMoveTo()
         {
             Assert.IsTrue(commandParser.parseCommand("moveto(34,43)"));
             Assert.IsFalse(commandParser.parseCommand("move"));
             Assert.IsFalse(commandParser.parseCommand("moveto(hgf)"));
+            Assert.IsFalse(commandParser.parseCommand("moveto 34,56)"));
+            Assert.IsFalse(commandParser.parseCommand("moveto(65,34"));
         }
 
 
-
-
         [TestMethod]
-        public void checkFillShape()
+        public void checkCircle()
         {
+            Assert.IsTrue(commandParser.parseCommand("circle(90)"));
+            Assert.IsFalse(commandParser.parseCommand("circle90"));
+            Assert.IsFalse(commandParser.parseCommand("circle(as)"));
+            Assert.IsFalse(commandParser.parseCommand("circle 90"));
+        }
+        [TestMethod]
+        public void checkFill()
+        {
+            Assert.IsTrue(commandParser.parseCommand("fill(on)"));
+            Assert.IsTrue(commandParser.parseCommand("fill(off)"));
+            Assert.IsFalse(commandParser.parseCommand("fill(23)"));
+            Assert.IsFalse(commandParser.parseCommand("fill(as"));
+            Assert.IsFalse(commandParser.parseCommand("fill 90)"));
             Assert.IsFalse(commandParser.parseCommand("fill(34,43)"));
             Assert.IsFalse(commandParser.parseCommand("fill"));
-            Assert.IsFalse(commandParser.parseCommand("fill(hgf)"));
-            Assert.IsTrue(commandParser.parseCommand("fill(on)"));
+        }
+
+        [TestMethod]
+        public void checkRectangle()
+        {
+            Assert.IsTrue(commandParser.parseCommand("rectangle(90,34)"));
+            Assert.IsFalse(commandParser.parseCommand("rectangle90"));
+            Assert.IsFalse(commandParser.parseCommand("rectangle(as,23)"));
+            Assert.IsFalse(commandParser.parseCommand("rectangle(90,df)"));
+            Assert.IsFalse(commandParser.parseCommand("rectangle(sd,df)"));
+            Assert.IsFalse(commandParser.parseCommand("rectangle 90,90)"));
+            Assert.IsFalse(commandParser.parseCommand("rectangle(90,45"));
+        }
+
+        [TestMethod]
+        public void checkPen()
+        {
+            Assert.IsTrue(commandParser.parseCommand("pen(aqua)"));
+            Assert.IsFalse(commandParser.parseCommand("pen(34)"));
+            Assert.IsFalse(commandParser.parseCommand("pen(asdf)"));
+            Assert.IsFalse(commandParser.parseCommand("pen(90,df)"));
+            Assert.IsFalse(commandParser.parseCommand("pen(sd,df)"));
+            Assert.IsFalse(commandParser.parseCommand("pne(aqua"));
+        
+        }
+        [TestMethod]
+        public void checkDrawTo()
+        {
+            Assert.IsTrue(commandParser.parseCommand("drawto(90,34)"));
+            Assert.IsFalse(commandParser.parseCommand("drawto 34"));
+            Assert.IsFalse(commandParser.parseCommand("drawto(as,23)"));
+            Assert.IsFalse(commandParser.parseCommand("drawto(90,df)"));
+            Assert.IsFalse(commandParser.parseCommand("drawto(sd,df)"));
+            Assert.IsFalse(commandParser.parseCommand("drawto 90,90)"));
+            Assert.IsFalse(commandParser.parseCommand("drawto(90,45"));
+        }
+        [TestMethod]
+        public void checkTriangle()
+        {
+            Assert.IsTrue(commandParser.parseCommand("triangle(90,34,45)"));
+            Assert.IsFalse(commandParser.parseCommand("triangle(234)"));
+            Assert.IsFalse(commandParser.parseCommand("triangle(as,23)"));
+            Assert.IsFalse(commandParser.parseCommand("triangle(90,df)"));
+            Assert.IsFalse(commandParser.parseCommand("triangle(sd,df)"));
+            Assert.IsFalse(commandParser.parseCommand("triangle 90,90)"));
+            Assert.IsFalse(commandParser.parseCommand("triangle(90,45"));
         }
     }
 }

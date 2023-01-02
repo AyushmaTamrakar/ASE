@@ -12,6 +12,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.WebRequestMethods;
+using File = System.IO.File;
 
 namespace Component1
 {
@@ -25,7 +27,7 @@ namespace Component1
         {
             InitializeComponent();
             g = drawPanel.CreateGraphics();
-            myCanvass = new Canvass(g);        
+            myCanvass = new Canvass();        
             xPosition.Text=myCanvass.XPos.ToString();
             yPosition.Text =myCanvass.YPos.ToString();
           
@@ -47,7 +49,9 @@ namespace Component1
                 String commands = actionText.Text.Trim().ToLower(); //read commandLine trim whitespaces and change to lowercase
                 if (commands.Equals("clear") == true)
                 {
-                    myCanvass.clear();
+                  
+                    g.Clear(Color.White);
+
                     console.ForeColor = Color.Blue;
                     console.Text = "Canvass Cleared!";
 
@@ -116,7 +120,11 @@ namespace Component1
                 }
                 else if (commands.Equals("reset") == true)
                 {
-                    myCanvass.reset();
+                   myCanvass.XPos = 0;
+                    myCanvass.YPos = 0;
+                    myCanvass.Color = Color.Black;
+                    myCanvass.Fill = false;
+                   
                     console.ForeColor = Color.Green;
                     console.Text = "Program is reset to initial state \n Color is Set to Black\n Position of pen is set to (0, 0) coordinates";
                     actionText.Text = "";

@@ -17,7 +17,6 @@ namespace Component1
 {
     public class Canvass
     {
-        Graphics g;
         Pen pen;
         Color color;
         int xPos, yPos;
@@ -26,26 +25,12 @@ namespace Component1
         Shape shape;
 
 
-
         ArrayList addLine = new ArrayList();
         ArrayList shapeList = new ArrayList();
         public Canvass()
         {
-         
         }
-        public Canvass(Graphics g)
-        {
-            this.g = g;
-            xPos = 0;
-            yPos = 0;
-            color = Color.Black;
-            pen = new Pen(color, 2);
-        }
-        public Graphics G
-        {
-            get { return g; }
-            set { g = value; }
-        }
+
         public Pen Pen
         {
             get { return pen; }
@@ -71,7 +56,7 @@ namespace Component1
             get { return color; }
             set { color = value; }
         }
-     
+
 
         public void drawCommand(string commandName, string parameters)
         {
@@ -98,13 +83,13 @@ namespace Component1
             }
             if (commandName.Equals("circle"))
             {
-              
+
                 string val1 = parameters.Split('\u002C')[0].Trim(); //unicode for comma
 
                 int radius = int.Parse(val1);
                 shape = factory.getShape("circle");  //get shapes from Factory Class
                 shape.set(Color, Fill, XPos - radius, YPos - radius, radius * 2, radius * 2); // sets value  in Set metho
-              
+
                 shapeList.Add(shape);
             }
             if (commandName.Equals("rectangle"))
@@ -140,7 +125,7 @@ namespace Component1
                 {
                     Fill = true;
                 }
-                else if (val1.Equals("off"))    
+                else if (val1.Equals("off"))
                 {
                     Fill = false;
                 }
@@ -172,25 +157,10 @@ namespace Component1
                 pen = new Pen(color, 2);
                 Color = color;
             }
-
-           
-        }
-     
-        public void reset()  // resets canvas
-        {
-            XPos = 0;
-            YPos = 0;
-            Color = Color.Black;
-            Fill = false;
-
-        }
-        public void clear()  // clears canvas
-        {
-            G.Clear(Color.White);
         }
 
-          
-public ArrayList getShape()
+
+        public ArrayList getShape()
         {
             return shapeList;
         }
