@@ -397,30 +397,13 @@ namespace Component1
         {
             if (String.IsNullOrEmpty(select) == false)
             {
-                switch (select)
+                for (int i = 0; i < colors.Count; i++)
                 {
-                    case "coral":
-                        pen = Color.Coral;
-                        break;
-                    case "magenta":
-                        pen = Color.Magenta;
-                        break;
-                    case "chocolate":
-                        pen = Color.Chocolate;
-                        break;
-                    case "lime":
-                        pen = Color.Lime;
-                        break;
-                    case "aqua":
-                        pen = Color.Aqua;
-                        break;
-                    default:
-                        pen = Color.Black;
-                        break;
-
+                    if (colors[i] == colors)  // checks commandName
+                    {
+                        return true;    // command is valid
+                    }
                 }
-
-                return true;
             }
             return false;
         }
