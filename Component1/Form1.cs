@@ -34,8 +34,7 @@ namespace Component1
             xPosition.Text = myCanvass.XPos.ToString();
             yPosition.Text = myCanvass.YPos.ToString();
            
-                newThread = new System.Threading.Thread(thread); // create the newthread passing the delegate mehtod thread() which corresponds to the ThreadStart delegate void method
-                newThread.Start();
+          
 
             
 
@@ -100,14 +99,12 @@ namespace Component1
                             else
                             {
                                 string commandName = line.Split('(')[0].Trim().ToLower();
-                                if(commandName== "colour")
-                                {
-                                    running = !running;
-                                }
+                             
                                 string parameter = line.Split('(', ')')[1].ToLower();
 
                                 string[] parameters = parameter.Split(',');
 
+                          
 
 
                                 myCanvass.drawCommand(commandName, parameters);
@@ -173,8 +170,7 @@ namespace Component1
             // this is the actual method that is executed as a thread. If you allow execution to exit then the thread will terminate
             while (true) // don't allow (in this case) for it to terminate
             {
-                while (running == true)
-                {
+               
                     if (flag == false)
                     {
                         this.color = Color.Blue;
@@ -186,7 +182,7 @@ namespace Component1
                         flag = false;
                     }
                     Thread.Sleep(500);
-                }
+                
             }
 
         }
