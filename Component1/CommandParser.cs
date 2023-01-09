@@ -1,7 +1,6 @@
 ﻿using System;
 using System.CodeDom;
 using System.Collections;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Linq.Expressions;
@@ -16,9 +15,9 @@ namespace Component1
 
         String commandName;
         String parameter;
-
+      
         string val1, val2, val3;
-        bool validCommand, containsVariable ;
+        bool validCommand, containsVariable = false;
         bool isFill;
 
 
@@ -37,8 +36,6 @@ namespace Component1
 
         bool noCommand;
 
-
-
         public int Error
         {
             get { return error; }
@@ -56,7 +53,7 @@ namespace Component1
             set { noCommand = value; }
         }
 
-
+  
         public CommandParser() { }
 
         public bool parseCommand(string command)
@@ -80,39 +77,7 @@ namespace Component1
                     count_line++; // counts line
                     String line = lines[i];
 
-                    if (line.Contains("="))
-                    {
-
-                       try
-                        {
-                            variable_name = line.Split('=')[0].Trim().ToLower();
-                            value = line.Split('=', delimeter[0])[1].Trim();
-
-                           
-                            if (Regex.IsMatch(value, @"^\d+$")) {
-                                return containsVariable = true;
-                                
-                            }else{
-                               return containsVariable = false;
-                                throw new CommandNotFoundException("Value should be number");
-                            }
-
-
-
-
-                        }
-                        catch (CommandNotFoundException e)
-                        {
-                            error++;
-                            error_lines.Add(count_line);
-                            errors.Add(e.Message);
-                        }
-
-
-
-                    }
-                    if (line.Contains("=") == false)
-                    {
+                   
                         try
                         {
                             checkParentheses(line);
@@ -124,7 +89,7 @@ namespace Component1
                             {
                                 if (validCommand == true) // if command is valid 
                                 {
-                                    parameter = line.Split('(', ')')[1].ToLower().Trim(); // line split to get parameter between ()
+                                    parameter = line.Split('(', ')')[1].ToLower(); // line split to get parameter between ()
 
                                     if (parameter.Length != 0) // if parameter exists
                                     {
@@ -178,7 +143,7 @@ namespace Component1
                             return false;
                         }
 
-                    }
+                    
 
 
                 }
@@ -186,7 +151,6 @@ namespace Component1
             return true;
 
         }
-
         public void checkParentheses(string line)
         {
 
@@ -243,7 +207,7 @@ namespace Component1
             }
         }
 
-
+    
         public bool checkParameter(string parameter) //checks parameter pass with commands
         {
 
@@ -255,12 +219,7 @@ namespace Component1
                     val1 = parameter.Split('\u002C')[0].Trim(); //unicode for comma
                     val2 = parameter.Split('\u002C')[1].Trim();
 
-                    if (containsVariable == true)
-                    {
-
-                    }
-                    else
-                    {
+                
 
                         if (Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$")) // if both values are digits
                         {
@@ -281,7 +240,7 @@ namespace Component1
                             throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" and \"" + val2 + "\" Parameter should be integer ");
                         }
 
-                    }
+                    
 
                 }
                 else
@@ -387,27 +346,15 @@ namespace Component1
             {
 
                 val1 = parameter;
-                if (containsVariable == true)
+                if (!Regex.IsMatch(val1, @"^\d+$"))
                 {
-                    if (val1.Equals(variable_name) == true)
-                    {
-                        MessageBox.Show("sf");
-                        return true;
-
-                    }
+                    throw new InvalidParameterException("Wrong parameter for circle \"" + val1 + "\" ");
                 }
+
                 else
                 {
-                    if (!Regex.IsMatch(val1, @"^\d+$"))
-                    {
-                        throw new InvalidParameterException("Wrong parameter for circle \"" + val1 + "\" ");
-                    }
+                    return true;
 
-                    else
-                    {
-                        return true;
-
-                    }
                 }
 
             }

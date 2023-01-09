@@ -21,19 +21,17 @@ namespace Component1
     {
         private Canvass myCanvass;
         Graphics g;
-
-
+    
         public Form1()
         {
             InitializeComponent();
             g = drawPanel.CreateGraphics();
             myCanvass = new Canvass();
             xPosition.Text = myCanvass.XPos.ToString();
-            yPosition.Text = myCanvass.YPos.ToString();
-
+            yPosition.Text = myCanvass.YPos.ToString();     
+                    
 
         }
-        
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -71,7 +69,7 @@ namespace Component1
                 }
                 else if (commands.Equals("run") == true)
                 {
-
+                 
                     int i = 0;
                     console.Text = String.Empty;
                     CommandParser parse = new CommandParser();
@@ -86,26 +84,17 @@ namespace Component1
                         {
                             String line = lines[j];
 
-                            if (line.Contains("="))
-                            {
-                                string variable_name = line.Split('=')[0].Trim().ToLower();
-                                string value = line.Split('=', delimeter[0])[1].Trim();
-
-                             
-                            }
-                            else
-                            {
+                         
                                 string commandName = line.Split('(')[0].Trim().ToLower();
-
+                             
                                 string parameter = line.Split('(', ')')[1].ToLower();
 
-                                string[] parameters = parameter.Split(',');
+                                string[] parameters = parameter.Split(',');                          
 
 
                                 myCanvass.drawCommand(commandName, parameters);
-
                                 drawPanel.Refresh();
-                            }
+                            
 
                         }
                     }
@@ -161,7 +150,7 @@ namespace Component1
             }
         }
 
-
+    
         private void drawPanel_Paint(object sender, PaintEventArgs e)
         {
             g = e.Graphics;
@@ -206,7 +195,7 @@ namespace Component1
                 File.WriteAllText(saveFile.FileName, commandLine.Text);
             }
         }
-        
+
 
     }
 }

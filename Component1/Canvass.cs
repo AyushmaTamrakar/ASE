@@ -8,7 +8,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Policy;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -23,9 +22,8 @@ namespace Component1
         Color color;
         int xPos, yPos;
         bool fill;
-        int toX, toY;
 
-
+     
 
         ShapeFactory factory = new ShapeFactory();
         Shape shape;
@@ -61,19 +59,14 @@ namespace Component1
             get { return color; }
             set { color = value; }
         }
-       
 
-    
+
         public void drawCommand(string commandName, params string[] parameters)
         {
-          
-
             if (commandName.Equals("drawto"))
             {
-                toX = int.Parse(parameters[0]);
-               
-                toY = int.Parse(parameters[1]);
-                
+                int toX = int.Parse(parameters[0]);
+                int toY = int.Parse(parameters[1]);
                 DrawTo draw = new DrawTo();
                 draw.set(color, xPos, yPos, toX, toY);
                 addLine.Add(draw);
@@ -83,8 +76,8 @@ namespace Component1
             if (commandName.Equals("moveto"))
             {
 
-                 toX = int.Parse(parameters[0]);
-                 toY = int.Parse(parameters[1]);
+                int toX = int.Parse(parameters[0]);
+                int toY = int.Parse(parameters[1]);
                 XPos = toX;
                 YPos = toY;
             }
@@ -112,7 +105,7 @@ namespace Component1
 
                 int sideA = int.Parse(parameters[0]);
                 int sideB = int.Parse(parameters[1]);
-                int sideC = int.Parse(parameters[3]);
+                int sideC = int.Parse(parameters[2]);
 
                 shape = factory.getShape("triangle");
                 shape.set(Color, Fill, XPos, YPos, sideA, sideB, sideC);
