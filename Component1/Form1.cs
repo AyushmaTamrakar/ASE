@@ -87,7 +87,7 @@ namespace Component1
                          
                                 string commandName = line.Split('(')[0].Trim().ToLower();
                              
-                                string parameter = line.Split('(', ')')[1].ToLower();
+                                string parameter = line.Split('(', ')')[1];
 
                                 string[] parameters = parameter.Split(',');                          
 
