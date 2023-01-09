@@ -84,18 +84,19 @@ namespace Component1
                         {
                             String line = lines[j];
 
-                         
+                            if (line.Contains("=") == false)
+                            {
                                 string commandName = line.Split('(')[0].Trim().ToLower();
-                             
+
                                 string parameter = line.Split('(', ')')[1];
 
-                                string[] parameters = parameter.Split(',');                          
+                                string[] parameters = parameter.Split(',');
 
 
                                 myCanvass.drawCommand(commandName, parameters);
                                 drawPanel.Refresh();
-                            
 
+                            }
                         }
                     }
                     if (parse.NoCommand == true)
