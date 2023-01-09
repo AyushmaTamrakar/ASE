@@ -21,11 +21,8 @@ namespace Component1
     {
         private Canvass myCanvass;
         Graphics g;
-        ArrayList shape = new ArrayList();
-        Color color;
 
-        Thread newThread;
-        bool flag = false, running = false;
+
         public Form1()
         {
             InitializeComponent();
@@ -33,12 +30,10 @@ namespace Component1
             myCanvass = new Canvass();
             xPosition.Text = myCanvass.XPos.ToString();
             yPosition.Text = myCanvass.YPos.ToString();
-           
-          
 
-            
 
         }
+        
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -76,6 +71,7 @@ namespace Component1
                 }
                 else if (commands.Equals("run") == true)
                 {
+
                     int i = 0;
                     console.Text = String.Empty;
                     CommandParser parse = new CommandParser();
@@ -93,21 +89,21 @@ namespace Component1
                             if (line.Contains("="))
                             {
                                 string variable_name = line.Split('=')[0].Trim().ToLower();
-                                string value = line.Split('=', delimeter[0])[1].Trim().ToLower();
-                                myCanvass.drawCommand(variable_name, value);
+                                string value = line.Split('=', delimeter[0])[1].Trim();
+
+                             
                             }
                             else
                             {
                                 string commandName = line.Split('(')[0].Trim().ToLower();
-                             
+
                                 string parameter = line.Split('(', ')')[1].ToLower();
 
                                 string[] parameters = parameter.Split(',');
 
-                          
-
 
                                 myCanvass.drawCommand(commandName, parameters);
+
                                 drawPanel.Refresh();
                             }
 
@@ -165,27 +161,7 @@ namespace Component1
             }
         }
 
-        public void thread()
-        {
-            // this is the actual method that is executed as a thread. If you allow execution to exit then the thread will terminate
-            while (true) // don't allow (in this case) for it to terminate
-            {
-               
-                    if (flag == false)
-                    {
-                        this.color = Color.Blue;
-                        flag = true;
-                    }
-                    else
-                    {
-                        this.color = Color.Red;
-                        flag = false;
-                    }
-                    Thread.Sleep(500);
-                
-            }
 
-        }
         private void drawPanel_Paint(object sender, PaintEventArgs e)
         {
             g = e.Graphics;
@@ -230,7 +206,7 @@ namespace Component1
                 File.WriteAllText(saveFile.FileName, commandLine.Text);
             }
         }
-
+        
 
     }
 }

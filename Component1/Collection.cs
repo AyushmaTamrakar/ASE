@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace Component1
 {
-    internal interface Container
+     public interface Collection
     {
-        public Iterator getIterator();
+         Iterator getIterator();
+
+        //string this[string index] { set; get; }
+        
+        int Count { get; }
     }
 }

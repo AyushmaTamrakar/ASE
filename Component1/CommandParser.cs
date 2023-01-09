@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom;
 using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Linq.Expressions;
@@ -15,16 +16,19 @@ namespace Component1
 
         String commandName;
         String parameter;
-      
+
         string val1, val2, val3;
-        bool validCommand;
+        bool validCommand, containsVariable ;
         bool isFill;
 
 
         ArrayList colors = new ArrayList() { "coral", "magenta", "chocolate", "lime", "aqua" };
         Color pen;
 
-  
+        string variable_name;
+        string value;
+
+
 
         ArrayList errors = new ArrayList();
         ArrayList error_lines = new ArrayList();
@@ -32,6 +36,8 @@ namespace Component1
         int count_line;
 
         bool noCommand;
+
+
 
         public int Error
         {
@@ -50,7 +56,7 @@ namespace Component1
             set { noCommand = value; }
         }
 
-  
+
         public CommandParser() { }
 
         public bool parseCommand(string command)
@@ -74,15 +80,26 @@ namespace Component1
                     count_line++; // counts line
                     String line = lines[i];
 
-                    if (line.Contains("=")) {
-                        string variable_name = line.Split('=')[0].Trim().ToLower();
-                        string value = line.Split('=', delimeter[0])[1].Trim().ToLower();
-                        try
+                    if (line.Contains("="))
+                    {
+
+                       try
                         {
-                            if(!Regex.IsMatch(value, @"^\d+$"))
-                            {
+                            variable_name = line.Split('=')[0].Trim().ToLower();
+                            value = line.Split('=', delimeter[0])[1].Trim();
+
+                           
+                            if (Regex.IsMatch(value, @"^\d+$")) {
+                                return containsVariable = true;
+                                
+                            }else{
+                               return containsVariable = false;
                                 throw new CommandNotFoundException("Value should be number");
                             }
+
+
+
+
                         }
                         catch (CommandNotFoundException e)
                         {
@@ -90,11 +107,11 @@ namespace Component1
                             error_lines.Add(count_line);
                             errors.Add(e.Message);
                         }
-                         
+
 
 
                     }
-                    else
+                    if (line.Contains("=") == false)
                     {
                         try
                         {
@@ -107,7 +124,7 @@ namespace Component1
                             {
                                 if (validCommand == true) // if command is valid 
                                 {
-                                    parameter = line.Split('(', ')')[1].ToLower(); // line split to get parameter between ()
+                                    parameter = line.Split('(', ')')[1].ToLower().Trim(); // line split to get parameter between ()
 
                                     if (parameter.Length != 0) // if parameter exists
                                     {
@@ -169,6 +186,7 @@ namespace Component1
             return true;
 
         }
+
         public void checkParentheses(string line)
         {
 
@@ -225,7 +243,7 @@ namespace Component1
             }
         }
 
-    
+
         public bool checkParameter(string parameter) //checks parameter pass with commands
         {
 
@@ -237,26 +255,33 @@ namespace Component1
                     val1 = parameter.Split('\u002C')[0].Trim(); //unicode for comma
                     val2 = parameter.Split('\u002C')[1].Trim();
 
-                    if (Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$")) // if both values are digits
+                    if (containsVariable == true)
                     {
-                        return true;
-                    }
 
-                    else if (!Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$"))
-                    {
-                        
-                        throw new InvalidParameterException("Wrong parameter \"" + val1 + "\". Parameter should be integer ");
                     }
-                    else if (!Regex.IsMatch(val2, @"^\d+$") && Regex.IsMatch(val1, @"^\d+$"))
+                    else
                     {
-                        throw new InvalidParameterException("Wrong parameter \"" + val2 + "\". Parameter should be integer ");
-                    }
-                    else if (!Regex.IsMatch(val1, @"^\d+$") && !Regex.IsMatch(val2, @"^\d+$"))  // if val1 and val2 is not [0-9]
-                    {
-                        throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" and \"" + val2 + "\" Parameter should be integer ");
-                    }
 
+                        if (Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$")) // if both values are digits
+                        {
+                            return true;
+                        }
 
+                        else if (!Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$"))
+                        {
+
+                            throw new InvalidParameterException("Wrong parameter \"" + val1 + "\". Parameter should be integer ");
+                        }
+                        else if (!Regex.IsMatch(val2, @"^\d+$") && Regex.IsMatch(val1, @"^\d+$"))
+                        {
+                            throw new InvalidParameterException("Wrong parameter \"" + val2 + "\". Parameter should be integer ");
+                        }
+                        else if (!Regex.IsMatch(val1, @"^\d+$") && !Regex.IsMatch(val2, @"^\d+$"))  // if val1 and val2 is not [0-9]
+                        {
+                            throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" and \"" + val2 + "\" Parameter should be integer ");
+                        }
+
+                    }
 
                 }
                 else
@@ -362,15 +387,27 @@ namespace Component1
             {
 
                 val1 = parameter;
-                if (!Regex.IsMatch(val1, @"^\d+$"))
+                if (containsVariable == true)
                 {
-                    throw new InvalidParameterException("Wrong parameter for circle \"" + val1 + "\" ");
-                }
+                    if (val1.Equals(variable_name) == true)
+                    {
+                        MessageBox.Show("sf");
+                        return true;
 
+                    }
+                }
                 else
                 {
-                    return true;
+                    if (!Regex.IsMatch(val1, @"^\d+$"))
+                    {
+                        throw new InvalidParameterException("Wrong parameter for circle \"" + val1 + "\" ");
+                    }
 
+                    else
+                    {
+                        return true;
+
+                    }
                 }
 
             }

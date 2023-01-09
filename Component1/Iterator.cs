@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace Component1
 {
-    public interface Iterator
+    public  interface Iterator
     {
-        public bool hasNext();
-        public object next();
+        string FirstItem { get; }
+        string NextItem { get; }
+        string CurrentItem { get; }
+        bool IsDone { get; }
     }
 }
