@@ -21,15 +21,15 @@ namespace Component1
     {
         private Canvass myCanvass;
         Graphics g;
-    
+
         public Form1()
         {
             InitializeComponent();
             g = drawPanel.CreateGraphics();
             myCanvass = new Canvass();
             xPosition.Text = myCanvass.XPos.ToString();
-            yPosition.Text = myCanvass.YPos.ToString();     
-                    
+            yPosition.Text = myCanvass.YPos.ToString();
+
 
         }
 
@@ -69,7 +69,7 @@ namespace Component1
                 }
                 else if (commands.Equals("run") == true)
                 {
-                 
+
                     int i = 0;
                     console.Text = String.Empty;
                     CommandParser parse = new CommandParser();
@@ -84,19 +84,20 @@ namespace Component1
                         {
                             String line = lines[j];
 
-                            if (line.Contains("=") == false)
-                            {
-                                string commandName = line.Split('(')[0].Trim().ToLower();
 
-                                string parameter = line.Split('(', ')')[1];
+                            string commandName = line.Split('(')[0].Trim().ToLower();
 
-                                string[] parameters = parameter.Split(',');
+                            string parameter = line.Split('(', ')')[1];
+
+                            string[] parameters = parameter.Split(',');
 
 
-                                myCanvass.drawCommand(commandName, parameters);
-                                drawPanel.Refresh();
 
-                            }
+                            myCanvass.drawCommand(commandName, parameters);
+                            drawPanel.Refresh();
+
+
+
                         }
                     }
                     if (parse.NoCommand == true)
@@ -151,7 +152,7 @@ namespace Component1
             }
         }
 
-    
+
         private void drawPanel_Paint(object sender, PaintEventArgs e)
         {
             g = e.Graphics;

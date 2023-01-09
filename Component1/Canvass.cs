@@ -105,7 +105,7 @@ namespace Component1
 
                 int sideA = int.Parse(parameters[0]);
                 int sideB = int.Parse(parameters[1]);
-                int sideC = int.Parse(parameters[2]);
+                int sideC = int.Parse(parameters[1]);
 
                 shape = factory.getShape("triangle");
                 shape.set(Color, Fill, XPos, YPos, sideA, sideB, sideC);

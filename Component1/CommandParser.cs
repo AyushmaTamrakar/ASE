@@ -17,15 +17,13 @@ namespace Component1
         String parameter;
       
         string val1, val2, val3;
-        bool validCommand, containsVariable = false;
+        bool validCommand;
         bool isFill;
 
 
         ArrayList colors = new ArrayList() { "coral", "magenta", "chocolate", "lime", "aqua" };
         Color pen;
 
-        string variable_name;
-        string value;
 
 
 
