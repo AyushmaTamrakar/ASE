@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -22,6 +23,8 @@ namespace Component1
         private Canvass myCanvass;
         Graphics g;
 
+        Dictionary<string, int> variables = null;
+
         public Form1()
         {
             InitializeComponent();
@@ -29,10 +32,7 @@ namespace Component1
             myCanvass = new Canvass();
             xPosition.Text = myCanvass.XPos.ToString();
             yPosition.Text = myCanvass.YPos.ToString();
-
-
         }
-
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
@@ -42,6 +42,7 @@ namespace Component1
             }
         }
 
+
         private void action_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -49,98 +50,17 @@ namespace Component1
                 String commands = actionText.Text.Trim().ToLower(); //read commandLine trim whitespaces and change to lowercase
                 if (commands.Equals("clear") == true)
                 {
-                    myCanvass.getShape().Clear();
-                    myCanvass.getLine().Clear();
-                    try
-                    {
-                        g.Clear(Color.White);
-                    }
-                    catch (Exception)
-                    {
-                        console.Text = "Canvas cannot be cleared!";
-                    }
-                    drawPanel.Refresh();
+                    canvasClear();
+                }
+                else if (commands.Equals("reset") == true)
+                {
+                    canvasReset();
 
-
-                    console.ForeColor = Color.Blue;
-                    console.Text = "Canvass Cleared!";
-
-                    actionText.Text = "";
                 }
                 else if (commands.Equals("run") == true)
                 {
 
-                    int i = 0;
-                    console.Text = String.Empty;
-                    CommandParser parse = new CommandParser();
-
-
-                    if (parse.parseCommand(commandLine.Text) == true)
-                    {
-                        char[] delimeter = new[] { '\r', '\n' };
-                        String[] lines = commandLine.Text.Split(delimeter, StringSplitOptions.RemoveEmptyEntries); //splits line
-
-                        for (int j = 0; j < lines.Length; j++)
-                        {
-                            String line = lines[j];
-
-
-                            string commandName = line.Split('(')[0].Trim().ToLower();
-
-                            string parameter = line.Split('(', ')')[1];
-
-                            string[] parameters = parameter.Split(',');
-
-
-
-                            myCanvass.drawCommand(commandName, parameters);
-                            drawPanel.Refresh();
-
-
-
-                        }
-                    }
-                    if (parse.NoCommand == true)
-                    {
-                        console.ForeColor = Color.Red;
-                        console.Text = "No commands to run";
-                    }
-
-
-                    if (parse.Error != 0)
-                    {
-
-                        console.ForeColor = Color.Red;
-
-
-
-                        foreach (string error_description in parse.error_list())
-                        {
-                            console.AppendText(Environment.NewLine + "Error on line " + (int)parse.ErrorLines[i] + ": " + error_description);
-                            i++;
-                        }
-
-                        console.AppendText(Environment.NewLine + "Please correct command syntax.");
-                    }
-
-                    actionText.Text = "";
-                    xPosition.Text = myCanvass.XPos.ToString();
-                    yPosition.Text = myCanvass.YPos.ToString();
-                }
-                else if (commands.Equals("reset") == true)
-                {
-                    myCanvass.XPos = 0;
-                    myCanvass.YPos = 0;
-                    myCanvass.Color = Color.Black;
-                    myCanvass.Fill = false;
-                    myCanvass.getShape().Clear();
-                    myCanvass.getLine().Clear();
-                    console.ForeColor = Color.Green;
-                    console.Text = "Program is reset to initial state \n Color is Set to Black\n Position of pen is set to (0, 0) coordinates";
-                    actionText.Text = "";
-                    xPosition.Text = myCanvass.XPos.ToString();
-                    yPosition.Text = myCanvass.YPos.ToString();
-
+                    runCommand();
                 }
                 else
                 {
@@ -151,7 +71,102 @@ namespace Component1
 
             }
         }
+        private void canvasClear()
+        {
+            myCanvass.getShape().Clear();
+            myCanvass.getLine().Clear();
+            try
+            {
+                g.Clear(Color.White);
+            }
+            catch (Exception)
+            {
+                console.Text = "Canvas cannot be cleared!";
+            }
+            drawPanel.Refresh();
 
+            console.ForeColor = Color.Blue;
+            console.Text = "Canvass Cleared!";
+
+            actionText.Text = "";
+        }
+        private void canvasReset()
+        {
+            myCanvass.XPos = 0;
+            myCanvass.YPos = 0;
+            myCanvass.Color = Color.Black;
+            myCanvass.Fill = false;
+            myCanvass.getShape().Clear();
+            myCanvass.getLine().Clear();
+            console.ForeColor = Color.Green;
+            console.Text = "Program is reset to initial state \n Color is Set to Black\n Position of pen is set to (0, 0) coordinates";
+            actionText.Text = "";
+            xPosition.Text = myCanvass.XPos.ToString();
+            yPosition.Text = myCanvass.YPos.ToString();
+        }
+        private void runCommand()
+        {
+            int i = 0;
+            console.Text = String.Empty;
+            CommandParser parse = new CommandParser();
+
+            if (parse.parseCommand(commandLine.Text) == true)
+            {
+                char[] delimeter = new[] { '\r', '\n' };
+                String[] lines = commandLine.Text.Split(delimeter, StringSplitOptions.RemoveEmptyEntries); //splits line
+
+                for (int j = 0; j < lines.Length; j++)
+                {
+                    String line = lines[j];
+                    if (line.Contains('='))
+                    {
+
+                        string variable_name = line.Substring(0, line.IndexOf('='));
+                        int variable_value = int.Parse(line.Substring(line.IndexOf('=') + 1));
+
+                        variables.Add(variable_name, variable_value);
+
+                    }
+                    else
+                    {
+
+                        string commandName = line.Split('(')[0].Trim().ToLower();
+
+                        string parameter = line.Split('(', ')')[1];
+
+                        string[] parameters = parameter.Split(',');
+
+
+
+                        myCanvass.drawCommand(commandName, parameters);
+                        drawPanel.Refresh();
+                    }
+                }
+
+            }
+
+            if (parse.NoCommand == true)
+            {
+                console.ForeColor = Color.Red;
+                console.Text = "No commands to run";
+            }
+            if (parse.Error != 0)
+            {
+                console.ForeColor = Color.Red;
+
+                foreach (string error_description in parse.error_list())
+                {
+                    console.AppendText(Environment.NewLine + "Error on line " + (int)parse.ErrorLines[i] + ": " + error_description);
+                    i++;
+                }
+
+                console.AppendText(Environment.NewLine + "Please correct command syntax.");
+            }
+
+            actionText.Text = "";
+            xPosition.Text = myCanvass.XPos.ToString();
+            yPosition.Text = myCanvass.YPos.ToString();
+        }
 
         private void drawPanel_Paint(object sender, PaintEventArgs e)
         {

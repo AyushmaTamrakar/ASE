@@ -63,6 +63,7 @@ namespace Component1
 
         public void drawCommand(string commandName, params string[] parameters)
         {
+           
             if (commandName.Equals("drawto"))
             {
                 int toX = int.Parse(parameters[0]);
@@ -105,7 +106,7 @@ namespace Component1
 
                 int sideA = int.Parse(parameters[0]);
                 int sideB = int.Parse(parameters[1]);
-                int sideC = int.Parse(parameters[1]);
+                int sideC = int.Parse(parameters[2]);
 
                 shape = factory.getShape("triangle");
                 shape.set(Color, Fill, XPos, YPos, sideA, sideB, sideC);

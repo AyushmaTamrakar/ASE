@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom;
 using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Linq.Expressions;
@@ -25,7 +26,7 @@ namespace Component1
         Color pen;
 
 
-
+        
 
         ArrayList errors = new ArrayList();
         ArrayList error_lines = new ArrayList();
@@ -75,7 +76,29 @@ namespace Component1
                     count_line++; // counts line
                     String line = lines[i];
 
-                   
+                    if (line.Contains('=')) {
+                        try
+                        {
+                            string variable_name = line.Substring(0, line.IndexOf('='));
+                            if (!Regex.IsMatch(variable_name, @"^[a-zA-Z]+$"))
+                            {
+                                throw new InvalidParameterException("Variable name should not be number");
+                            }
+                            
+                        }
+                        catch (InvalidParameterException e)
+                        {  error++;     // counts number of errorLines
+                            error_lines.Add(count_line); // add count_line to error_lines arraylist
+                            errors.Add(e.Message);  // add to arrayList errors
+                            return false;
+
+                        }
+                        
+                    }
+                    else
+                    {
+
+
                         try
                         {
                             checkParentheses(line);
@@ -141,9 +164,7 @@ namespace Component1
                             return false;
                         }
 
-                    
-
-
+                    }          
                 }
             }
             return true;
@@ -253,6 +274,7 @@ namespace Component1
 
                 if (parameter.Split('\u002C').Length == 3)
                 {
+                    
                     val1 = parameter.Split('\u002C')[0].Trim(); //unicode for comma
                     val2 = parameter.Split('\u002C')[1].Trim();
                     val3 = parameter.Split('\u002C')[2].Trim();
