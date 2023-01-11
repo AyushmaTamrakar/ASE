@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Policy;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -17,20 +18,29 @@ namespace Component1
 {
     public class Canvass
     {
+        private static Canvass canvass;
+        private Pen pen;
+        private Color color;
+        private int xPos, yPos;
+        private bool fill;
 
-        Pen pen;
-        Color color;
-        int xPos, yPos;
-        bool fill;
+        private ShapeFactory factory = new ShapeFactory();
+        private Shape shape;
 
-     
+        private ArrayList addLine = new ArrayList();
+        private ArrayList shapeList = new ArrayList();
 
-        ShapeFactory factory = new ShapeFactory();
-        Shape shape;
+        public static Canvass GetInstance()
+        {
+            if (canvass == null)
+            {
+                canvass = new Canvass();
+            }
+            return canvass;
+        }
 
-        ArrayList addLine = new ArrayList();
-        ArrayList shapeList = new ArrayList();
-        public Canvass()
+
+        private Canvass()
         {
             xPos = 0;
             yPos = 0;
@@ -61,13 +71,36 @@ namespace Component1
         }
 
 
-        public void drawCommand(string commandName, params string[] parameters)
+
+        public void drawCommand(string commandName, Dictionary<string, string> var, params string[] parameters)
         {
-           
             if (commandName.Equals("drawto"))
             {
-                int toX = int.Parse(parameters[0]);
-                int toY = int.Parse(parameters[1]);
+                int toX = 0, toY = 0;
+
+                string x = parameters[0];
+                string y = parameters[1];
+                if (!Regex.IsMatch(x, @"^[0-9]+$"))
+                {
+                    string X;
+                    var.TryGetValue(x, out X);
+                    toX = int.Parse(X);
+                }
+                else
+                {
+                    toX = int.Parse(parameters[0]);
+                }
+                if (!Regex.IsMatch(y, @"^[0-9]+$"))
+                {
+                    string Y;
+                    var.TryGetValue(y, out Y);
+                    toY = int.Parse(Y);
+                }
+                else
+                {
+                    toY = int.Parse(parameters[1]);
+                }
+
                 DrawTo draw = new DrawTo();
                 draw.set(color, xPos, yPos, toX, toY);
                 addLine.Add(draw);
@@ -76,16 +109,48 @@ namespace Component1
             }
             if (commandName.Equals("moveto"))
             {
+                int toX = 0, toY = 0;
+                string x = parameters[0];
+                string y = parameters[1];
+                if (!Regex.IsMatch(x, @"^[0-9]+$"))
+                {
+                    string X;
+                    var.TryGetValue(x, out X);
+                    toX = int.Parse(X);
+                }
+                else
+                {
+                    toX = int.Parse(parameters[0]);
+                }
+                if (!Regex.IsMatch(y, @"^[0-9]+$"))
+                {
+                    string Y;
+                    var.TryGetValue(y, out Y);
+                    toY = int.Parse(Y);
+                }
+                else
+                {
+                    toY = int.Parse(parameters[1]);
+                }
 
-                int toX = int.Parse(parameters[0]);
-                int toY = int.Parse(parameters[1]);
                 XPos = toX;
                 YPos = toY;
             }
             if (commandName.Equals("circle"))
             {
+                int radius = 0;
+                string radius_var = parameters[0];
+                if (!Regex.IsMatch(radius_var, @"^[0-9]+$"))
+                {
+                    string rad;
+                    var.TryGetValue(radius_var, out rad);
+                    radius = int.Parse(rad);
 
-                int radius = int.Parse(parameters[0]);
+                }
+                else
+                {
+                    radius = int.Parse(parameters[0]);
+                }
                 shape = factory.getShape("circle");  //get shapes from Factory Class
                 shape.set(Color, Fill, XPos - radius, YPos - radius, radius * 2, radius * 2); // sets value  in Set metho
 
@@ -93,9 +158,30 @@ namespace Component1
             }
             if (commandName.Equals("rectangle"))
             {
+                int length = 0, breadth = 0;
+                string param1 = parameters[0];
+                string param2 = parameters[1];
+                if (!Regex.IsMatch(param1, @"^[0-9]+$"))
+                {
+                    string len;
+                    var.TryGetValue(param2, out len);
+                    length = int.Parse(len);
+                }
+                else
+                {
+                    length = int.Parse(parameters[0]);
+                }
+                if (!Regex.IsMatch(param2, @"^[0-9]+$"))
+                {
+                    string breadth_var;
+                    var.TryGetValue(param2, out breadth_var);
+                    breadth = int.Parse(breadth_var);
+                }
+                else
+                {
+                    breadth = int.Parse(parameters[1]);
+                }
 
-                int length = int.Parse(parameters[0]);
-                int breadth = int.Parse(parameters[1]);
                 shape = factory.getShape("rectangle");
                 shape.set(Color, Fill, XPos, YPos, length, breadth);
                 shapeList.Add(shape);
@@ -103,10 +189,39 @@ namespace Component1
             }
             if (commandName.Equals("triangle"))
             {
-
-                int sideA = int.Parse(parameters[0]);
-                int sideB = int.Parse(parameters[1]);
-                int sideC = int.Parse(parameters[2]);
+                int sideA = 0, sideB = 0, sideC = 0;
+                string param1 = parameters[0];
+                string param2 = parameters[1];
+                if (!Regex.IsMatch(param1, @"^[0-9]+$"))
+                {
+                    string sidea;
+                    var.TryGetValue(param2, out sidea);
+                    sideA = int.Parse(sidea);
+                }
+                else
+                {
+                    sideA = int.Parse(parameters[0]);
+                }
+                if (!Regex.IsMatch(param2, @"^[0-9]+$"))
+                {
+                    string sideb;
+                    var.TryGetValue(param2, out sideb);
+                    sideB = int.Parse(sideb);
+                }
+                else
+                {
+                    sideB = int.Parse(parameters[1]);
+                }
+                if (!Regex.IsMatch(param2, @"^[0-9]+$"))
+                {
+                    string sidec;
+                    var.TryGetValue(param2, out sidec);
+                    sideC = int.Parse(sidec);
+                }
+                else
+                {
+                    sideC = int.Parse(parameters[2]);
+                }
 
                 shape = factory.getShape("triangle");
                 shape.set(Color, Fill, XPos, YPos, sideA, sideB, sideC);
@@ -114,7 +229,19 @@ namespace Component1
             }
             if (commandName.Equals("fill"))
             {
-                string val1 = parameters[0];
+                string val1="" ;
+
+                string fill_var = parameters[0];
+                if (!Regex.IsMatch(fill_var, @"^[0-9]+$") &&( fill_var.Equals("on") == false && fill_var.Equals("off") == false ))
+                {
+
+                    var.TryGetValue(fill_var, out val1);
+
+                }
+                else
+                {
+                    val1 = parameters[0];
+                }
                 if (val1.Equals("on"))
                 {
                     Fill = true;
@@ -127,7 +254,19 @@ namespace Component1
             if (commandName.Equals("pen"))
             {
                 string val1 = parameters[0];
-                switch (val1)
+                string color_var;
+                if (!Regex.IsMatch(val1, @"^[0-9]+$") &&( val1.Equals("coral")==false || val1.Equals("magenta") == false || val1.Equals("chocolate") == false || val1.Equals("lime") == false || val1.Equals("aqua") == false))
+                {
+                   
+                    var.TryGetValue(val1, out color_var);
+                    
+                }
+                else
+                {
+                    color_var = parameters[0];
+                }
+
+                switch (color_var)
                 {
                     case "coral":
                         color = Color.Coral;
@@ -150,12 +289,11 @@ namespace Component1
                 }
                 pen = new Pen(color, 2);
                 Color = color;
+
             }
 
-           
-
         }
-   
+
         public ArrayList getShape()
         {
             return shapeList;

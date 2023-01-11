@@ -21,15 +21,16 @@ namespace Component1
     public partial class Form1 : Form
     {
         private Canvass myCanvass;
-        Graphics g;
+        private Graphics g;
 
-        Dictionary<string, int> variables = null;
+
+        private Dictionary<string, string> variables = new Dictionary<string, string>();
 
         public Form1()
         {
             InitializeComponent();
             g = drawPanel.CreateGraphics();
-            myCanvass = new Canvass();
+            myCanvass = Canvass.GetInstance();
             xPosition.Text = myCanvass.XPos.ToString();
             yPosition.Text = myCanvass.YPos.ToString();
         }
@@ -106,6 +107,7 @@ namespace Component1
         }
         private void runCommand()
         {
+           
             int i = 0;
             console.Text = String.Empty;
             CommandParser parse = new CommandParser();
@@ -117,14 +119,22 @@ namespace Component1
 
                 for (int j = 0; j < lines.Length; j++)
                 {
-                    String line = lines[j];
+                    String line = lines[j].Trim();
                     if (line.Contains('='))
                     {
 
                         string variable_name = line.Substring(0, line.IndexOf('='));
-                        int variable_value = int.Parse(line.Substring(line.IndexOf('=') + 1));
+                        string variable_value = line.Substring(line.IndexOf('=') + 1);
 
-                        variables.Add(variable_name, variable_value);
+                       
+                        if (!variables.ContainsKey(variable_name))
+                        {
+                            variables.Add(variable_name, variable_value);
+                        }
+                        else
+                        {
+                            variables[variable_name] = variable_value;
+                        }
 
                     }
                     else
@@ -136,10 +146,13 @@ namespace Component1
 
                         string[] parameters = parameter.Split(',');
 
+                   
+
+                        myCanvass.drawCommand(commandName, variables, parameters);
 
 
-                        myCanvass.drawCommand(commandName, parameters);
                         drawPanel.Refresh();
+                       
                     }
                 }
 
@@ -166,8 +179,9 @@ namespace Component1
             actionText.Text = "";
             xPosition.Text = myCanvass.XPos.ToString();
             yPosition.Text = myCanvass.YPos.ToString();
+           
         }
-
+       
         private void drawPanel_Paint(object sender, PaintEventArgs e)
         {
             g = e.Graphics;
@@ -185,7 +199,7 @@ namespace Component1
             }
 
         }
-
+      
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFile = new OpenFileDialog
