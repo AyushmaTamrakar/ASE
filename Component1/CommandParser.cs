@@ -19,11 +19,11 @@ namespace Component1
 
         string val1, val2, val3;
         bool validCommand, containsVariable;
-        bool isFill;
+    
         string variable_name;
 
         ArrayList colors = new ArrayList() { "coral", "magenta", "chocolate", "lime", "aqua" };
-        Color pen;
+   
 
         private Dictionary<string, string> variables = new Dictionary<string, string>();
 
@@ -75,7 +75,7 @@ namespace Component1
                 {
 
                     count_line++; // counts line
-                    String line = lines[i];
+                    String line = lines[i].ToLower();
 
                     if (line.Contains('='))
                     {
@@ -87,7 +87,7 @@ namespace Component1
                             {
                                 throw new InvalidParameterException("Variable name should not be number");
                             }
-                            string variable_value = line.Substring(line.IndexOf('=') + 1);
+                            string variable_value = line.Substring(line.IndexOf('=') + 1).Trim();
 
                             if (!variables.ContainsKey(variable_name))
                             {
@@ -110,19 +110,31 @@ namespace Component1
                         }
 
                     }
+                    else if (line.Contains("while"))
+                    {
+                        Regex regex = new Regex(@"\s");
+                        string[] loop_name = regex.Split(line.ToLower());
+
+                        if (loop_name[0] != "while")
+                        {
+                            throw new CommandNotFoundException("loop name should be while");
+                        }
+
+                    }
+
                     else
                     {
                         try
                         {
-                            checkParentheses(line);
 
                             commandName = line.Split('(')[0].Trim().ToLower(); // line split to get commandName
 
                             checkCommandName(commandName); // checkCommandName method called passing parameter commandName
                             try
                             {
+                           
                                 if (validCommand == true) // if command is valid 
-                                {
+                                { checkParentheses(line);
                                     parameter = line.Split('(', ')')[1].ToLower(); // line split to get parameter between ()
 
                                     if (parameter.Length != 0) // if parameter exists
@@ -251,18 +263,55 @@ namespace Component1
                     val1 = parameter.Split('\u002C')[0].Trim(); //unicode for comma
                     val2 = parameter.Split('\u002C')[1].Trim();
 
-                    if (variables.ContainsKey(val1))
+
+                    if (variables.ContainsKey(val1) && variables.ContainsKey(val2))
                     {
-                        return true;
+
+                        if (!Regex.IsMatch(variables[val1], @"^\d+$"))
+                        {
+                            throw new InvalidParameterException("Variable value should be integer for  \"" + val1 + " \" ");
+                        }
+                        else if (!Regex.IsMatch(variables[val2], @"^\d+$"))
+                        {
+                            throw new InvalidParameterException("Variable value should be integer for  \" " + val2 + " \" ");
+                        }
+
+                    }
+                    else if (variables.ContainsKey(val1) || variables.ContainsKey(val2))
+                    {
+                        if (variables.ContainsKey(val1))
+                        {
+                            if (Regex.IsMatch(variables[variable_name], @"^\d+$"))
+                            {
+                                return true;
+                            }
+                            else
+                            {
+
+                                throw new InvalidParameterException("Invalid variable value \" " + val1 + " \" ");
+                            }
+                        }
+
+
+                        else if (variables.ContainsKey(val2))
+                        {
+                            if (Regex.IsMatch(variables[variable_name], @"^\d+$"))
+                            {
+                                return true;
+                            }
+                            else
+                            {
+
+                                throw new InvalidParameterException("Invalid variable value \" " + val2 + " \" ");
+                            }
+                        }
                     }
                     else
                     {
-
                         if (Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$")) // if both values are digits
                         {
                             return true;
                         }
-
                         else if (!Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$"))
                         {
 
@@ -276,15 +325,13 @@ namespace Component1
                         {
                             throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" and \"" + val2 + "\" Parameter should be integer ");
                         }
-
+                        else
+                        {
+                            throw new InvalidParameterException("Should contain two integer parameters ");  //throw error
+                        }
                     }
-                }
-                else
-                {
-                    throw new InvalidParameterException("Should contain two integer parameters ");  //throw error
-                }
 
-
+                }
             }
             if (commandName.Equals("triangle"))
             {
@@ -295,9 +342,63 @@ namespace Component1
                     val1 = parameter.Split('\u002C')[0].Trim(); //unicode for comma
                     val2 = parameter.Split('\u002C')[1].Trim();
                     val3 = parameter.Split('\u002C')[2].Trim();
-                    if (variables.ContainsKey(val1))
+                    if (variables.ContainsKey(val1) && variables.ContainsKey(val2) && variables.ContainsKey(val3))
                     {
-                        return true;
+
+                        if (!Regex.IsMatch(variables[val1], @"^\d+$"))
+                        {
+                            throw new InvalidParameterException("Variable value should be integer for \" " + val1 + " \" ");
+                        }
+                        else if (!Regex.IsMatch(variables[val2], @"^\d+$"))
+                        {
+                            throw new InvalidParameterException("Variable value should be integer for  \" " + val2 + " \" ");
+                        }
+                        else if (!Regex.IsMatch(variables[val3], @"^\d+$"))
+                        {
+                            throw new InvalidParameterException("Variable value should be integer for \"" + val3 + " \" ");
+                        }
+
+                    }
+                    else if (variables.ContainsKey(val1) || variables.ContainsKey(val2) || variables.ContainsKey(val3))
+                    {
+                        if (variables.ContainsKey(val1))
+                        {
+                            if (Regex.IsMatch(variables[variable_name], @"^\d+$"))
+                            {
+                                return true;
+                            }
+                            else
+                            {
+
+                                throw new InvalidParameterException("Invalid variable value \" " + val1 + " \" ");
+                            }
+                        }
+
+
+                        else if (variables.ContainsKey(val2))
+                        {
+                            if (Regex.IsMatch(variables[variable_name], @"^\d+$"))
+                            {
+                                return true;
+                            }
+                            else
+                            {
+
+                                throw new InvalidParameterException("Invalid variable value \" " + val2 + " \" ");
+                            }
+                        }
+                        else if (variables.ContainsKey(val3))
+                        {
+                            if (Regex.IsMatch(variables[variable_name], @"^\d+$"))
+                            {
+                                return true;
+                            }
+                            else
+                            {
+
+                                throw new InvalidParameterException("Invalid variable value \" " + val3 + " \" ");
+                            }
+                        }
                     }
                     else
                     {
@@ -349,13 +450,23 @@ namespace Component1
             {
                 if (variables.ContainsKey(parameter) == true)
                 {
-                    return true;
+                    if (variables[variable_name] == "on" || variables[variable_name] == "off")
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        throw new InvalidParameterException("Invalid value of variable for fill command");
+                    }
                 }
-                else {
+                else
+                {
                     if (parameter.Equals("on") || parameter.Equals("off"))
                     {
+                        bool isFill;
                         switch (parameter)
                         {
+                            
                             case "on":
                                 isFill = true;
                                 break;
@@ -370,7 +481,7 @@ namespace Component1
                         throw new InvalidParameterException("Fill should be either \"on\" or \"off\" ");
                     }
                 }
-               
+
             }
             if (commandName.Equals("pen"))
             {
@@ -409,7 +520,19 @@ namespace Component1
                 if (!Regex.IsMatch(val1, @"^\d+$"))
                 {
 
-                    if (variables.ContainsKey(val1) == false)
+                    if (variables.ContainsKey(val1) == true)
+                    {
+                        if (Regex.IsMatch(variables[variable_name], @"^\d+$"))
+                        {
+                            return true;
+                        }
+                        else
+                        {
+
+                            throw new InvalidParameterException("Invalid variable value for circle ");
+                        }
+                    }
+                    else
                     {
                         throw new InvalidParameterException("Wrong parameter for circle \"" + val1 + "\" ");
                     }

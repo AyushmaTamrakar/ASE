@@ -229,33 +229,36 @@ namespace Component1
             }
             if (commandName.Equals("fill"))
             {
-                string val1="" ;
+                string val1;
 
                 string fill_var = parameters[0];
-                if (!Regex.IsMatch(fill_var, @"^[0-9]+$") &&( fill_var.Equals("on") == false && fill_var.Equals("off") == false ))
+                if (!Regex.IsMatch(fill_var, @"^[0-9]+$") && fill_var.Equals("on") == false && fill_var.Equals("off")==false)
                 {
-
                     var.TryGetValue(fill_var, out val1);
-
                 }
                 else
                 {
                     val1 = parameters[0];
                 }
-                if (val1.Equals("on"))
-                {
-                    Fill = true;
-                }
-                else if (val1.Equals("off"))
-                {
-                    Fill = false;
-                }
+               
+
+                    if (val1.Equals("on"))
+                    {
+                        Fill = true;
+                    }
+                    else if (val1.Equals("off"))
+                    {
+                        Fill = false;
+                    }
+                
             }
             if (commandName.Equals("pen"))
             {
                 string val1 = parameters[0];
                 string color_var;
-                if (!Regex.IsMatch(val1, @"^[0-9]+$") &&( val1.Equals("coral")==false || val1.Equals("magenta") == false || val1.Equals("chocolate") == false || val1.Equals("lime") == false || val1.Equals("aqua") == false))
+                if (!Regex.IsMatch(val1, @"^[0-9]+$") && val1.Equals("coral")==false
+                   && val1.Equals("magenta")==false && val1.Equals("chocolate")==false
+                   && val1.Equals("aqua")==false && val1.Equals("lime")==false )
                 {
                    
                     var.TryGetValue(val1, out color_var);
@@ -263,7 +266,7 @@ namespace Component1
                 }
                 else
                 {
-                    color_var = parameters[0];
+                    color_var = val1;
                 }
 
                 switch (color_var)

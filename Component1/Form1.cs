@@ -123,8 +123,8 @@ namespace Component1
                     if (line.Contains('='))
                     {
 
-                        string variable_name = line.Substring(0, line.IndexOf('='));
-                        string variable_value = line.Substring(line.IndexOf('=') + 1);
+                        string variable_name = line.Substring(0, line.IndexOf('=')).Trim();
+                        string variable_value = line.Substring(line.IndexOf('=') + 1).Trim();
 
                        
                         if (!variables.ContainsKey(variable_name))
@@ -137,8 +137,12 @@ namespace Component1
                         }
 
                     }
-                    else
+                    else if (line.Contains("while") && line.Contains("endwhile") == false)
                     {
+                        console.Text = "No endloop";
+                    }
+                    //else
+                    //{
 
                         string commandName = line.Split('(')[0].Trim().ToLower();
 
@@ -153,7 +157,7 @@ namespace Component1
 
                         drawPanel.Refresh();
                        
-                    }
+                    //}
                 }
 
             }
