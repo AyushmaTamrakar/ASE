@@ -19,11 +19,11 @@ namespace Component1
 
         string val1, val2, val3;
         bool validCommand, containsVariable;
-    
+
         string variable_name;
 
         ArrayList colors = new ArrayList() { "coral", "magenta", "chocolate", "lime", "aqua" };
-   
+
 
         private Dictionary<string, string> variables = new Dictionary<string, string>();
 
@@ -75,29 +75,114 @@ namespace Component1
                 {
 
                     count_line++; // counts line
-                    String line = lines[i].ToLower();
+                    String line = lines[i];
 
                     if (line.Contains('='))
                     {
+
                         try
                         {
 
-                            variable_name = line.Substring(0, line.IndexOf('=')).Trim();
+                            //variable_name = line.Substring(0, line.IndexOf('=')).Trim();
+                            variable_name = line.Split('=')[0].Trim();
+
                             if (!Regex.IsMatch(variable_name, @"^[a-zA-Z]+$"))
                             {
                                 throw new InvalidParameterException("Variable name should not be number");
                             }
-                            string variable_value = line.Substring(line.IndexOf('=') + 1).Trim();
+                            // string variable_value = line.Substring(line.IndexOf('=') + 1).Trim();
 
-                            if (!variables.ContainsKey(variable_name))
-                            {
-                                variables.Add(variable_name, variable_value);
-                            }
-                            else
-                            {
-                                variables[variable_name] = variable_value;
-                            }
+                            string variable_value = line.Split('=')[1].Trim().ToLower();
+                            char[] operators = new[] { '+', '-', '*', '/' };
 
+                            string[] variable_params = variable_value.Split(operators, StringSplitOptions.RemoveEmptyEntries);
+
+
+                            if (variable_params.Length == 1)
+                            {
+                                if (!variables.ContainsKey(variable_name))
+                                {
+                                    variables.Add(variable_name, variable_value);
+
+                                }
+                                else
+                                {
+                                    variables[variable_name] = variable_value;
+                                }
+                            }
+                            else if (variable_params.Length == 2)
+                            {
+                                string val1 = variable_params[0].Trim();
+                                string val2 = variable_params[1].Trim();
+                              
+                                if (variables.ContainsKey(val1) && variables.ContainsKey(val2))
+                                {
+
+                                    if (!Regex.IsMatch(variables[val1], @"^\d+$"))
+                                    {
+                                        throw new InvalidParameterException("Variable value should be integer for  \"" + val1 + " \" ");
+                                    }
+                                    else if (!Regex.IsMatch(variables[val2], @"^\d+$"))
+                                    {
+                                        throw new InvalidParameterException("Variable value should be integer for  \" " + val2 + " \" ");
+                                    }
+                                   
+                                }
+                                else if (variables.ContainsKey(val1) || variables.ContainsKey(val2))
+                                {
+                                    if (variables.ContainsKey(val1))
+                                    {
+                                        if (Regex.IsMatch(variables[val1], @"^\d+$"))
+                                        {
+                                            return true;
+                                        }
+                                        else
+                                        {
+
+                                            throw new InvalidParameterException("Invalid variable value \" " + val1 + " \" ");
+                                        }
+                                    }
+
+
+                                    else if (variables.ContainsKey(val2))
+                                    {
+                                        if (Regex.IsMatch(variables[val2], @"^\d+$"))
+                                        {
+                                            return true;
+                                        }
+                                        else
+                                        {
+
+                                            throw new InvalidParameterException("Invalid variable value \" " + val2 + " \" ");
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if (Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$")) // if both values are digits
+                                    {
+                                        return true;
+                                    }
+                                    else if (!Regex.IsMatch(val1, @"^\d+$") && Regex.IsMatch(val2, @"^\d+$"))
+                                    {
+
+                                        throw new InvalidParameterException("Wrong parameter \"" + val1 + "\". Parameter should be integer ");
+                                    }
+                                    else if (!Regex.IsMatch(val2, @"^\d+$") && Regex.IsMatch(val1, @"^\d+$"))
+                                    {
+                                        throw new InvalidParameterException("Wrong parameter \"" + val2 + "\". Parameter should be integer ");
+                                    }
+                                    else if (!Regex.IsMatch(val1, @"^\d+$") && !Regex.IsMatch(val2, @"^\d+$"))  // if val1 and val2 is not [0-9]
+                                    {
+                                        throw new InvalidParameterException("Wrong parameter \"" + val1 + "\" and \"" + val2 + "\" Parameter should be integer ");
+                                    }
+                                    else
+                                    {
+                                        throw new InvalidParameterException("Should contain two integer parameters ");  //throw error
+                                    }
+                                }
+
+                            }
 
                         }
                         catch (InvalidParameterException e)
@@ -107,17 +192,6 @@ namespace Component1
                             errors.Add(e.Message);  // add to arrayList errors
                             return false;
 
-                        }
-
-                    }
-                    else if (line.Contains("while"))
-                    {
-                        Regex regex = new Regex(@"\s");
-                        string[] loop_name = regex.Split(line.ToLower());
-
-                        if (loop_name[0] != "while")
-                        {
-                            throw new CommandNotFoundException("loop name should be while");
                         }
 
                     }
@@ -132,9 +206,9 @@ namespace Component1
                             checkCommandName(commandName); // checkCommandName method called passing parameter commandName
                             try
                             {
-                           
+                                checkParentheses(line);
                                 if (validCommand == true) // if command is valid 
-                                { checkParentheses(line);
+                                {
                                     parameter = line.Split('(', ')')[1].ToLower(); // line split to get parameter between ()
 
                                     if (parameter.Length != 0) // if parameter exists
@@ -195,6 +269,8 @@ namespace Component1
             return true;
 
         }
+
+       
         public void checkParentheses(string line)
         {
 
@@ -466,7 +542,7 @@ namespace Component1
                         bool isFill;
                         switch (parameter)
                         {
-                            
+
                             case "on":
                                 isFill = true;
                                 break;
@@ -520,7 +596,7 @@ namespace Component1
                 if (!Regex.IsMatch(val1, @"^\d+$"))
                 {
 
-                    if (variables.ContainsKey(val1) == true)
+                    if (variables.ContainsKey(val1) )
                     {
                         if (Regex.IsMatch(variables[variable_name], @"^\d+$"))
                         {

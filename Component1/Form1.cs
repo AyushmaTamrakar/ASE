@@ -107,7 +107,7 @@ namespace Component1
         }
         private void runCommand()
         {
-           
+
             int i = 0;
             console.Text = String.Empty;
             CommandParser parse = new CommandParser();
@@ -119,30 +119,48 @@ namespace Component1
 
                 for (int j = 0; j < lines.Length; j++)
                 {
-                    String line = lines[j].Trim();
+                    String line = lines[j];
                     if (line.Contains('='))
                     {
 
                         string variable_name = line.Substring(0, line.IndexOf('=')).Trim();
-                        string variable_value = line.Substring(line.IndexOf('=') + 1).Trim();
 
-                       
-                        if (!variables.ContainsKey(variable_name))
+
+                        string variable_value = line.Split('=')[1].Trim().ToLower();
+                        char[] operators = new[] { '+', '-', '*', '/' };
+
+                        string[] variable_params = variable_value.Split(operators, StringSplitOptions.RemoveEmptyEntries);
+
+                        if (variable_params.Length == 1)
                         {
-                            variables.Add(variable_name, variable_value);
+                            updateVariables(variable_name, variable_value);
+                          
                         }
-                        else
+                        else if (variable_params.Length == 2)
                         {
-                            variables[variable_name] = variable_value;
+                            string val1 = variable_params[0].Trim();
+                            string val2 = variable_params[1].Trim();
+                            int parameter1;
+                            int parameter2;
+
+                            if (variables.ContainsKey(val1) && variables.ContainsKey(val2))
+                            {
+                                string var1, var2;
+                                variables.TryGetValue(val1, out var1);
+                                variables.TryGetValue(val2, out var2);
+                                parameter1 = int.Parse(var1);
+                                parameter2 = int.Parse(var2);
+                                int result = calculateVariable(line, parameter1, parameter2);
+                                string r = result.ToString();
+                                updateVariables(variable_name, r);
+                              
+                            }
                         }
+
 
                     }
-                    else if (line.Contains("while") && line.Contains("endwhile") == false)
+                    else
                     {
-                        console.Text = "No endloop";
-                    }
-                    //else
-                    //{
 
                         string commandName = line.Split('(')[0].Trim().ToLower();
 
@@ -150,14 +168,14 @@ namespace Component1
 
                         string[] parameters = parameter.Split(',');
 
-                   
+
 
                         myCanvass.drawCommand(commandName, variables, parameters);
 
 
                         drawPanel.Refresh();
-                       
-                    //}
+
+                    }
                 }
 
             }
@@ -183,9 +201,52 @@ namespace Component1
             actionText.Text = "";
             xPosition.Text = myCanvass.XPos.ToString();
             yPosition.Text = myCanvass.YPos.ToString();
-           
+
         }
-       
+        public int calculateVariable(string line, int var1, int var2)
+        {
+            int result = 0;
+            if (line.Contains('+'))
+            {
+                result = var1 + var2;
+            }
+            else if (line.Contains('-'))
+            {
+                result = var1 - var2;
+            }
+            else if (line.Contains('*'))
+            {
+                result = var1 * var2;
+            }
+            else if (line.Contains('/'))
+            {
+                if (var2 == 0)
+                {
+                    throw new InvalidParameterException("Divisor cannot be Zero");
+                }
+                else
+                {
+                    result = ((int)var1 / var2);
+                }
+            }
+            return result;
+        }
+        public void updateVariables(string variable_name, string variable_value)
+        {
+            if (variables.ContainsKey(variable_name))
+            {
+                variables[variable_name] = variable_value;
+                MessageBox.Show("update");
+            }
+            else
+            {
+               
+                variables.Add(variable_name, variable_value);
+             
+
+            }
+        }
+
         private void drawPanel_Paint(object sender, PaintEventArgs e)
         {
             g = e.Graphics;
@@ -203,7 +264,7 @@ namespace Component1
             }
 
         }
-      
+
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFile = new OpenFileDialog

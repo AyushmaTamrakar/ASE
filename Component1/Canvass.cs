@@ -192,6 +192,7 @@ namespace Component1
                 int sideA = 0, sideB = 0, sideC = 0;
                 string param1 = parameters[0];
                 string param2 = parameters[1];
+                string param3 = parameters[2];
                 if (!Regex.IsMatch(param1, @"^[0-9]+$"))
                 {
                     string sidea;
@@ -212,10 +213,10 @@ namespace Component1
                 {
                     sideB = int.Parse(parameters[1]);
                 }
-                if (!Regex.IsMatch(param2, @"^[0-9]+$"))
+                if (!Regex.IsMatch(param3, @"^[0-9]+$"))
                 {
                     string sidec;
-                    var.TryGetValue(param2, out sidec);
+                    var.TryGetValue(param3, out sidec);
                     sideC = int.Parse(sidec);
                 }
                 else
@@ -240,7 +241,8 @@ namespace Component1
                 {
                     val1 = parameters[0];
                 }
-               
+                if (val1 != "")
+                {
 
                     if (val1.Equals("on"))
                     {
@@ -250,7 +252,7 @@ namespace Component1
                     {
                         Fill = false;
                     }
-                
+                }
             }
             if (commandName.Equals("pen"))
             {
