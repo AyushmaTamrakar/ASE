@@ -64,6 +64,17 @@ namespace Component1
             get { return fill; }
             set { fill = value; }
         }
+        public string Fill_var()
+        {
+            if(fill == true)
+            {
+                return "On";
+            }
+            else
+            {
+                return "Off";
+            }
+        }
         public Color Color
         {
             get { return color; }

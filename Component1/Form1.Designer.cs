@@ -53,6 +53,8 @@
             this.xPosition = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.yPosition = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.fill = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -228,7 +230,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Lucida Fax", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(124, 47);
+            this.label8.Location = new System.Drawing.Point(108, 47);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(24, 18);
             this.label8.TabIndex = 14;
@@ -238,7 +240,7 @@
             // 
             this.xPosition.AutoSize = true;
             this.xPosition.Font = new System.Drawing.Font("Lucida Fax", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xPosition.Location = new System.Drawing.Point(154, 47);
+            this.xPosition.Location = new System.Drawing.Point(128, 47);
             this.xPosition.Name = "xPosition";
             this.xPosition.Size = new System.Drawing.Size(18, 18);
             this.xPosition.TabIndex = 15;
@@ -248,7 +250,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Lucida Fax", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(216, 47);
+            this.label5.Location = new System.Drawing.Point(161, 47);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(24, 18);
             this.label5.TabIndex = 16;
@@ -258,11 +260,31 @@
             // 
             this.yPosition.AutoSize = true;
             this.yPosition.Font = new System.Drawing.Font("Lucida Fax", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.yPosition.Location = new System.Drawing.Point(246, 47);
+            this.yPosition.Location = new System.Drawing.Point(178, 47);
             this.yPosition.Name = "yPosition";
             this.yPosition.Size = new System.Drawing.Size(18, 18);
             this.yPosition.TabIndex = 17;
             this.yPosition.Text = "  ";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Lucida Fax", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(223, 47);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(41, 18);
+            this.label6.TabIndex = 18;
+            this.label6.Text = "Fill:";
+            // 
+            // fill
+            // 
+            this.fill.AutoSize = true;
+            this.fill.Font = new System.Drawing.Font("Lucida Fax", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fill.Location = new System.Drawing.Point(270, 47);
+            this.fill.Name = "fill";
+            this.fill.Size = new System.Drawing.Size(18, 18);
+            this.fill.TabIndex = 19;
+            this.fill.Text = "  ";
             // 
             // Form1
             // 
@@ -270,6 +292,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
             this.ClientSize = new System.Drawing.Size(772, 450);
+            this.Controls.Add(this.fill);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.yPosition);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.xPosition);
@@ -321,6 +345,8 @@
         private System.Windows.Forms.ToolStripMenuItem aboutUsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem commandListToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem actionListToolStripMenuItem;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label fill;
     }
 }
 

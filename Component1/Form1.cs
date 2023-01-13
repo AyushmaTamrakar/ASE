@@ -22,7 +22,7 @@ namespace Component1
     {
         private Canvass myCanvass;
         private Variable variable;
-
+        private ConditionalStatement conditionalStatement;
         private Graphics g;
 
 
@@ -34,6 +34,7 @@ namespace Component1
             g = drawPanel.CreateGraphics();
             myCanvass = Canvass.GetInstance();
             variable = Variable.GetInstance();
+            conditionalStatement = ConditionalStatement.getInstance();
             xPosition.Text = myCanvass.XPos.ToString();
             yPosition.Text = myCanvass.YPos.ToString();
         }
@@ -126,31 +127,60 @@ namespace Component1
 
                 char[] delimeter = new[] { '\r', '\n' };
                 String[] lines = commandLine.Text.Split(delimeter, StringSplitOptions.RemoveEmptyEntries); //splits line
-
+                int count_lines = 0;
                 for (int j = 0; j < lines.Length; j++)
                 {
+                    count_lines++;
 
                     String line = lines[j];
-
-                    if (parse.parseCommand(line))
+                    if (line.Contains('=') == true && line.Contains('(') == false && line.Contains(')') == false)
                     {
-                        if (line.Contains('='))
+                        if (parse.parseVariable(line))
                         {
+
                             variable.declare_variable(line);
                         }
-                        else
+                    }
+                    else if (line.Contains("if"))
+                    {
+                        if (parse.parseIf(line))
                         {
-                            string commandName = line.Split('(')[0].Trim().ToLower();
+                            if (line.Contains("if") && line.Contains("then"))
+                            {
 
-                            string parameter = line.Split('(', ')')[1];
+                                string commands = line.Split('(')[0].Trim();
+                                string condition = line.Split('(', ')')[1].Trim();
+                                string[] separator = { "then" };
+                                string[] statement = line.Split(separator, StringSplitOptions.None);
+                                string command = statement[1].Trim();
+                                if (parse.parseCommand(command))
+                                {
+                                    string commandName = command.Split('(')[0].Trim().ToLower();
 
-                            string[] parameters = parameter.Split(',');
-                            variables = Variable.getVariables();
-                            myCanvass.drawCommand(commandName, variables, parameters);
+                                    string parameter = command.Split('(', ')')[1];
 
+                                    string[] parameters = parameter.Split(',');
+                                    variables = Variable.getVariables();
+                                    myCanvass.drawCommand(commandName, variables, parameters);
+
+                                }
+                                MessageBox.Show(command);
+                            }
                         }
+                    }
+
+                    else if (parse.parseCommand(line))
+                    {
+                        string commandName = line.Split('(')[0].Trim().ToLower();
+
+                        string parameter = line.Split('(', ')')[1];
+
+                        string[] parameters = parameter.Split(',');
+                        variables = Variable.getVariables();
+                        myCanvass.drawCommand(commandName, variables, parameters);
 
                     }
+
 
                     drawPanel.Refresh();
 

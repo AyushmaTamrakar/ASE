@@ -26,11 +26,9 @@ namespace Component1
         }
         public void declare_variable(string line)
         {
+            line = line.Trim();
             variable_name = line.Split('=')[0].Trim().ToLower();
-            if (!Regex.IsMatch(variable_name, @"^[a-zA-Z]+$"))
-            {
-                throw new InvalidParameterException("Variable name should not be number");
-            }
+          
 
             string variable_value = line.Split('=')[1].Trim().ToLower();
             char[] operators = new[] { '+', '-', '*', '/' };
@@ -113,10 +111,11 @@ namespace Component1
             else if (line.Contains('-'))
             {
                 result = var1 - var2;
+                MessageBox.Show(result.ToString());
             }
             else if (line.Contains('*'))
             {
-                result = var1 * var2;
+                result = (var1*var2);
             }
             else if (line.Contains('/'))
             {

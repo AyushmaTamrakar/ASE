@@ -3,6 +3,7 @@ using System.CodeDom;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.AccessControl;
@@ -13,7 +14,7 @@ namespace Component1
 {
     public class CommandParser
     {
-      
+
         String commandName;
         String parameter;
 
@@ -31,8 +32,8 @@ namespace Component1
         ArrayList error_lines = new ArrayList();
         int error = 0;
         int count_line;
+        int ifStart;
 
-        bool noCommand;
 
         public int Error
         {
@@ -45,14 +46,10 @@ namespace Component1
             get { return error_lines; }
             set { error_lines = value; }
         }
-        public bool NoCommand
-        {
-            get { return noCommand; }
-            set { noCommand = value; }
-        }
 
 
-        public CommandParser() {}
+
+        public CommandParser() { }
 
         public bool parseCommand(string command)
         {
@@ -65,8 +62,88 @@ namespace Component1
                 count_line++; // counts line
                 String line = lines[i];
 
+                try
+                {
+                    commandName = line.Split('(')[0].Trim().ToLower(); // line split to get commandName
 
-                if (line.Contains('='))
+                    checkCommandName(commandName); // checkCommandName method called passing parameter commandName
+                    try
+                    {
+                        checkParentheses(line);
+                        if (validCommand == true) // if command is valid 
+                        {
+                            parameter = line.Split('(', ')')[1].ToLower(); // line split to get parameter between ()
+
+                            if (parameter.Length != 0) // if parameter exists
+                            {
+                                try
+                                {
+                                    checkParameter(parameter); // splits and check parameter
+
+                                }
+                                catch (InvalidParameterException e)
+                                {
+
+                                    error++;
+                                    error_lines.Add(count_line);
+                                    errors.Add(e.Message);
+                                    return false;
+                                }
+                                // draw commands to canvas
+                            }
+                            else
+                            {          // error display if parameter not found
+                                error++;
+                                error_lines.Add(count_line);
+                                errors.Add("Parameter not found ");
+
+                                return false;
+                            }
+                            return true;
+                        }
+                        else
+                        {          // if commandName is invalid
+                            throw new IndexOutOfRangeException("Invalid command \"" + commandName + " \"");
+                        }
+                    }
+
+                    catch (IndexOutOfRangeException e) // handles IndexOutOfRangeExcepetion
+                    {
+                        error++;     // counts number of errorLines
+                        error_lines.Add(count_line); // add count_line to error_lines arraylist
+                        errors.Add(e.Message);  // add to arrayList errors
+                        return false;
+                    }
+
+
+
+                }
+                catch (CommandNotFoundException e)
+                {
+                    error++;
+                    error_lines.Add(count_line);
+                    errors.Add(e.Message);
+                    return false;
+                }
+
+
+            }
+
+            return true;
+
+        }
+        public bool parseVariable(string command)
+        {
+            char[] delimeter = new[] { '\r', '\n' };
+            String[] lines = command.Split(delimeter, StringSplitOptions.RemoveEmptyEntries); //splits line
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+
+                count_line++; // counts line
+                String line = lines[i];
+
+                if (line.Contains('=') == true && line.Contains('(') == false && line.Contains(')') == false)
                 {
 
                     try
@@ -81,62 +158,67 @@ namespace Component1
 
 
                         string variable_value = line.Split('=')[1].Trim().ToLower();
-                        char[] operators = new[] { '+', '-', '*', '/' };
 
-                        string[] variable_params = variable_value.Split(operators, StringSplitOptions.RemoveEmptyEntries);
-
-
-
-                        if (variable_params.Length == 2)
+                        if (line.Contains('+') || line.Contains('-') || line.Contains('*') || line.Contains('/') || line.Contains('='))
                         {
-                            variables = Variable.getVariables();
-                            string var1 = variable_params[0];
-                            string var2 = variable_params[1];
-                            if (variables.ContainsKey(var1) && variables.ContainsKey(var2))
+                            char[] operators = new[] { '+', '-', '*', '/' };
+                            string[] variable_params = variable_value.Split(operators, StringSplitOptions.RemoveEmptyEntries);
+
+
+                            if (variable_params.Length == 2)
                             {
-
-                                if (!Regex.IsMatch(variables[var1], @"^\d+$"))
+                                variables = Variable.getVariables();
+                                string var1 = variable_params[0];
+                                string var2 = variable_params[1];
+                                if (variables.ContainsKey(var1) && variables.ContainsKey(var2))
                                 {
-                                    throw new InvalidParameterException("Variable value should be integer for  \"" + val1 + " \" ");
-                                }
-                                else if (!Regex.IsMatch(variables[var2], @"^\d+$"))
-                                {
-                                    throw new InvalidParameterException("Variable value should be integer for  \" " + val2 + " \" ");
-                                }
 
+                                    if (!Regex.IsMatch(variables[var1], @"^\d+$"))
+                                    {
+                                        throw new InvalidParameterException("Variable value should be integer for  \"" + variable_params[0] + " \" ");
+                                    }
+                                    else if (!Regex.IsMatch(variables[var2], @"^\d+$"))
+                                    {
+                                        throw new InvalidParameterException("Variable value should be integer for  \" " + variable_params[1] + " \" ");
+                                    }
+
+                                }
+                                else if (variables.ContainsKey(var1) || variables.ContainsKey(var2))
+                                {
+                                    if (variables.ContainsKey(var1))
+                                    {
+                                        if (Regex.IsMatch(variables[var1], @"^\d+$"))
+                                        {
+                                            return true;
+                                        }
+                                        else
+                                        {
+
+                                            throw new InvalidParameterException("Invalid variable value \" " + var1 + " \" ");
+                                        }
+                                    }
+
+                                    else if (variables.ContainsKey(var2))
+                                    {
+                                        if (Regex.IsMatch(variables[var2], @"^\d+$"))
+                                        {
+                                            return true;
+                                        }
+                                        else
+                                        {
+
+                                            throw new InvalidParameterException("Invalid variable value \" " + var2 + " \" ");
+                                        }
+                                    }
+                                }
                             }
-                            else if (variables.ContainsKey(var1) || variables.ContainsKey(var2))
-                            {
-                                if (variables.ContainsKey(var1))
-                                {
-                                    if (Regex.IsMatch(variables[var1], @"^\d+$"))
-                                    {
-                                        return true;
-                                    }
-                                    else
-                                    {
-
-                                        throw new InvalidParameterException("Invalid variable value \" " + var1 + " \" ");
-                                    }
-                                }
 
 
-                                else if (variables.ContainsKey(var2))
-                                {
-                                    if (Regex.IsMatch(variables[var2], @"^\d+$"))
-                                    {
-                                        return true;
-                                    }
-                                    else
-                                    {
-
-                                        throw new InvalidParameterException("Invalid variable value \" " + var2 + " \" ");
-                                    }
-                                }
-                            }
                         }
-
-
+                        else
+                        {
+                            throw new InvalidParameterException("Invalid operator");
+                        }
 
                     }
                     catch (InvalidParameterException e)
@@ -149,83 +231,58 @@ namespace Component1
                     }
 
                 }
-                else if (line.Contains("if"))
-                {
-
-                }
-
-                else
-                {
-                    try
-                    {
-
-                        commandName = line.Split('(')[0].Trim().ToLower(); // line split to get commandName
-
-                        checkCommandName(commandName); // checkCommandName method called passing parameter commandName
-                        try
-                        {
-                            checkParentheses(line);
-                            if (validCommand == true) // if command is valid 
-                            {
-                                parameter = line.Split('(', ')')[1].ToLower(); // line split to get parameter between ()
-
-                                if (parameter.Length != 0) // if parameter exists
-                                {
-                                    try
-                                    {
-                                        checkParameter(parameter); // splits and check parameter
-
-                                    }
-                                    catch (InvalidParameterException e)
-                                    {
-
-                                        error++;
-                                        error_lines.Add(count_line);
-                                        errors.Add(e.Message);
-                                        return false;
-                                    }
-                                    // draw commands to canvas
-                                }
-                                else
-                                {          // error display if parameter not found
-                                    error++;
-                                    error_lines.Add(count_line);
-                                    errors.Add("Parameter not found ");
-
-                                    return false;
-                                }
-                                return true;
-                            }
-                            else
-                            {          // if commandName is invalid
-                                throw new IndexOutOfRangeException("Invalid command \"" + commandName + " \"");
-                            }
-                        }
-
-                        catch (IndexOutOfRangeException e) // handles IndexOutOfRangeExcepetion
-                        {
-                            error++;     // counts number of errorLines
-                            error_lines.Add(count_line); // add count_line to error_lines arraylist
-                            errors.Add(e.Message);  // add to arrayList errors
-                            return false;
-                        }
-
-
-
-                    }
-                    catch (CommandNotFoundException e)
-                    {
-                        error++;
-                        error_lines.Add(count_line);
-                        errors.Add(e.Message);
-                        return false;
-                    }
-
-
-                }
             }
-            return true;
 
+            return true;
+        }
+        public bool parseIf(string command)
+        {
+            char[] delimeter = new[] { '\r', '\n' };
+            String[] lines = command.Split(delimeter, StringSplitOptions.RemoveEmptyEntries); //splits line
+
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+
+                count_line++; // counts line
+                String line = lines[i];
+
+                try
+                {
+                    if (line.Contains("if"))
+                    {
+                        checkParentheses(line); 
+                        if (line.Contains("if") && line.Contains("then"))
+                        {
+
+                            string commands = line.Split('(')[0].Trim();
+                            string condition = line.Split('(', ')')[1].Trim();
+                            string[] separator = { "then" };
+                            string[] statement = line.Split(separator, StringSplitOptions.None);
+
+                        }
+                    }
+
+                    if (line.Contains("if") && line.Contains("endif"))
+                    {
+                        MessageBox.Show("multi");
+                    }
+
+
+                }
+                catch (CommandNotFoundException e)
+                {
+                    error++;     // counts number of errorLines
+                    error_lines.Add(count_line); // add count_line to error_lines arraylist
+                    errors.Add(e.Message);  // add to arrayList errors
+                    return false;
+
+                }
+
+
+            }
+
+            return true;
         }
 
 
@@ -619,6 +676,7 @@ namespace Component1
         {
             return errors;
         }
+
 
     }
 
