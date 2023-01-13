@@ -21,6 +21,8 @@ namespace Component1
     public partial class Form1 : Form
     {
         private Canvass myCanvass;
+        private Variable variable;
+
         private Graphics g;
 
 
@@ -31,6 +33,7 @@ namespace Component1
             InitializeComponent();
             g = drawPanel.CreateGraphics();
             myCanvass = Canvass.GetInstance();
+            variable = Variable.GetInstance();
             xPosition.Text = myCanvass.XPos.ToString();
             yPosition.Text = myCanvass.YPos.ToString();
         }
@@ -112,79 +115,51 @@ namespace Component1
             console.Text = String.Empty;
             CommandParser parse = new CommandParser();
 
-            if (parse.parseCommand(commandLine.Text) == true)
+            if (commandLine.Text == String.Empty)
             {
+                console.ForeColor = Color.Red;
+                console.Text = "No commands to run";
+            }
+            else
+            {
+
+
                 char[] delimeter = new[] { '\r', '\n' };
                 String[] lines = commandLine.Text.Split(delimeter, StringSplitOptions.RemoveEmptyEntries); //splits line
 
                 for (int j = 0; j < lines.Length; j++)
                 {
+
                     String line = lines[j];
-                    if (line.Contains('='))
+
+                    if (parse.parseCommand(line))
                     {
-
-                        string variable_name = line.Substring(0, line.IndexOf('=')).Trim();
-
-
-                        string variable_value = line.Split('=')[1].Trim().ToLower();
-                        char[] operators = new[] { '+', '-', '*', '/' };
-
-                        string[] variable_params = variable_value.Split(operators, StringSplitOptions.RemoveEmptyEntries);
-
-                        if (variable_params.Length == 1)
+                        if (line.Contains('='))
                         {
-                            updateVariables(variable_name, variable_value);
-                          
+                            variable.declare_variable(line);
                         }
-                        else if (variable_params.Length == 2)
+                        else
                         {
-                            string val1 = variable_params[0].Trim();
-                            string val2 = variable_params[1].Trim();
-                            int parameter1;
-                            int parameter2;
+                            string commandName = line.Split('(')[0].Trim().ToLower();
 
-                            if (variables.ContainsKey(val1) && variables.ContainsKey(val2))
-                            {
-                                string var1, var2;
-                                variables.TryGetValue(val1, out var1);
-                                variables.TryGetValue(val2, out var2);
-                                parameter1 = int.Parse(var1);
-                                parameter2 = int.Parse(var2);
-                                int result = calculateVariable(line, parameter1, parameter2);
-                                string r = result.ToString();
-                                updateVariables(variable_name, r);
-                              
-                            }
+                            string parameter = line.Split('(', ')')[1];
+
+                            string[] parameters = parameter.Split(',');
+                            variables = Variable.getVariables();
+                            myCanvass.drawCommand(commandName, variables, parameters);
+
                         }
 
-
                     }
-                    else
-                    {
 
-                        string commandName = line.Split('(')[0].Trim().ToLower();
+                    drawPanel.Refresh();
 
-                        string parameter = line.Split('(', ')')[1];
-
-                        string[] parameters = parameter.Split(',');
-
-
-
-                        myCanvass.drawCommand(commandName, variables, parameters);
-
-
-                        drawPanel.Refresh();
-
-                    }
                 }
 
+
             }
 
-            if (parse.NoCommand == true)
-            {
-                console.ForeColor = Color.Red;
-                console.Text = "No commands to run";
-            }
+
             if (parse.Error != 0)
             {
                 console.ForeColor = Color.Red;
@@ -231,21 +206,7 @@ namespace Component1
             }
             return result;
         }
-        public void updateVariables(string variable_name, string variable_value)
-        {
-            if (variables.ContainsKey(variable_name))
-            {
-                variables[variable_name] = variable_value;
-                MessageBox.Show("update");
-            }
-            else
-            {
-               
-                variables.Add(variable_name, variable_value);
-             
 
-            }
-        }
 
         private void drawPanel_Paint(object sender, PaintEventArgs e)
         {
