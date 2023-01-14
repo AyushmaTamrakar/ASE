@@ -19,7 +19,7 @@ namespace Component1
         String parameter;
 
         string val1, val2, val3;
-        bool validCommand, containsVariable;
+        bool validCommand;
 
 
         string variable_name;
@@ -32,7 +32,7 @@ namespace Component1
         ArrayList error_lines = new ArrayList();
         int error = 0;
         int count_line;
-        int ifStart;
+
 
 
         public int Error
@@ -245,30 +245,54 @@ namespace Component1
             {
 
                 count_line++; // counts line
-                String line = lines[i];
+                string line = lines[i];
 
                 try
                 {
                     if (line.Contains("if"))
                     {
-                        checkParentheses(line); 
+
+
                         if (line.Contains("if") && line.Contains("then"))
                         {
-
+                            checkParentheses(line);
                             string commands = line.Split('(')[0].Trim();
                             string condition = line.Split('(', ')')[1].Trim();
+                            string[] operators = new[] { "<=", ">=", "==", "!=", ">", "<" };
+                            string[] conditions = condition.Split(operators, StringSplitOptions.RemoveEmptyEntries);
+                            if (condition.Contains("<=") || condition.Contains(">=") || condition.Contains("==") || condition.Contains("!=") || condition.Contains(">") || condition.Contains("<"))
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                throw new CommandNotFoundException("Invalid Operator Used.");
+                            }
                             string[] separator = { "then" };
                             string[] statement = line.Split(separator, StringSplitOptions.None);
+                        }
+
+                        else if (line.Contains("if") && !line.Contains("then") )
+                        {
+                            string commands = line.Split('(')[0].Trim();
+                            checkParentheses(line);
+                            string condition = line.Split('(', ')')[1].Trim();
+
+                            string[] operators = new[] { "<=", ">=", "==", "!=", ">", "<" };
+                            string[] conditions = condition.Split(operators, StringSplitOptions.RemoveEmptyEntries);
+                            if (condition.Contains("<=") || condition.Contains(">=") || condition.Contains("==") || condition.Contains("!=") || condition.Contains(">") || condition.Contains("<"))
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                throw new CommandNotFoundException("Invalid Operator Used.");
+                            }
+
 
                         }
+
                     }
-
-                    if (line.Contains("if") && line.Contains("endif"))
-                    {
-                        MessageBox.Show("multi");
-                    }
-
-
                 }
                 catch (CommandNotFoundException e)
                 {
@@ -286,12 +310,19 @@ namespace Component1
         }
 
 
+
+        public bool loopCommand(string command)
+        {
+            string commandName = command.Split('(')[0].Trim();
+            return true;
+        }
         public void checkParentheses(string line)
         {
 
             char[] parantheses = new[] { '(', ')' };
 
             // check if each line has parantheses
+
             if (line.Contains(parantheses[0]) == false && line.Contains(parantheses[1]) == false)
             {
 

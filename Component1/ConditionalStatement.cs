@@ -26,52 +26,47 @@ namespace Component1
             }
             return conditionalStatement;
         }
-        public void checkCondition(string lines)
+   
+        public bool check(string condition, params string[] conditions)
         {
-          
-            
-
-        }
-        public void check(string condition, params string[] conditions)
-        {
-
+            variables = Variable.getVariables();
             if (variables.ContainsKey(conditions[0]))
             {
                 if (condition.Contains("=="))
                 {
                     if (variables[conditions[0]] == conditions[1])
                     {
-                        runif = true;
+                        return true;
                     }
-                    else { runif = false; }
+                    else { return false; }
                 }
                 else if (condition.Contains("!="))
                 {
                     if (variables[conditions[0]] != conditions[1])
                     {
-                        runif = true;
+                        return true;
                     }
-                    else { runif = false; }
+                    else { return false; }
                 }
                 else if (condition.Contains(">="))
                 {
                     if (int.Parse(variables[conditions[0]]) >= int.Parse(conditions[1]))
                     {
-                        runif = true;
+                        return true;
                     }
-                    else { runif = false; }
+                    else {return false; }
                 }
                 else if (condition.Contains("<="))
                 {
                     if (int.Parse(variables[conditions[0]]) <= int.Parse(conditions[1]))
                     {
-                        runif = true;
+                        return true;
                     }
-                    else { runif = false; }
+                    else { return false; }
                 }
+               
 
-
-            }
+            } return true;
         }
     }
 
