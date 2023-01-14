@@ -146,64 +146,66 @@ namespace Component1
                     }
                     else if (line.Contains("if"))
                     {
-                        ifStart = ++j;
 
-
-                        if (line.Contains("endif"))
+                        if (parse.parseIf(line))
                         {
-                            ifEnd = j;
-
-                        }
-                        if (line.Contains("if") && !line.Contains("then") && (line.Contains('(') && line.Contains(')')))
-                        {
-                            string commands = line.Split('(')[0].Trim();
-                            string condition = line.Split('(', ')')[1].Trim();
-
-                            string[] operators = new[] { "<=", ">=", "==", "!=", ">", "<" };
-                            string[] conditions = condition.Split(operators, StringSplitOptions.RemoveEmptyEntries);
-                            for (int z = ifStart; z < lines.Length; z++)
+                            if (line.Contains("if") && !line.Contains("then"))
                             {
-                                String nextLine = lines[z].Trim();
-                                if (nextLine.Contains("endif") == false)
+                                ifStart = ++j;
+                                string commands = line.Split('(')[0].Trim();
+                                string condition = line.Split('(', ')')[1].Trim();
+
+                                string[] operators = new[] { "<=", ">=", "==", "!=", ">", "<" };
+                                string[] conditions = condition.Split(operators, StringSplitOptions.RemoveEmptyEntries);
+                                if (condition.Contains("<=") || condition.Contains(">=") || condition.Contains("!=")
+                               || condition.Contains("==") || condition.Contains(">") || condition.Contains("<"))
                                 {
                                     if (conditionalStatement.check(condition, conditions))
                                     {
-
-                                        if (nextLine.Contains('=') == true && nextLine.Contains('(') == false && nextLine.Contains(')') == false)
+                                        for (int z = ifStart; z < lines.Length; z++)
                                         {
-                                            if (parse.parseVariable(nextLine))
+                                            if (lines[z].Equals("endif"))
                                             {
-
-                                                variable.declare_variable(nextLine);
-
+                                                ifEnd = ++z;
                                             }
                                         }
-                                        if (nextLine.Contains("circle") || nextLine.Contains("rectangle") || nextLine.Contains("triangle") ||
-                                            nextLine.Contains("drawto") || nextLine.Contains("moveto") || nextLine.Contains("fill") ||
-                                            nextLine.Contains("pen"))
+                                        for (int y = ifStart; y < ifEnd; y++)
                                         {
-                                            if (parse.parseCommand(nextLine))
+                                            String nextLine = lines[y].Trim();
+                                            if (nextLine.Equals("endif") == false)
                                             {
-                                                string commandName = nextLine.Split('(')[0].Trim().ToLower();
+                                                if (nextLine.Contains('=') == true && nextLine.Contains('(') == false && nextLine.Contains(')') == false)
+                                                {
+                                                    if (parse.parseVariable(nextLine))
+                                                    {
 
-                                                string parameter = nextLine.Split('(', ')')[1];
+                                                        variable.declare_variable(nextLine);
 
-                                                string[] parameters = parameter.Split(',');
-                                                variables = Variable.getVariables();
-                                                myCanvass.drawCommand(commandName, variables, parameters);
+                                                    }
+                                                }
+                                                if (nextLine.Contains("circle") || nextLine.Contains("rectangle") || nextLine.Contains("triangle") ||
+                                                    nextLine.Contains("drawto") || nextLine.Contains("moveto") || nextLine.Contains("fill") ||
+                                                    nextLine.Contains("pen"))
+                                                {
+                                                    if (parse.parseCommand(nextLine))
+                                                    {
+                                                        string commandName = nextLine.Split('(')[0].Trim().ToLower();
 
+                                                        string parameter = nextLine.Split('(', ')')[1];
+
+                                                        string[] parameters = parameter.Split(',');
+                                                        variables = Variable.getVariables();
+                                                        myCanvass.drawCommand(commandName, variables, parameters);
+
+                                                    }
+                                                }
                                             }
                                         }
                                     }
+                                  
                                 }
                             }
-
-                        }
-
-
-                        if (line.Contains("if") && line.Contains("then"))
-                        {
-                            if (parse.parseIf(line))
+                            if (line.Contains("if") && line.Contains("then"))
                             {
                                 string commands = line.Split('(')[0].Trim();
                                 string condition = line.Split('(', ')')[1].Trim();
@@ -216,7 +218,7 @@ namespace Component1
 
                                 if (conditionalStatement.check(condition, conditions))
                                 {
-                                    MessageBox.Show(command);
+
                                     if (command.Contains('=') == true && command.Contains('(') == false && command.Contains(')') == false)
                                     {
                                         if (parse.parseVariable(command))
@@ -236,39 +238,35 @@ namespace Component1
                                         string[] parameters = parameter.Split(',');
                                         variables = Variable.getVariables();
                                         myCanvass.drawCommand(commandName, variables, parameters);
-                                      
+
                                     }
-                                   
+
 
                                 }
 
                             }
-                            
+
 
                         }
 
 
                     }
-                    else if (line.Contains("while"))
+                    else if (line.Contains("circle") || line.Contains("triangle") || line.Contains("rectangle")
+                                         || line.Contains("drawto") || line.Contains("moveto") || line.Contains("fill") || line.Contains("pen"))
                     {
-                        if (parse.loopCommand(line))
+
+                        if (parse.parseCommand(line))
                         {
+                            string commandName = line.Split('(')[0].Trim().ToLower();
+
+                            string parameter = line.Split('(', ')')[1];
+
+                            string[] parameters = parameter.Split(',');
+                            variables = Variable.getVariables();
+                            myCanvass.drawCommand(commandName, variables, parameters);
 
                         }
                     }
-
-                    else if (parse.parseCommand(line))
-                    {
-                        string commandName = line.Split('(')[0].Trim().ToLower();
-
-                        string parameter = line.Split('(', ')')[1];
-
-                        string[] parameters = parameter.Split(',');
-                        variables = Variable.getVariables();
-                        myCanvass.drawCommand(commandName, variables, parameters);
-
-                    }
-
 
                     drawPanel.Refresh();
 

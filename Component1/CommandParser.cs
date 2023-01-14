@@ -243,56 +243,57 @@ namespace Component1
 
             for (int i = 0; i < lines.Length; i++)
             {
-
                 count_line++; // counts line
                 string line = lines[i];
-
                 try
                 {
-                    if (line.Contains("if"))
+
+                    commandName = line.Split('(')[0].Trim().ToLower(); // line split to get commandName
+
+                    checkCommandName(commandName); // checkCommandName method called passing parameter commandName
+                    try
                     {
+                        checkParentheses(line);
 
-
-                        if (line.Contains("if") && line.Contains("then"))
+                        string condition = line.Split('(', ')')[1].Trim();
+                        variables = Variable.getVariables();
+                        if (condition == String.Empty)
                         {
-                            checkParentheses(line);
-                            string commands = line.Split('(')[0].Trim();
-                            string condition = line.Split('(', ')')[1].Trim();
-                            string[] operators = new[] { "<=", ">=", "==", "!=", ">", "<" };
-                            string[] conditions = condition.Split(operators, StringSplitOptions.RemoveEmptyEntries);
-                            if (condition.Contains("<=") || condition.Contains(">=") || condition.Contains("==") || condition.Contains("!=") || condition.Contains(">") || condition.Contains("<"))
+                            throw new CommandNotFoundException("Missing condition");
+                        }
+                        else
+                        {
+                            if (condition.Contains("<=") || condition.Contains(">=") || condition.Contains("!=")
+                                || condition.Contains("==") || condition.Contains(">") || condition.Contains("<"))
                             {
-                                return true;
+                                string[] operators = new[] { "<=", ">=", "==", "!=", ">", "<" };
+                                string[] conditions = condition.Split(operators, StringSplitOptions.RemoveEmptyEntries);
+                                if (variables.ContainsKey(conditions[0]) == false)
+                                {
+                                    throw new CommandNotFoundException("Variable not found");
+                                }
+                                else if (!Regex.IsMatch(conditions[1], @"^\d+$"))
+                                {
+                                    throw new CommandNotFoundException("Could not be compared with string");
+                                }
                             }
                             else
                             {
-                                throw new CommandNotFoundException("Invalid Operator Used.");
+                                throw new CommandNotFoundException("Invalid operator used");
                             }
-                            string[] separator = { "then" };
-                            string[] statement = line.Split(separator, StringSplitOptions.None);
                         }
 
-                        else if (line.Contains("if") && !line.Contains("then") )
-                        {
-                            string commands = line.Split('(')[0].Trim();
-                            checkParentheses(line);
-                            string condition = line.Split('(', ')')[1].Trim();
-
-                            string[] operators = new[] { "<=", ">=", "==", "!=", ">", "<" };
-                            string[] conditions = condition.Split(operators, StringSplitOptions.RemoveEmptyEntries);
-                            if (condition.Contains("<=") || condition.Contains(">=") || condition.Contains("==") || condition.Contains("!=") || condition.Contains(">") || condition.Contains("<"))
-                            {
-                                return true;
-                            }
-                            else
-                            {
-                                throw new CommandNotFoundException("Invalid Operator Used.");
-                            }
-
-
-                        }
 
                     }
+                    catch (CommandNotFoundException e)
+                    {
+                        error++;     // counts number of errorLines
+                        error_lines.Add(count_line); // add count_line to error_lines arraylist
+                        errors.Add(e.Message);  // add to arrayList errors
+                        return false;
+
+                    }
+
                 }
                 catch (CommandNotFoundException e)
                 {
@@ -302,9 +303,8 @@ namespace Component1
                     return false;
 
                 }
-
-
             }
+
 
             return true;
         }
@@ -454,6 +454,10 @@ namespace Component1
                         }
                     }
 
+                }
+                else
+                {
+                    throw new InvalidParameterException("Parameter should be integer");  //throw error
                 }
             }
             if (commandName.Equals("triangle"))
@@ -633,6 +637,10 @@ namespace Component1
                         throw new InvalidParameterException("Wrong color. \nColor should be either \"coral\", \"magenta\", \"chocolate\", \"lime\", \"aqua\" ");
                     }
                 }
+                else
+                {
+                    throw new InvalidParameterException("Wrong color. \nColor should be either \"coral\", \"magenta\", \"chocolate\", \"lime\", \"aqua\" ");
+                }
 
             }
             if (commandName.Equals("circle"))
@@ -694,9 +702,13 @@ namespace Component1
             {
                 for (int i = 0; i < colors.Count; i++)
                 {
-                    if (colors[i] == colors)  // checks commandName
+                    if (colors[i] != colors)  // checks commandName
                     {
                         return true;    // command is valid
+                    }
+                    else
+                    {
+                        return false;
                     }
                 }
             }
