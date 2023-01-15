@@ -53,6 +53,8 @@ namespace Component1
             Color color2 = Color.Green;
             SolidBrush brush1 = new SolidBrush(color1);
             SolidBrush brush2 = new SolidBrush(color2);
+            Pen pen1 = new Pen(color1, 2);
+            Pen pen2 = new Pen(color2, 2);
 
             if (fill)
             {
@@ -70,13 +72,31 @@ namespace Component1
                     {
                         if (flag == false)
                         {
-                            g.FillEllipse(brush1, x, y, radius, radius);
-                            flag = true;
+                            if (fill)
+                            {
+                                g.FillEllipse(brush1, x, y, radius, radius);
+                                flag = true;
+                            }
+                            else
+                            {
+                                g.DrawEllipse(pen1, x, y, radius, radius);
+                                flag = true;
+                            }
+                          
                         }
                         else
                         {
-                            g.FillEllipse(brush2, x, y, radius, radius);
-                            flag = false;
+                            if (fill)
+                            {
+                                g.FillEllipse(brush2, x, y, radius, radius);
+                                flag = false;
+                            }
+                            else
+                            {
+                                g.DrawEllipse(pen2, x, y, radius, radius);
+                                flag = false;
+                            }
+                          
                         }
                         Thread.Sleep(500);
                     }

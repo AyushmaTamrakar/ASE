@@ -9,7 +9,7 @@ using System.Windows.Forms.VisualStyles;
 
 namespace Component1
 {
-    internal class Variable
+    public class Variable
     {
         private static Variable variable;
         private static Dictionary<string, string> variables = new Dictionary<string, string>();
@@ -34,7 +34,7 @@ namespace Component1
         /// method to declare variable 
         /// </summary>
         /// <param name="line"></param>
-        public void declare_variable(string line)
+        public bool declare_variable(string line)
         {
             line = line.Trim();
             variable_name = line.Split('=')[0].Trim().ToLower();
@@ -51,12 +51,15 @@ namespace Component1
                 if (variables.ContainsKey(variable_name))
                 {
                     variables[variable_name] = variable_value;
+                   
                 }
                 else
                 {
                     variables.Add(variable_name, variable_value);
+                
 
                 }
+                return true;
 
             }
             else if (variable_params.Length == 2)
@@ -97,6 +100,7 @@ namespace Component1
                     addVariable(variable_name, r);
                 }
             }
+            return true;
 
         }
         /// <summary>

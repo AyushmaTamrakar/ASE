@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Component1
@@ -10,6 +11,8 @@ namespace Component1
     internal class Triangle : Shape
     {
         int sideA, sideB, sideC;
+        bool flag = false;
+        public static bool running = false;
         /// <summary>
         /// implementing base class constructor
         /// </summary>
@@ -43,6 +46,12 @@ namespace Component1
         {
             Pen pen = new Pen(color, 2);
             SolidBrush brush = new SolidBrush(color);
+            Color color1 = Color.Red;
+            Color color2 = Color.Green;
+            SolidBrush brush1 = new SolidBrush(color1);
+            SolidBrush brush2 = new SolidBrush(color2);
+            Pen pen1 = new Pen(color1, 2);
+            Pen pen2 = new Pen(color2, 2);
 
             if (fill)
             {
@@ -57,6 +66,52 @@ namespace Component1
                     new Point((int)(x + sideB* Math.Cos(sideC * Math.PI / 180))  , (int)(y +sideB * Math.Sin(sideC * Math.PI/180))) };
                 g.DrawPolygon(pen, point);
 
+            }
+            if (flashShape)
+            {
+                while (true)
+                {
+                    while (running == true)
+                    {
+                        if (flag == false)
+                        {
+                            if (fill)
+                            {
+                                Point[] point = { new Point(x, y), new Point(x+sideA, y),
+                    new Point((int)(x + sideB* Math.Cos(sideC * Math.PI / 180))  , (int)(y +sideB * Math.Sin(sideC * Math.PI/180))) };
+                                g.FillPolygon(brush1, point);
+                                flag = true;
+                            }
+                            else
+                            {
+                                Point[] point = { new Point(x, y), new Point(x+sideA, y),
+                    new Point((int)(x + sideB* Math.Cos(sideC * Math.PI / 180))  , (int)(y +sideB * Math.Sin(sideC * Math.PI/180))) };
+                                g.DrawPolygon(pen1, point);
+                                flag = true;
+                            }
+
+                        }
+                        else
+                        {
+                            if (fill)
+                            {
+                                Point[] point = { new Point(x, y), new Point(x+sideA, y),
+                    new Point((int)(x + sideB* Math.Cos(sideC * Math.PI / 180))  , (int)(y +sideB * Math.Sin(sideC * Math.PI/180))) };
+                                g.FillPolygon(brush2, point);
+                                flag = false;
+                            }
+                            else
+                            {
+                                Point[] point = { new Point(x, y), new Point(x+sideA, y),
+                    new Point((int)(x + sideB* Math.Cos(sideC * Math.PI / 180))  , (int)(y +sideB * Math.Sin(sideC * Math.PI/180))) };
+                                g.DrawPolygon(pen2, point);
+                                flag = false;
+                            }
+
+                        }
+                        Thread.Sleep(500);
+                    }
+                }
             }
         }
         /// <summary>

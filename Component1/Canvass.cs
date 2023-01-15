@@ -141,7 +141,7 @@ namespace Component1
                 }
 
                 DrawTo draw = new DrawTo();
-                draw.set(color, xPos, yPos, toX, toY);
+                draw.set(color,flashShape, xPos, yPos, toX, toY);
                 addLine.Add(draw);
                 XPos = toX;
                 YPos = toY;
@@ -313,6 +313,9 @@ namespace Component1
                     {
                         flashShape = true;
                         Circle.running = true;
+                        Triangle.running = true;
+                        Rectangle.running = true;
+                        DrawTo.running = true;
                     }
                     else if (val1.Equals("off"))
                     {

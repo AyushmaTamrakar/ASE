@@ -456,7 +456,7 @@ namespace Component1
 
                                                 }
                                             }
-                                            else if (cmd.Contains("circle") || cmd.Contains("triangle") || cmd.Contains("rectangle")
+                                            else if (cmd.Contains("circle") || cmd.Contains("triangle") || cmd.Contains("rectangle")||cmd.Contains("flash")
                                           || cmd.Contains("drawto") || cmd.Contains("moveto") || cmd.Contains("fill") || cmd.Contains("pen"))
                                             {
 
@@ -502,7 +502,7 @@ namespace Component1
 
                                                 }
                                             }
-                                            else if (cmd.Contains("circle") || cmd.Contains("triangle") || cmd.Contains("rectangle")
+                                            else if (cmd.Contains("circle") || cmd.Contains("triangle") || cmd.Contains("rectangle")||cmd.Contains("flash")
                                           || cmd.Contains("drawto") || cmd.Contains("moveto") || cmd.Contains("fill") || cmd.Contains("pen"))
                                             {
 
@@ -547,7 +547,7 @@ namespace Component1
 
                                                 }
                                             }
-                                            else if (cmd.Contains("circle") || cmd.Contains("triangle") || cmd.Contains("rectangle")
+                                            else if (cmd.Contains("circle") || cmd.Contains("triangle") || cmd.Contains("rectangle") || cmd.Contains("flash")
                                           || cmd.Contains("drawto") || cmd.Contains("moveto") || cmd.Contains("fill") || cmd.Contains("pen"))
                                             {
 
@@ -627,7 +627,7 @@ namespace Component1
                 }
 
                 else if (line.Contains("circle") || line.Contains("triangle") || line.Contains("rectangle")
-                                      || line.Contains("drawto") || line.Contains("moveto") || line.Contains("fill") || line.Contains("pen"))
+                 ||line.Contains("flash") || line.Contains("drawto") || line.Contains("moveto") || line.Contains("fill") || line.Contains("pen"))
                 {
 
                     if (parse.parseCommand(line))
