@@ -15,7 +15,10 @@ namespace Component1
         Color color;
  
         public DrawTo() { }
-
+        /// <summary>
+        /// draws line
+        /// </summary>
+        /// <param name="g"></param>
         public  void draw(Graphics g)
         {
             Pen pen = new Pen(color, 2);
@@ -26,6 +29,14 @@ namespace Component1
            
 
         }
+        /// <summary>
+        /// sets value for drawing line
+        /// </summary>
+        /// <param name="color"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="toX"></param>
+        /// <param name="toY"></param>
         public void set(Color color,  int x, int y, int toX, int toY)
         {
             this.x = x;

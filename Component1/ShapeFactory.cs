@@ -8,6 +8,11 @@ namespace Component1
 {
     internal class ShapeFactory
     {
+        /// <summary>
+        /// factory design pattern returns object
+        /// </summary>
+        /// <param name="shapeType"></param>
+        /// <returns></returns>
         public Shape getShape(String shapeType)
         {
             shapeType = shapeType.ToLower().Trim();

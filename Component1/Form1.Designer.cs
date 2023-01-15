@@ -162,20 +162,22 @@
             // aboutUsToolStripMenuItem
             // 
             this.aboutUsToolStripMenuItem.Name = "aboutUsToolStripMenuItem";
-            this.aboutUsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutUsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.aboutUsToolStripMenuItem.Text = "About";
             // 
             // commandListToolStripMenuItem
             // 
             this.commandListToolStripMenuItem.Name = "commandListToolStripMenuItem";
-            this.commandListToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.commandListToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.commandListToolStripMenuItem.Text = "Command List";
+            this.commandListToolStripMenuItem.Click += new System.EventHandler(this.commandListToolStripMenuItem_Click);
             // 
             // actionListToolStripMenuItem
             // 
             this.actionListToolStripMenuItem.Name = "actionListToolStripMenuItem";
-            this.actionListToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.actionListToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.actionListToolStripMenuItem.Text = "Action List";
+            this.actionListToolStripMenuItem.Click += new System.EventHandler(this.actionListToolStripMenuItem_Click);
             // 
             // label2
             // 

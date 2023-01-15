@@ -10,8 +10,10 @@ namespace Component1
     internal class Rectangle: Shape
     {
         int length, breadth;
-
-        public Rectangle() : base()
+        /// <summary>
+        /// Inherit from base class shape
+        /// </summary>
+        public Rectangle() : base() 
         {
 
         }
@@ -20,7 +22,10 @@ namespace Component1
             this.breadth = breadth;
             this.length = length;
         }
-
+        /// <summary>
+        /// method to draw rectangle
+        /// </summary>
+        /// <param name="g"></param>
         public override void draw(Graphics g)
         {
             Pen pen = new Pen(color, 2);
@@ -35,7 +40,13 @@ namespace Component1
                 g.DrawRectangle(pen, x, y, length, breadth);
             }
 
-        }
+        }/// <summary>
+        /// set color, fill, flash and parameter for rectangle
+        /// </summary>
+        /// <param name="colour"></param>
+        /// <param name="fill"></param>
+        /// <param name="flashShape"></param>
+        /// <param name="list"></param>
         public override void set(Color colour, bool fill, bool flashShape, params int[] list)
         {
             //list[0] is x, list[1] is y, list[2] is length, list[3] is breadth

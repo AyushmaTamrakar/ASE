@@ -31,7 +31,10 @@ namespace Component1
         private ArrayList addLine = new ArrayList();
         private ArrayList shapeList = new ArrayList();
 
-  
+  /// <summary>
+  /// get instance of canvass class using singleton pattern
+  /// </summary>
+  /// <returns></returns>
         public static Canvass GetInstance()
         {
             if (canvass == null)
@@ -40,7 +43,9 @@ namespace Component1
             }
             return canvass;
         }
-
+        /// <summary>
+        /// constructor of canvass class
+        /// </summary>
         private Canvass()
         {
             xPos = 0;
@@ -49,22 +54,34 @@ namespace Component1
             pen = new Pen(color, 2);
             fill = false;
         }
-
+        /// <summary>
+        /// position of x-axis
+        /// </summary>
         public int XPos
         {
             get { return xPos; }
             set { xPos = value; }
         }
+        /// <summary>
+        /// position of y-axis
+        /// </summary>
         public int YPos
         {
             set { yPos = value; }
             get { return yPos; }
         }
+        /// <summary>
+        /// fill of shape
+        /// </summary>
         public bool Fill
         {
             get { return fill; }
             set { fill = value; }
         }
+        /// <summary>
+        /// method returning fill
+        /// </summary>
+        /// <returns></returns>
         public string Fill_var()
         {
             string fill_val="";
@@ -78,6 +95,9 @@ namespace Component1
             }
             return fill_val;
         }
+        /// <summary>
+        /// set and get Color properties
+        /// </summary>
         public Color Color
         {
             get { return color; }
@@ -85,7 +105,12 @@ namespace Component1
         }
 
 
-
+        /// <summary>
+        /// Method to draw shapes and set color and position
+        /// </summary>
+        /// <param name="commandName"></param>
+        /// <param name="var"></param>
+        /// <param name="parameters"></param>
         public void drawCommand(string commandName, Dictionary<string, string> var, params string[] parameters)
         {
             if (commandName.Equals("drawto"))
@@ -237,7 +262,7 @@ namespace Component1
                 {
                     sideC = int.Parse(parameters[2]);
                 }
-
+                
                 shape = factory.getShape("triangle");
                 shape.set(Color, Fill,flashShape, XPos, YPos, sideA, sideB, sideC);
                 shapeList.Add(shape);
@@ -339,11 +364,18 @@ namespace Component1
             }
 
         }
-
+        /// <summary>
+        /// returns shape list 
+        /// </summary>
+        /// <returns></returns>
         public ArrayList getShape()
         {
             return shapeList;
         }
+        /// <summary>
+        /// returns line
+        /// </summary>
+        /// <returns></returns>
         public ArrayList getLine()
         {
             return addLine;

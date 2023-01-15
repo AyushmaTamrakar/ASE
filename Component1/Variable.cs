@@ -16,6 +16,11 @@ namespace Component1
 
 
         private string variable_name;
+
+        /// <summary>
+        /// get instance of Variable class
+        /// </summary>
+        /// <returns></returns>
         public static Variable GetInstance()
         {
             if (variable == null)
@@ -24,6 +29,11 @@ namespace Component1
             }
             return variable;
         }
+
+        /// <summary>
+        /// method to declare variable 
+        /// </summary>
+        /// <param name="line"></param>
         public void declare_variable(string line)
         {
             line = line.Trim();
@@ -89,6 +99,11 @@ namespace Component1
             }
 
         }
+        /// <summary>
+        /// add variables to list or update to existing variable
+        /// </summary>
+        /// <param name="variable_name"></param>
+        /// <param name="value"></param>
         public void addVariable(string variable_name, string value)
         {
             if (variables.ContainsKey(variable_name))
@@ -101,6 +116,14 @@ namespace Component1
             }
 
         }
+        /// <summary>
+        /// calculate variable with given operation
+        /// </summary>
+        /// <param name="line"></param>
+        /// <param name="var1"></param>
+        /// <param name="var2"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidParameterException"></exception>
         public int calculateVariable(string line, int var1, int var2)
         {
             int result = 0;
@@ -130,10 +153,19 @@ namespace Component1
             }
             return result;
         }
+        /// <summary>
+        /// returns dictionary containing key and value pair of variable
+        /// </summary>
+        /// <returns></returns>
         public static Dictionary<string, string> getVariables()
         {
             return variables;
         }
+        /// <summary>
+        /// returns boolean value if a given value consist of digists
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public bool isDigit(string value)
         {
             if (Regex.IsMatch(value, @"^\d+$"))
@@ -145,6 +177,11 @@ namespace Component1
                 return false;
             }
         }
+        /// <summary>
+        /// returns boolean to check if it is variable
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public bool isVariable(string value)
         {
             if (variables.ContainsKey(value))
@@ -155,7 +192,11 @@ namespace Component1
             {
                 return false;
             }
-        }
+        }/// <summary>
+        /// returns value of variable
+        /// </summary>
+        /// <param name="var_val"></param>
+        /// <returns></returns>
         public string getValue(string var_val)
         {
             return variables[var_val];

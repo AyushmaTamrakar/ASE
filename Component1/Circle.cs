@@ -8,22 +8,43 @@ using System.Threading.Tasks;
 
 namespace Component1
 {
+    /// <summary>
+    /// circle class inherting from shape class
+    /// </summary>
     internal class Circle: Shape
     {
+        /// <summary>
+        /// radius of circle
+        /// </summary>
         int radius;
+
         bool flag = false;
         public static bool running = false;
+        /// <summary>
+        /// calling base class constructor
+        /// </summary>
         public Circle() : base()
         {
 
         }
-       
+        /// <summary>
+        /// overloading constructor
+        /// </summary>
+        /// <param name="color"></param>
+        /// <param name="fill"></param>
+        /// <param name="flashShape"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="radius"></param>
         public Circle(Color color, bool fill, bool flashShape, int x, int y, int radius) : base(color, fill,  flashShape, x, y)
         {
             this.radius = radius;
           
         }
-
+        /// <summary>
+        /// draw method draws circle shape
+        /// </summary>
+        /// <param name="g"></param>
         public override void draw(Graphics g)
         {
             Pen pen = new Pen(color, 2);
@@ -41,7 +62,7 @@ namespace Component1
             {
                 g.DrawEllipse(pen, x, y, radius, radius);
             }
-            if (flashShape==true)
+            if (flashShape)
             {
                 while (true)
                 {
@@ -63,6 +84,13 @@ namespace Component1
             }
 
         }
+        /// <summary>
+        /// overriding set method to set radius
+        /// </summary>
+        /// <param name="colour"></param>
+        /// <param name="fill"></param>
+        /// <param name="flashShape"></param>
+        /// <param name="list"></param>
         public override void set(Color colour,bool fill, bool flashShape, params int[] list)
         {
             //list[0] is x, list[1] is y, list[2] is radius

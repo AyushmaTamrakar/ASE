@@ -7,7 +7,9 @@ using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.Hosting;
 using System.Security.AccessControl;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -38,13 +40,17 @@ namespace Component1
        
 
 
-
+        /// <summary>
+        /// Error property
+        /// </summary>
         public int Error
         {
             get { return error; }
             set { error = value; }
         }
-
+        /// <summary>
+        /// get and sets errorlines
+        /// </summary>
         public ArrayList ErrorLines
         {
             get { return error_lines; }
@@ -52,13 +58,19 @@ namespace Component1
         }
 
 
-
+        /// <summary>
+        /// constructor
+        /// </summary>
         public CommandParser() { }
 
 
 
 
-
+        /// <summary>
+        /// parse drawing commands
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
 
         public bool parseCommand(string command)
         {
@@ -141,6 +153,11 @@ namespace Component1
             return true;
 
         }
+        /// <summary>
+        /// validates variables
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
         public bool parseVariable(string command)
         {
             char[] delimeter = new[] { '\r', '\n' };
@@ -244,6 +261,11 @@ namespace Component1
 
             return true;
         }
+        /// <summary>
+        /// validate if statement
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
         public bool parseIf(string command)
         {
             char[] delimeter = new[] { '\r', '\n' };
@@ -318,9 +340,14 @@ namespace Component1
 
             return true;
         }
+        /// <summary>
+        /// validates method
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
         public bool parseMethod(string command)
         {
-            char[] delimeter = new[] { 'r', 'n' };
+            char[] delimeter = new[] { '\r', '\n' };
             String[] lines = command.Split(delimeter, StringSplitOptions.RemoveEmptyEntries);
 
             for(int i =0; i <lines.Length; i++)
@@ -329,13 +356,39 @@ namespace Component1
                 string line = lines[i];
                 try
                 {
-                    string methods = line.Split(' ')[0].ToLower();
-                    if (methods.Length == 3)
+                    string[] methods = line.Split(' ');
+                    if (methods.Length == 2)
                     {
-                        MessageBox.Show("valid");
-                    }
+                        methods[0] = methods[0].Trim();
+                        methods[1] = methods[1].Trim();
+                        if (!methods[0].Equals("method"))
+                        {
+                            throw new CommandNotFoundException("Invalid method syntax");
+                        }
+                        checkParentheses(line);
+                        string methodName = methods[1].Split('(')[0];
+                        if(!Regex.IsMatch(methodName, @"^[a-zA-Z]+$"))
+                        {
+                            throw new CommandNotFoundException("Method name should contain only alphabets");
+                        }
+                        string[] parameters = methods[1].Split('(', ')');
+                        if(parameters.Length >0)
+                        {
+                            if (!Regex.IsMatch(methodName, @"^[a-zA-Z]+$"))
+                            {
+                                throw new CommandNotFoundException("Arguments should be only alphabets");
+                            }
+                        }
+                        else
+                        {
+                            return true;
+                        }
 
-                    
+                    }
+                    else
+                    {
+                        throw new CommandNotFoundException("Invalid method syntax");
+                    }
                     
                 }
                 catch(CommandNotFoundException e)
@@ -352,6 +405,10 @@ namespace Component1
         }
 
         /// <summary>
+        /// validates loop
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
         public bool parseLoop(string command)
         {
             char[] delimeter = new[] { '\r', '\n' };
@@ -425,6 +482,13 @@ namespace Component1
             }
             return true;
         }
+
+        /// <summary>
+        /// 
+        ///check for parentheses in line
+        /// </summary>
+        /// <param name="line"></param>
+        /// <exception cref="CommandNotFoundException"></exception>
         public void checkParentheses(string line)
         {
 
@@ -458,6 +522,12 @@ namespace Component1
 
 
         }
+        /// <summary>
+        /// 
+        /// checks command name
+        /// </summary>
+        /// <param name="commandName"></param>
+        /// <returns></returns>
         public bool checkCommandName(string commandName)
         {
 
@@ -483,7 +553,12 @@ namespace Component1
             }
         }
 
-
+        /// <summary>
+        /// checks for parameter of commands
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidParameterException"></exception>
         public bool checkParameter(string parameter) //checks parameter pass with commands
         {
             variables = Variable.getVariables();
@@ -495,7 +570,7 @@ namespace Component1
                     val1 = parameter.Split('\u002C')[0].Trim(); //unicode for comma
                     val2 = parameter.Split('\u002C')[1].Trim();
 
-
+                  
                     if (variables.ContainsKey(val1) && variables.ContainsKey(val2))
                     {
 
@@ -830,6 +905,11 @@ namespace Component1
 
 
         }
+        /// <summary>
+        /// checks color
+        /// </summary>
+        /// <param name="select"></param>
+        /// <returns></returns>
 
         public bool checkColor(string select)
         {
@@ -850,6 +930,10 @@ namespace Component1
             return false;
         }
   
+        /// <summary>
+        /// return error list
+        /// </summary>
+        /// <returns></returns>
         public ArrayList error_list()
         {
             return errors;

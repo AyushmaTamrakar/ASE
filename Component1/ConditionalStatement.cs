@@ -32,7 +32,10 @@ namespace Component1
             variable = Variable.GetInstance();
             parse = new CommandParser();
         }
-
+        /// <summary>
+        /// gets instance of ConditionalStatement
+        /// </summary>
+        /// <returns></returns>
         public static ConditionalStatement getInstance()
         {
             if (conditionalStatement == null)
@@ -42,7 +45,12 @@ namespace Component1
             return conditionalStatement;
         }
 
-   
+   /// <summary>
+   /// compares variable in if statement
+   /// </summary>
+   /// <param name="condition"></param>
+   /// <param name="conditions"></param>
+   /// <returns></returns>
         public bool check(string condition, params string[] conditions)
         {
             variables = Variable.getVariables();

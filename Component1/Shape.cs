@@ -19,6 +19,14 @@ namespace Component1
             x = y = 0;
             fill = false;
         }
+        /// <summary>
+        /// assigning current object value
+        /// </summary>
+        /// <param name="color"></param>
+        /// <param name="fill"></param>
+        /// <param name="flashShape"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         public Shape(Color color, bool fill,bool flashShape, int x, int y)
         {
             this.color = color;
@@ -27,6 +35,13 @@ namespace Component1
             this.fill = fill;
         }
         public abstract void draw(Graphics g);
+        /// <summary>
+        /// virtual set method to be implemented by child classes
+        /// </summary>
+        /// <param name="color"></param>
+        /// <param name="fill"></param>
+        /// <param name="flashShape"></param>
+        /// <param name="list"></param>
         public virtual void set(Color color, bool fill, bool flashShape, params int[] list)
         {
             this.color = color;
