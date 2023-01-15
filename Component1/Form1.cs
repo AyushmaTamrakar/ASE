@@ -136,6 +136,8 @@ namespace Component1
 
                     String line = lines[j];
 
+              
+
                     if (line.Contains('=') == true && line.Contains('(') == false && line.Contains(')') == false)
                     {
                         if (parse.parseVariable(line))
@@ -172,7 +174,7 @@ namespace Component1
                                         for (int y = ifStart; y < ifEnd; y++)
                                         {
                                             String nextLine = lines[y].Trim();
-                                            if (nextLine.Equals("endif") == false)
+                                            if (lines[y].Equals("endif") == false)
                                             {
                                                 if (nextLine.Contains('=') == true && nextLine.Contains('(') == false && nextLine.Contains(')') == false)
                                                 {
