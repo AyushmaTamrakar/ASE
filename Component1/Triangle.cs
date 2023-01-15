@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -52,6 +53,7 @@ namespace Component1
             SolidBrush brush2 = new SolidBrush(color2);
             Pen pen1 = new Pen(color1, 2);
             Pen pen2 = new Pen(color2, 2);
+         
 
             if (fill)
             {

@@ -536,7 +536,7 @@ namespace Component1
             {
 
                 // string array of commands
-                string[] commands = { "drawto", "moveto", "circle", "rectangle", "triangle", "pen", "fill", "flash" };
+                string[] commands = { "drawto", "moveto", "circle", "rectangle", "triangle", "pen", "fill", "flash","rotate" };
                 for (int i = 0; i < commands.Length; i++)
                 {
                     if (commands[i] == commandName)  // checks commandName
@@ -830,6 +830,47 @@ namespace Component1
                     }
                 }
 
+            }
+            if (commandName.Equals("rotate"))
+            {
+                try
+                {
+                    if (parameter.Length == 1)
+                    {
+                        if (!Regex.IsMatch(parameter, @"^[0-9]+$"))
+                        {
+                            if (variables.ContainsKey(parameter))
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                throw new InvalidParameterException("Variable: " + parameter + " does not exist");
+                            }
+                        }
+                        else
+                        {
+                            int.Parse(parameter);
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        throw new InvalidParameterException("Only 1 parameter required.");
+                    }
+
+                }
+                catch (FormatException)
+                {
+                    errors.Add("Degree should be in numbers (0-9).");
+                    return false;
+                }
+                catch (InvalidParameterException e)
+                {
+                    errors.Add(e.Message);
+                    return false;
+                }
+               
             }
             if (commandName.Equals("pen"))
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -33,13 +34,13 @@ namespace Component1
         {
             Pen pen = new Pen(color, 2);
             SolidBrush brush = new SolidBrush(color);
-            Color color1 = Color.Red;
-            Color color2 = Color.Green;
+            Color color1 = Color.Blue;
+            Color color2 = Color.Yellow;
             SolidBrush brush1 = new SolidBrush(color1);
             SolidBrush brush2 = new SolidBrush(color2);
             Pen pen1 = new Pen(color1, 2);
             Pen pen2 = new Pen(color2, 2);
-
+          
             if (fill)
             {
                 g.FillRectangle(brush, x, y, length, breadth);

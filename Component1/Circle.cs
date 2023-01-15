@@ -55,7 +55,7 @@ namespace Component1
             SolidBrush brush2 = new SolidBrush(color2);
             Pen pen1 = new Pen(color1, 2);
             Pen pen2 = new Pen(color2, 2);
-
+          
             if (fill)
             {
                 g.FillEllipse(brush, x, y, radius, radius);
