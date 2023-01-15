@@ -66,14 +66,16 @@ namespace Component1
         }
         public string Fill_var()
         {
+            string fill_val="";
             if(fill == true)
             {
-                return "On";
+                fill_val = "On";
             }
-            else
+            if (fill == false)
             {
-                return "Off";
+                fill_val= "Off";
             }
+            return fill_val;
         }
         public Color Color
         {

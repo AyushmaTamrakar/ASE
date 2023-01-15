@@ -24,7 +24,7 @@ namespace Component1
         private Variable variable;
         private ConditionalStatement conditionalStatement;
         private Graphics g;
-        int ifStart, ifEnd;
+        int ifStart, ifEnd, whileStart, whileEnd;
 
 
         private Dictionary<string, string> variables = new Dictionary<string, string>();
@@ -129,14 +129,16 @@ namespace Component1
                 char[] delimeter = new[] { '\r', '\n' };
                 String[] lines = commandLine.Text.Split(delimeter, StringSplitOptions.RemoveEmptyEntries); //splits line
                 int count_lines = 0;
+                int error = 0;
 
+                bool complex_command = false;
                 for (int j = 0; j < lines.Length; j++)
                 {
                     count_lines++;
 
                     String line = lines[j];
 
-              
+
 
                     if (line.Contains('=') == true && line.Contains('(') == false && line.Contains(')') == false)
                     {
@@ -162,52 +164,64 @@ namespace Component1
                                 if (condition.Contains("<=") || condition.Contains(">=") || condition.Contains("!=")
                                || condition.Contains("==") || condition.Contains(">") || condition.Contains("<"))
                                 {
-                                    if (conditionalStatement.check(condition, conditions))
+                                }
+                                if (conditionalStatement.check(condition, conditions))
+                                {
+                                    for (int z = ifStart; z < lines.Length; z++)
                                     {
-                                        for (int z = ifStart; z < lines.Length; z++)
+                                        if (lines[z].Equals("endif"))
                                         {
-                                            if (lines[z].Equals("endif"))
-                                            {
-                                                ifEnd = ++z;
-                                            }
+                                            ifEnd = z;
                                         }
-                                        for (int y = ifStart; y < ifEnd; y++)
+                                    }
+                                    if (ifEnd == 0)
+                                    {
+                                        console.ForeColor = Color.Red;
+                                        console.Text = "If statement not ended properly";
+                                    }
+                                    for (int y = ifStart; y < ifEnd; ++y)
+                                    {
+                                        String nextLine = lines[y].Trim();
+                                        if (lines[y].Equals("endif") == false)
                                         {
-                                            String nextLine = lines[y].Trim();
-                                            if (lines[y].Equals("endif") == false)
+                                            if (nextLine.Contains('=') == true && nextLine.Contains('(') == false && nextLine.Contains(')') == false)
                                             {
-                                                if (nextLine.Contains('=') == true && nextLine.Contains('(') == false && nextLine.Contains(')') == false)
+                                                if (parse.parseVariable(nextLine))
                                                 {
-                                                    if (parse.parseVariable(nextLine))
-                                                    {
 
-                                                        variable.declare_variable(nextLine);
+                                                    variable.declare_variable(nextLine);
 
-                                                    }
                                                 }
-                                                if (nextLine.Contains("circle") || nextLine.Contains("rectangle") || nextLine.Contains("triangle") ||
-                                                    nextLine.Contains("drawto") || nextLine.Contains("moveto") || nextLine.Contains("fill") ||
-                                                    nextLine.Contains("pen"))
+                                            }
+                                            else if (nextLine.Contains("circle") || nextLine.Contains("rectangle") || nextLine.Contains("triangle") ||
+                                                nextLine.Contains("drawto") || nextLine.Contains("moveto") || nextLine.Contains("fill") ||
+                                                nextLine.Contains("pen"))
+                                            {
+                                                if (parse.parseCommand(nextLine))
                                                 {
-                                                    if (parse.parseCommand(nextLine))
-                                                    {
-                                                        string commandName = nextLine.Split('(')[0].Trim().ToLower();
+                                                    string commandName = nextLine.Split('(')[0].Trim().ToLower();
 
-                                                        string parameter = nextLine.Split('(', ')')[1];
+                                                    string parameter = nextLine.Split('(', ')')[1];
 
-                                                        string[] parameters = parameter.Split(',');
-                                                        variables = Variable.getVariables();
-                                                        myCanvass.drawCommand(commandName, variables, parameters);
+                                                    string[] parameters = parameter.Split(',');
+                                                    variables = Variable.getVariables();
+                                                    myCanvass.drawCommand(commandName, variables, parameters);
 
-                                                    }
                                                 }
+                                            }
+                                            else
+                                            {
+                                                break;
                                             }
                                         }
                                     }
-                                  
+
                                 }
                             }
-                            if (line.Contains("if") && line.Contains("then"))
+
+
+
+                            else if (line.Contains("if") && line.Contains("then"))
                             {
                                 string commands = line.Split('(')[0].Trim();
                                 string condition = line.Split('(', ')')[1].Trim();
@@ -253,8 +267,116 @@ namespace Component1
 
 
                     }
+                    else if (line.Contains("while"))
+                    {
+                        whileStart= ++j;
+                        string loop_val;
+                        int counter = 0;
+
+                        string commandName = line.Split('(')[0].Trim().ToLower().Trim();
+                        string condition = line.Split('(', ')')[1].Trim();
+                        string[] operators = new[] { "<=", ">=", "<", ">" };
+                        string[] conditions = condition.Split(operators, StringSplitOptions.RemoveEmptyEntries);
+                        string variable_name = conditions[0].ToLower().Trim();
+                        int loopValue = int.Parse(conditions[1]);
+                        if (parse.parseLoop(line))
+                        {
+
+                            for (int z = whileStart; z < lines.Length; z++)
+                            {
+                                if (lines[z].Equals("endloop"))
+                                {
+                                    whileEnd = z;
+                                }
+                            }
+                            if (whileEnd == 0)
+                            {
+                                console.ForeColor = Color.Red;
+                                console.Text = "Loop not ended properly";
+                            }
+
+                            variables = Variable.getVariables();
+
+                            ArrayList cmds = new ArrayList();
+                            if (variables.ContainsKey(variable_name))
+                            {
+                                
+                                variables.TryGetValue(variable_name, out loop_val);
+
+                                for (int z = whileStart; z < whileEnd; z++)
+                                {
+                                    if (!lines[z].Equals("endloop"))
+                                    {
+                                        cmds.Add(lines[z]); 
+                                    }
+                                    else
+                                    {
+                                        break;
+                                    }
+                                    if ((lines[z].Contains(variable_name +"="+ variable_name+ "+" + variable_name) || lines[z].Contains(variable_name + "=" + variable_name + "+" ) || lines[z].Contains(variable_name + "*") || lines[z].Contains(variable_name + "/")))
+                                    {
+                                        counter++;
+                                    }
+                                }
+                                
+
+                                if (counter == 0)
+                                {
+                                    console.AppendText("Counter variable not handled");
+
+                                }
+                                if (condition.Contains("<="))
+                                {
+                                    
+                                    if (int.Parse(loop_val) >= loopValue)
+                                    {
+                                        console.Text = "Variable " + variable_name + "should be smaller than " + loopValue;
+
+                                    }
+                                    while (int.Parse(loop_val) <= loopValue)
+                                    {
+                                        foreach (string cmd in cmds)
+                                        {
+                                           
+                                            if (cmd.Contains('=') == true && cmd.Contains('(') == false && cmd.Contains(')') == false)
+                                            {
+                                                if (parse.parseVariable(cmd))
+                                                {
+
+                                                    variable.declare_variable(cmd);                                                 
+
+                                                }
+                                            }
+                                           else if (cmd.Contains("circle") || cmd.Contains("triangle") || cmd.Contains("rectangle")
+                                         || cmd.Contains("drawto") || cmd.Contains("moveto") || cmd.Contains("fill") || cmd.Contains("pen"))
+                                            {
+                                              
+                                                    string nameCommand = cmd.Split('(')[0].Trim().ToLower();
+
+                                                    string parameter = cmd.Split('(', ')')[1];
+
+                                                    string[] parameters = parameter.Split(',');
+                                                    variables = Variable.getVariables();
+                                                    myCanvass.drawCommand(nameCommand, variables, parameters);
+
+                                                
+                                            }
+                                            else
+                                            {
+                                                console.AppendText("\n Command: (" + cmd + ") not supported.");
+
+                                            }
+                                        }
+                                        variables.TryGetValue(variable_name, out loop_val);
+                                    }
+                                }
+
+
+                            }
+                        }
+                    }
                     else if (line.Contains("circle") || line.Contains("triangle") || line.Contains("rectangle")
-                                         || line.Contains("drawto") || line.Contains("moveto") || line.Contains("fill") || line.Contains("pen"))
+                                          || line.Contains("drawto") || line.Contains("moveto") || line.Contains("fill") || line.Contains("pen"))
                     {
 
                         if (parse.parseCommand(line))

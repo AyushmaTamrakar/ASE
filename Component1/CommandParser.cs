@@ -3,6 +3,7 @@ using System.CodeDom;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
@@ -32,6 +33,7 @@ namespace Component1
         ArrayList error_lines = new ArrayList();
         int error = 0;
         int count_line;
+        int ifStart, ifEnd;
 
 
 
@@ -50,6 +52,51 @@ namespace Component1
 
 
         public CommandParser() { }
+
+
+
+
+        public string checkCommand(string cmd)
+        {
+            string type = null;
+            if (cmd.Contains("if") && !cmd.Contains("endif"))
+            {
+                type = "if";
+            }
+            else if (cmd.Contains("then"))
+            {
+                type = "singleif";
+            }
+            else if (cmd.Contains("loop") && cmd.Contains("for"))
+            {
+                type = "loop";
+            }
+            else if (cmd.Contains("method") && !cmd.Contains("endmethod"))
+            {
+                if (cmd.Split(' ')[0].Equals("method"))
+                {
+                    type = "method";
+                }
+                else
+                {
+                    type = "methodcall";
+                }
+            }
+
+            else if (cmd.Contains("endif") || cmd.Contains("endloop") || cmd.Contains("endmethod"))
+            {
+                type = "end_tag";
+            }
+
+            return type;
+        }
+
+        public bool checkMethod(string command)
+        {
+
+            return true;
+        }
+
 
         public bool parseCommand(string command)
         {
@@ -245,15 +292,16 @@ namespace Component1
             {
                 count_line++; // counts line
                 string line = lines[i];
+
                 try
                 {
 
                     commandName = line.Split('(')[0].Trim().ToLower(); // line split to get commandName
 
-                    checkCommandName(commandName); // checkCommandName method called passing parameter commandName
                     try
                     {
-                        checkParentheses(line);
+                            checkParentheses(line);
+                        
 
                         string condition = line.Split('(', ')')[1].Trim();
                         variables = Variable.getVariables();
@@ -267,6 +315,168 @@ namespace Component1
                                 || condition.Contains("==") || condition.Contains(">") || condition.Contains("<"))
                             {
                                 string[] operators = new[] { "<=", ">=", "==", "!=", ">", "<" };
+                                string[] conditions = condition.Split(operators, StringSplitOptions.RemoveEmptyEntries);
+                                if (variables.ContainsKey(conditions[0]) == false)
+                                {
+                                    throw new CommandNotFoundException("Variable not found");
+                                }
+                                else if (!Regex.IsMatch(conditions[1], @"^\d+$"))
+                                {
+                                    throw new CommandNotFoundException("Could not be compared with string");
+                                }
+                            }
+                            else
+                            {
+                                throw new CommandNotFoundException("Invalid operator used");
+                            }
+                        }
+
+                    }
+                    catch (CommandNotFoundException e)
+                    {
+                        error++;     // counts number of errorLines
+                        error_lines.Add(count_line); // add count_line to error_lines arraylist
+                        errors.Add(e.Message);  // add to arrayList errors
+                        return false;
+
+                    }
+
+                }
+                catch (CommandNotFoundException e)
+                {
+                    error++;     // counts number of errorLines
+                    error_lines.Add(count_line); // add count_line to error_lines arraylist
+                    errors.Add(e.Message);  // add to arrayList errors
+                    return false;
+
+                }
+            }
+
+
+            return true;
+        }
+
+        public string check_command_type(string cmd)
+        {
+            string type = null;
+            if (cmd.Contains("if") && !cmd.Contains("endif"))
+            {
+                type = "if";
+            }
+            else if (cmd.Contains("then"))
+            {
+                type = "singleif";
+            }
+            else if (cmd.Contains("loop") && cmd.Contains("for"))
+            {
+                type = "loop";
+            }
+            else if (cmd.Contains("method") && !cmd.Contains("endmethod"))
+            {
+                if (cmd.Split(' ')[0].Equals("method"))
+                {
+                    type = "method";
+                }
+                else
+                {
+                    type = "methodcall";
+                }
+            }
+
+            else if (cmd.Contains("endif") || cmd.Contains("endloop") || cmd.Contains("endmethod"))
+            {
+                type = "end_tag";
+            }
+
+            return type;
+        }
+
+        public bool check_loop(string command)
+        {
+            variables = Variable.getVariables();
+            command = Regex.Replace(command, @"\s+", "");
+            string[] check_cmd = command.Split(new string[] {
+        "for"
+      },
+
+            StringSplitOptions.RemoveEmptyEntries);
+            string[] loopCondition = { };
+            try
+            {
+                if (!check_cmd[0].Equals("loop"))
+                {
+                    throw new CommandNotFoundException("Invalid Command Name");
+                }
+
+                if (check_cmd.Length != 2)
+                {
+                    throw new CommandNotFoundException("Invalid Loop Command Syntax");
+                }
+
+                loopCondition = check_cmd[1].Split(new string[] { "<=", ">=", "<", ">" }, StringSplitOptions.RemoveEmptyEntries);
+                if (loopCondition.Length == 1)
+                {
+                    throw new InvalidParameterException("Invalid loop statement. Operator should be <= or => or < or >");
+                }
+
+                if (!Regex.IsMatch(check_cmd[1], @"^[0-9]+$"))
+                {
+                    string variable_name = loopCondition[0].ToLower().Trim();
+                    if (!variables.ContainsKey(variable_name))
+                    {
+                        throw new CommandNotFoundException("Variable: " + variable_name + " not found.");
+                    }
+                }
+            }
+            catch (CommandNotFoundException e)
+            {
+                errors.Add(e.Message);
+                return false;
+            }
+
+            catch (InvalidParameterException e)
+            {
+                errors.Add(e.Message);
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        public bool parseLoop(string command)
+        {
+            char[] delimeter = new[] { '\r', '\n' };
+            String[] lines = command.Split(delimeter, StringSplitOptions.RemoveEmptyEntries); //splits line
+
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                count_line++; // counts line
+                string line = lines[i];
+
+                try
+                {
+
+                    commandName = line.Split('(')[0].Trim().ToLower(); // line split to get commandName
+
+                    try
+                    {
+
+                        checkParentheses(line);
+
+
+                        string condition = line.Split('(', ')')[1].Trim();
+                        variables = Variable.getVariables();
+                        if (condition == String.Empty)
+                        {
+                            throw new CommandNotFoundException("Missing condition");
+                        }
+                        else
+                        {
+                            if (condition.Contains("<=") || condition.Contains(">=")
+                                || condition.Contains(">") || condition.Contains("<"))
+                            {
+                                string[] operators = new[] { "<=", ">=", "<", ">" };
                                 string[] conditions = condition.Split(operators, StringSplitOptions.RemoveEmptyEntries);
                                 if (variables.ContainsKey(conditions[0]) == false)
                                 {
@@ -304,16 +514,6 @@ namespace Component1
 
                 }
             }
-
-
-            return true;
-        }
-
-
-
-        public bool loopCommand(string command)
-        {
-            string commandName = command.Split('(')[0].Trim();
             return true;
         }
         public void checkParentheses(string line)
@@ -357,7 +557,7 @@ namespace Component1
             {
 
                 // string array of commands
-                string[] commands = { "drawto", "moveto", "circle", "rectangle", "triangle", "pen", "fill", "colour" };
+                string[] commands = { "drawto", "moveto", "circle", "rectangle", "triangle", "pen", "fill" };
                 for (int i = 0; i < commands.Length; i++)
                 {
                     if (commands[i] == commandName)  // checks commandName
