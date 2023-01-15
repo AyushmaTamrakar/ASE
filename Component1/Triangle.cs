@@ -14,7 +14,7 @@ namespace Component1
         {
 
         }
-        public Triangle(Color color, bool fill, int x, int y, int sideA, int sideB, int sideC) : base(color, fill, x, y)
+        public Triangle(Color color, bool fill, bool flashShape, int x, int y, int sideA, int sideB, int sideC) : base(color, fill,flashShape, x, y)
         {
             this.sideA = sideA;
             this.sideB = sideB;
@@ -40,10 +40,10 @@ namespace Component1
 
             }
         }
-        public override void set(Color colour, bool fill, params int[] list)
+        public override void set(Color colour, bool fill, bool flashShape, params int[] list)
         {
             //list[0] is x, list[1] is y, list[2] is length, list[3] is breadth
-            base.set(colour, fill, list[0], list[1]);
+            base.set(colour, fill,flashShape, list[0], list[1]);
             this.sideA = list[2];
             this.sideB = list[3];
             this.sideC = list[4];

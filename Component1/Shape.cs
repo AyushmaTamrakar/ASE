@@ -11,7 +11,7 @@ namespace Component1
     {
         protected Color color;
         protected int x, y;
-        protected bool fill;
+        protected bool fill,flashShape;
 
         public Shape()
         {
@@ -19,7 +19,7 @@ namespace Component1
             x = y = 0;
             fill = false;
         }
-        public Shape(Color color, bool fill, int x, int y)
+        public Shape(Color color, bool fill,bool flashShape, int x, int y)
         {
             this.color = color;
             this.x = x;
@@ -27,10 +27,11 @@ namespace Component1
             this.fill = fill;
         }
         public abstract void draw(Graphics g);
-        public virtual void set(Color color, bool fill, params int[] list)
+        public virtual void set(Color color, bool fill, bool flashShape, params int[] list)
         {
             this.color = color;
             this.fill = fill;
+            this.flashShape = flashShape;
             this.x = list[0];
             this.y = list[1];
 

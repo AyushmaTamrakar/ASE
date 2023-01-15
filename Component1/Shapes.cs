@@ -9,7 +9,7 @@ namespace Component1
 {
     internal interface Shapes
     {
-        void set(Color color, bool colorFill, params int[] list);
+        void set(Color color, bool colorFill, bool flashShape, params int[] list);
         void draw(Graphics g);
     }
 }

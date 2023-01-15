@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Component1
@@ -10,20 +11,27 @@ namespace Component1
     internal class Circle: Shape
     {
         int radius;
+        bool flag = false;
+        public static bool running = false;
         public Circle() : base()
         {
 
         }
        
-        public Circle(Color color, bool fill, int x, int y, int radius) : base(color, fill, x, y)
+        public Circle(Color color, bool fill, bool flashShape, int x, int y, int radius) : base(color, fill,  flashShape, x, y)
         {
             this.radius = radius;
+          
         }
 
         public override void draw(Graphics g)
         {
             Pen pen = new Pen(color, 2);
             SolidBrush brush = new SolidBrush(color);
+            Color color1 = Color.Red;
+            Color color2 = Color.Green;
+            SolidBrush brush1 = new SolidBrush(color1);
+            SolidBrush brush2 = new SolidBrush(color2);
 
             if (fill)
             {
@@ -33,12 +41,32 @@ namespace Component1
             {
                 g.DrawEllipse(pen, x, y, radius, radius);
             }
+            if (flashShape==true)
+            {
+                while (true)
+                {
+                    while (running == true)
+                    {
+                        if (flag == false)
+                        {
+                            g.FillEllipse(brush1, x, y, radius, radius);
+                            flag = true;
+                        }
+                        else
+                        {
+                            g.FillEllipse(brush2, x, y, radius, radius);
+                            flag = false;
+                        }
+                        Thread.Sleep(500);
+                    }
+                }
+            }
 
         }
-        public override void set(Color colour,bool fill, params int[] list)
+        public override void set(Color colour,bool fill, bool flashShape, params int[] list)
         {
             //list[0] is x, list[1] is y, list[2] is radius
-            base.set(colour, fill, list[0], list[1]);
+            base.set(colour, fill,flashShape, list[0], list[1]);
             this.radius = list[2];
 
         }

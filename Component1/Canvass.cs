@@ -22,7 +22,8 @@ namespace Component1
         private Pen pen;
         private Color color;
         private int xPos, yPos;
-        private bool fill;
+        private bool fill,flashShape;
+
 
         private ShapeFactory factory = new ShapeFactory();
         private Shape shape;
@@ -30,6 +31,7 @@ namespace Component1
         private ArrayList addLine = new ArrayList();
         private ArrayList shapeList = new ArrayList();
 
+  
         public static Canvass GetInstance()
         {
             if (canvass == null)
@@ -38,7 +40,6 @@ namespace Component1
             }
             return canvass;
         }
-
 
         private Canvass()
         {
@@ -165,7 +166,7 @@ namespace Component1
                     radius = int.Parse(parameters[0]);
                 }
                 shape = factory.getShape("circle");  //get shapes from Factory Class
-                shape.set(Color, Fill, XPos - radius, YPos - radius, radius * 2, radius * 2); // sets value  in Set metho
+                shape.set(Color, Fill, flashShape,XPos - radius, YPos - radius, radius * 2, radius * 2); // sets value  in Set metho
 
                 shapeList.Add(shape);
             }
@@ -196,7 +197,7 @@ namespace Component1
                 }
 
                 shape = factory.getShape("rectangle");
-                shape.set(Color, Fill, XPos, YPos, length, breadth);
+                shape.set(Color, Fill,flashShape, XPos, YPos, length, breadth);
                 shapeList.Add(shape);
 
             }
@@ -238,7 +239,7 @@ namespace Component1
                 }
 
                 shape = factory.getShape("triangle");
-                shape.set(Color, Fill, XPos, YPos, sideA, sideB, sideC);
+                shape.set(Color, Fill,flashShape, XPos, YPos, sideA, sideB, sideC);
                 shapeList.Add(shape);
             }
             if (commandName.Equals("fill"))
@@ -264,6 +265,33 @@ namespace Component1
                     else if (val1.Equals("off"))
                     {
                         Fill = false;
+                    }
+                }
+            }
+            if (commandName.Equals("flash"))
+            {
+                string val1;
+
+                string flash_var = parameters[0];
+                if (!Regex.IsMatch(flash_var, @"^[0-9]+$") && flash_var.Equals("on") == false && flash_var.Equals("off") == false)
+                {
+                    var.TryGetValue(flash_var, out val1);
+                }
+                else
+                {
+                    val1 = parameters[0];
+                }
+                if (val1 != "")
+                {
+
+                    if (val1.Equals("on"))
+                    {
+                        flashShape = true;
+                        Circle.running = true;
+                    }
+                    else if (val1.Equals("off"))
+                    {
+                        flashShape = false;
                     }
                 }
             }
