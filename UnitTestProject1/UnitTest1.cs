@@ -40,6 +40,9 @@ namespace UnitTestProject1
             }
            
         }
+        /// <summary>
+        /// checks move to
+        /// </summary>
 
         [TestMethod]
         public void checkMoveTo()
@@ -51,7 +54,9 @@ namespace UnitTestProject1
             Assert.IsFalse(commandParser.parseCommand("moveto(65,34"));
         }
 
-
+        /// <summary>
+        /// checks circle
+        /// </summary>
         [TestMethod]
         public void checkCircle()
         {
@@ -60,6 +65,9 @@ namespace UnitTestProject1
             Assert.IsFalse(commandParser.parseCommand("circle(as)"));
             Assert.IsFalse(commandParser.parseCommand("circle 90"));
         }
+        /// <summary>
+        /// checks fill command
+        /// </summary>
         [TestMethod]
         public void checkFill()
         {
@@ -71,7 +79,9 @@ namespace UnitTestProject1
             Assert.IsFalse(commandParser.parseCommand("fill(34,43)"));
             Assert.IsFalse(commandParser.parseCommand("fill"));
         }
-
+        /// <summary>
+        /// checks rectangle commadn
+        /// </summary>
         [TestMethod]
         public void checkRectangle()
         {
@@ -83,7 +93,9 @@ namespace UnitTestProject1
             Assert.IsFalse(commandParser.parseCommand("rectangle 90,90)"));
             Assert.IsFalse(commandParser.parseCommand("rectangle(90,45"));
         }
-
+        /// <summary>
+        /// checks pen command
+        /// </summary>
         [TestMethod]
         public void checkPen()
         {
@@ -95,6 +107,9 @@ namespace UnitTestProject1
             Assert.IsFalse(commandParser.parseCommand("pne(aqua"));
         
         }
+        /// <summary>
+        /// checks drawtocommand
+        /// </summary>
         [TestMethod]
         public void checkDrawTo()
         {
@@ -106,6 +121,9 @@ namespace UnitTestProject1
             Assert.IsFalse(commandParser.parseCommand("drawto 90,90)"));
             Assert.IsFalse(commandParser.parseCommand("drawto(90,45"));
         }
+        /// <summary>
+        /// checks triangle command
+        /// </summary>
         [TestMethod]
         public void checkTriangle()
         {

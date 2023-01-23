@@ -29,7 +29,7 @@ namespace Component1
 
         ArrayList colors = new ArrayList() { "coral", "magenta", "chocolate", "lime", "aqua" };
 
-        
+
 
         private Dictionary<string, string> variables;
 
@@ -37,7 +37,7 @@ namespace Component1
         ArrayList error_lines = new ArrayList();
         int error = 0;
         int count_line;
-       
+
 
 
         /// <summary>
@@ -184,66 +184,73 @@ namespace Component1
 
 
                         string variable_value = line.Split('=')[1].Trim().ToLower();
-
-                        if (line.Contains('+') || line.Contains('-') || line.Contains('*') || line.Contains('/') || line.Contains('='))
+                        if (variable_value == String.Empty)
                         {
-                            char[] operators = new[] { '+', '-', '*', '/' };
-                            string[] variable_params = variable_value.Split(operators, StringSplitOptions.RemoveEmptyEntries);
-
-
-                            if (variable_params.Length == 2)
-                            {
-                                variables = Variable.getVariables();
-                                string var1 = variable_params[0];
-                                string var2 = variable_params[1];
-                                if (variables.ContainsKey(var1) && variables.ContainsKey(var2))
-                                {
-
-                                    if (!Regex.IsMatch(variables[var1], @"^\d+$"))
-                                    {
-                                        throw new InvalidParameterException("Variable value should be integer for  \"" + variable_params[0] + " \" ");
-                                    }
-                                    else if (!Regex.IsMatch(variables[var2], @"^\d+$"))
-                                    {
-                                        throw new InvalidParameterException("Variable value should be integer for  \" " + variable_params[1] + " \" ");
-                                    }
-
-                                }
-                                else if (variables.ContainsKey(var1) || variables.ContainsKey(var2))
-                                {
-                                    if (variables.ContainsKey(var1))
-                                    {
-                                        if (Regex.IsMatch(variables[var1], @"^\d+$"))
-                                        {
-                                            return true;
-                                        }
-                                        else
-                                        {
-
-                                            throw new InvalidParameterException("Invalid variable value \" " + var1 + " \" ");
-                                        }
-                                    }
-
-                                    else if (variables.ContainsKey(var2))
-                                    {
-                                        if (Regex.IsMatch(variables[var2], @"^\d+$"))
-                                        {
-                                            return true;
-                                        }
-                                        else
-                                        {
-
-                                            throw new InvalidParameterException("Invalid variable value \" " + var2 + " \" ");
-                                        }
-                                    }
-                                }
-                            }
-
-
+                            throw new InvalidParameterException("No values assigned for  \"" + variable_name + " \" ");
                         }
                         else
                         {
-                            throw new InvalidParameterException("Invalid operator");
+
+                            if (line.Contains('+') || line.Contains('-') || line.Contains('*') || line.Contains('/') || line.Contains('='))
+                            {
+                                char[] operators = new[] { '+', '-', '*', '/' };
+                                string[] variable_params = variable_value.Split(operators, StringSplitOptions.RemoveEmptyEntries);
+
+
+                                if (variable_params.Length == 2)
+                                {
+                                    variables = Variable.getVariables();
+                                    string var1 = variable_params[0];
+                                    string var2 = variable_params[1];
+                                    if (variables.ContainsKey(var1) && variables.ContainsKey(var2))
+                                    {
+
+                                        if (!Regex.IsMatch(variables[var1], @"^\d+$"))
+                                        {
+                                            throw new InvalidParameterException("Variable value should be integer for  \"" + variable_params[0] + " \" ");
+                                        }
+                                        else if (!Regex.IsMatch(variables[var2], @"^\d+$"))
+                                        {
+                                            throw new InvalidParameterException("Variable value should be integer for  \" " + variable_params[1] + " \" ");
+                                        }
+
+                                    }
+                                    else if (variables.ContainsKey(var1) || variables.ContainsKey(var2))
+                                    {
+                                        if (variables.ContainsKey(var1))
+                                        {
+                                            if (Regex.IsMatch(variables[var1], @"^\d+$"))
+                                            {
+                                                return true;
+                                            }
+                                            else
+                                            {
+
+                                                throw new InvalidParameterException("Invalid variable value \" " + var1 + " \" ");
+                                            }
+                                        }
+
+                                        else if (variables.ContainsKey(var2))
+                                        {
+                                            if (Regex.IsMatch(variables[var2], @"^\d+$"))
+                                            {
+                                                return true;
+                                            }
+                                            else
+                                            {
+
+                                                throw new InvalidParameterException("Invalid variable value \" " + var2 + " \" ");
+                                            }
+                                        }
+                                    }
+                                }
+
+
+                            }
+                            else
+                            {
+                                throw new InvalidParameterException("Invalid operator");
+                            }
                         }
 
                     }
@@ -276,54 +283,38 @@ namespace Component1
             {
                 count_line++; // counts line
                 string line = lines[i];
-
                 try
                 {
+                    checkParentheses(line);
 
-                    commandName = line.Split('(')[0].Trim().ToLower(); // line split to get commandName
 
-                    try
+                    string condition = line.Split('(', ')')[1].Trim();
+                    variables = Variable.getVariables();
+                    if (condition == String.Empty)
                     {
-                        checkParentheses(line);
+                        throw new CommandNotFoundException("Missing condition");
+                    }
+                    else
+                    {
 
-
-                        string condition = line.Split('(', ')')[1].Trim();
-                        variables = Variable.getVariables();
-                        if (condition == String.Empty)
+                        if (condition.Contains("<=") || condition.Contains(">=") || condition.Contains("!=")
+                            || condition.Contains("==") || condition.Contains(">") || condition.Contains("<"))
                         {
-                            throw new CommandNotFoundException("Missing condition");
+                            string[] operators = new[] { "<=", ">=", "==", "!=", ">", "<" };
+                            string[] conditions = condition.Split(operators, StringSplitOptions.RemoveEmptyEntries);
+                            if (variables.ContainsKey(conditions[0]) == false)
+                            {
+                                throw new CommandNotFoundException("Variable not found");
+                            }
+                            else if (!Regex.IsMatch(conditions[1], @"^\d+$"))
+                            {
+                                throw new CommandNotFoundException("Could not be compared with string");
+                            }
                         }
                         else
                         {
-
-                            if (condition.Contains("<=") || condition.Contains(">=") || condition.Contains("!=")
-                                || condition.Contains("==") || condition.Contains(">") || condition.Contains("<"))
-                            {
-                                string[] operators = new[] { "<=", ">=", "==", "!=", ">", "<" };
-                                string[] conditions = condition.Split(operators, StringSplitOptions.RemoveEmptyEntries);
-                                if (variables.ContainsKey(conditions[0]) == false)
-                                {
-                                    throw new CommandNotFoundException("Variable not found");
-                                }
-                                else if (!Regex.IsMatch(conditions[1], @"^\d+$"))
-                                {
-                                    throw new CommandNotFoundException("Could not be compared with string");
-                                }
-                            }
-                            else
-                            {
-                                throw new CommandNotFoundException("Invalid operator used");
-                            }
+                            throw new CommandNotFoundException("Invalid operator used");
                         }
-
-                    }
-                    catch (CommandNotFoundException e)
-                    {
-                        error++;     // counts number of errorLines
-                        error_lines.Add(count_line); // add count_line to error_lines arraylist
-                        errors.Add(e.Message);  // add to arrayList errors
-                        return false;
-
                     }
 
                 }
@@ -335,6 +326,8 @@ namespace Component1
                     return false;
 
                 }
+
+
             }
 
 
@@ -350,48 +343,60 @@ namespace Component1
             char[] delimeter = new[] { '\r', '\n' };
             String[] lines = command.Split(delimeter, StringSplitOptions.RemoveEmptyEntries);
 
-            for(int i =0; i <lines.Length; i++)
+            for (int i = 0; i < lines.Length; i++)
             {
                 count_line++;
                 string line = lines[i];
                 try
                 {
-                    string[] methods = line.Split(' ');
-                    if (methods.Length == 2)
+
+
+                    if (line.IndexOf("method") < line.Length - 7)
                     {
-                        methods[0] = methods[0].Trim();
-                        methods[1] = methods[1].Trim();
-                        if (!methods[0].Equals("method"))
+                        // there is something after "method" in the line
+                       
+                        string[] methods = line.Split(' ');
+                        if (methods.Length == 2)
                         {
-                            throw new CommandNotFoundException("Invalid method syntax");
-                        }
-                        checkParentheses(line);
-                        string methodName = methods[1].Split('(')[0];
-                        if(!Regex.IsMatch(methodName, @"^[a-zA-Z]+$"))
-                        {
-                            throw new CommandNotFoundException("Method name should contain only alphabets");
-                        }
-                        string[] parameters = methods[1].Split('(', ')');
-                        if(parameters.Length >0)
-                        {
-                            if (!Regex.IsMatch(methodName, @"^[a-zA-Z]+$"))
+                            checkParentheses(line);
+                            string methodName = methods[1].Split('(')[0];
+                            if (methodName == String.Empty)
                             {
-                                throw new CommandNotFoundException("Arguments should be only alphabets");
+                                throw new CommandNotFoundException("No method name found");
                             }
+                            else if (!Regex.IsMatch(methodName, @"^[a-zA-Z]+$"))
+                            {
+                                throw new CommandNotFoundException("Method name should contain only alphabets");
+                            }
+                            string[] parameters = methods[1].Split('(', ')');
+                            if (parameters.Length > 0)
+                            {
+                                if (!Regex.IsMatch(methodName, @"^[a-zA-Z]+$"))
+                                {
+                                    throw new CommandNotFoundException("Arguments should be only alphabets");
+                                }
+                            }
+                            else
+                            {
+                                return true;
+                            }
+
                         }
                         else
                         {
-                            return true;
+                            throw new CommandNotFoundException("Invalid method syntax should be (method methodName()...endmethod)");
                         }
-
                     }
                     else
                     {
-                        throw new CommandNotFoundException("Invalid method syntax");
+                        throw new CommandNotFoundException("Method name not found");
                     }
-                    
+
+
+
+
                 }
-                catch(CommandNotFoundException e)
+                catch (CommandNotFoundException e)
                 {
                     error++;     // counts number of errorLines
                     error_lines.Add(count_line); // add count_line to error_lines arraylist
@@ -536,7 +541,7 @@ namespace Component1
             {
 
                 // string array of commands
-                string[] commands = { "drawto", "moveto", "circle", "rectangle", "triangle", "pen", "fill", "flash","rotate" };
+                string[] commands = { "drawto", "moveto", "circle", "rectangle", "triangle", "pen", "fill", "flash", "rotate" };
                 for (int i = 0; i < commands.Length; i++)
                 {
                     if (commands[i] == commandName)  // checks commandName
@@ -570,7 +575,7 @@ namespace Component1
                     val1 = parameter.Split('\u002C')[0].Trim(); //unicode for comma
                     val2 = parameter.Split('\u002C')[1].Trim();
 
-                  
+
                     if (variables.ContainsKey(val1) && variables.ContainsKey(val2))
                     {
 
@@ -811,7 +816,7 @@ namespace Component1
                 {
                     if (parameter.Equals("on") || parameter.Equals("off"))
                     {
-                    ;
+                        ;
                         switch (parameter)
                         {
 
@@ -870,7 +875,7 @@ namespace Component1
                     errors.Add(e.Message);
                     return false;
                 }
-               
+
             }
             if (commandName.Equals("pen"))
             {
@@ -939,9 +944,9 @@ namespace Component1
 
 
             }
-          
 
-            
+
+
             return true;
 
 
@@ -970,7 +975,7 @@ namespace Component1
             }
             return false;
         }
-  
+
         /// <summary>
         /// return error list
         /// </summary>
